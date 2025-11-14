@@ -9,8 +9,8 @@ A decentralized chat application built with Solidity and Foundry, featuring peer
 
 ## Deployed Contracts
 
-- **WhisprChat**: [0x99dEEd2B0BD06c4E193742E21c7784Ffc7c18A3e](https://celoscan.io/address/0x99dEEd2B0BD06c4E193742E21c7784Ffc7c18A3e) (Celo Mainnet)
-- **WhisprRegistry**: [0x89CB6866513E689DaD242654584a8169a6944a87](https://celoscan.io/address/0x89CB6866513E689DaD242654584a8169a6944a87) (Celo Mainnet)
+- **WhisprChat**: [0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C](https://celoscan.io/address/0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C) (Celo Mainnet)
+- **WhisprRegistry**: [0xA72B585c6b2293177dd485Ec0A607A471976771B](https://celoscan.io/address/0xA72B585c6b2293177dd485Ec0A607A471976771B) (Celo Mainnet)
 
 ## Foundry
 
