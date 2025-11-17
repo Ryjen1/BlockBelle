@@ -5,7 +5,7 @@ A decentralized chat application built with Solidity and Foundry, featuring peer
 ## Contracts
 
 - **WhisprChat**: Handles messaging, group creation, and Chainlink automation for posting price updates.
-- **WhisprRegistry**: Manages user registration with ENS names and avatars.
+- **WhisprRegistry**: Manages user registration with ENS names and avatars
 
 ## Deployed Contracts
 
