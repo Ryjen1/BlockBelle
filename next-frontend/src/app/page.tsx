@@ -8,6 +8,7 @@ import MainChat from '@/components/MainChat';
 import UserProfile from '@/components/UserProfile';
 import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
+import Account from '@/components/Account';
 import Image from 'next/image';
 
 export default function Home() {
@@ -212,7 +213,7 @@ export default function Home() {
             onNotRegistered={handleRegistrationRequired}
           />
         )}
-        {activeTab === 'account' && <div>Account</div>}
+        {activeTab === 'account' && <Account />}
       </main>
     </div>
   );

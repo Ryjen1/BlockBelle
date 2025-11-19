@@ -18,9 +18,65 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Self Protocol Integration
+## Self Protocol Integration ✅
 
-This Next.js setup is ready for Self Protocol QR Code SDK integration. Follow the [Self Protocol documentation](https://docs.self.xyz/frontend-integration/qrcode-sdk) to complete the integration.
+**Self Protocol identity verification is now fully integrated!**
+
+Users can verify their identity using the Self mobile app directly from the Account page. The integration includes:
+
+- ✅ QR Code verification flow
+- ✅ Real Self Protocol SDK integration (not mock)
+- ✅ Backend verification endpoint
+- ✅ Persistent verification status
+- ✅ Privacy-preserving zero-knowledge proofs
+
+### Quick Start
+
+1. **Set up environment variables**:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **For local testing with Self app**:
+   ```bash
+   # Install ngrok
+   npm install -g ngrok
+   
+   # Expose your local server
+   ngrok http 3000
+   
+   # Update .env.local with ngrok URL
+   NEXT_PUBLIC_SELF_ENDPOINT=https://your-ngrok-url.ngrok.io/api/self/verify
+   SELF_ENDPOINT=https://your-ngrok-url.ngrok.io/api/self/verify
+   ```
+
+3. **Run the app**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Test verification**:
+   - Navigate to Account tab
+   - Click "Verify with Self Protocol"
+   - Scan QR code with Self mobile app
+   - Complete verification
+
+### Documentation
+
+- 📖 [Integration Guide](./SELF_PROTOCOL_INTEGRATION.md) - Complete setup and usage guide
+- 🧪 [Testing Plan](./SELF_TESTING_PLAN.md) - Comprehensive testing procedures
+- 🔗 [Self Protocol Docs](https://docs.self.xyz) - Official documentation
+
+### Configuration
+
+The integration uses these environment variables:
+- `NEXT_PUBLIC_SELF_APP_NAME` - App name shown in Self app
+- `NEXT_PUBLIC_SELF_SCOPE` - Unique identifier for your app
+- `NEXT_PUBLIC_SELF_ENDPOINT` - Verification endpoint URL
+- `NEXT_PUBLIC_SELF_ENDPOINT_TYPE` - `staging_https` for mock, `https` for production
+- `SELF_USE_MOCK_PASSPORT` - `true` for testing, `false` for production
+
+See `.env.example` for all configuration options.
 
 ## Project Structure
 
