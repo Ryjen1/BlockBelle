@@ -1,0 +1,9 @@
+.env
+
+# Foundry output directories
+out/
+broadcast/
+cache/
+node_modules/
+dist/
+.gitmodules
