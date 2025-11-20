@@ -49,6 +49,18 @@ const ChatInterface: React.FC = () => {
     show: false,
   })
 
+  // Component cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      // Clear any pending timeouts
+      if (notification.show) {
+        setNotification({ message: '', type: 'info', show: false })
+      }
+      // Reset any form state
+      setMessageInput('')
+    }
+  }, [])
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!messageInput.trim() || isSending || !selectedUser) return
@@ -97,17 +109,17 @@ const ChatInterface: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       <Notification message={notification.message} type={notification.type} show={notification.show} />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
         {/* User List */}
-        <div className="lg:col-span-1">
+        <div className="w-full lg:w-80 lg:flex-shrink-0">
           <UserList onUserSelect={selectUser} selectedUser={selectedUser} />
         </div>
 
         {/* Chat Area */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-md h-96 flex flex-col">
+        <div className="flex-1 min-w-0">
+          <div className="bg-white rounded-lg shadow-md h-80 lg:h-96 flex flex-col">
             {/* Chat Header */}
             <div className="p-4 border-b border-gray-200">
               {selectedUser ? (
