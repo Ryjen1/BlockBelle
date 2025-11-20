@@ -7,11 +7,10 @@ import { useRegistration } from '@/hooks/useRegistration';
 import { UserIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
 interface SimpleOnboardingProps {
-  onComplete: () => void
   onRegister: () => void
 }
 
-export default function SimpleOnboarding({ onComplete, onRegister }: SimpleOnboardingProps) {
+export default function SimpleOnboarding({ onRegister }: SimpleOnboardingProps) {
   const { address, isConnected } = useAccount()
   const { isRegistered, ensName, isLoading } = useRegistration()
   const [showOnboarding, setShowOnboarding] = useState(false)
@@ -19,14 +18,14 @@ export default function SimpleOnboarding({ onComplete, onRegister }: SimpleOnboa
   useEffect(() => {
     if (isConnected && !isLoading) {
       if (isRegistered) {
-        // User is registered, go directly to chat
-        onComplete()
+        // User is registered, show status but don't auto-redirect
+        setShowOnboarding(false)
       } else {
         // User is not registered, show onboarding
         setShowOnboarding(true)
       }
     }
-  }, [isConnected, isRegistered, isLoading, onComplete])
+  }, [isConnected, isRegistered, isLoading])
 
   if (!isConnected) {
     return (
@@ -45,7 +44,16 @@ export default function SimpleOnboarding({ onComplete, onRegister }: SimpleOnboa
     )
   }
 
-  // Show connected status
+  if (isLoading) {
+    return (
+      <div className="flex items-center space-x-4">
+        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+        <span className="text-gray-600">Checking...</span>
+      </div>
+    )
+  }
+
+  // Show connected status for registered users
   if (isRegistered) {
     return (
       <div className="flex items-center space-x-4">
@@ -63,37 +71,13 @@ export default function SimpleOnboarding({ onComplete, onRegister }: SimpleOnboa
         ✓ Wallet Connected
       </div>
       <button
-        onClick={onRegister}
+        onClick={() => {
+          if (onRegister) onRegister()
+        }}
         className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105"
       >
         Register ENS
       </button>
     </div>
   )
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center space-x-4">
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
-        <span className="text-gray-600">Checking...</span>
-      </div>
-    )
-  }
-
-  if (showOnboarding && !isRegistered) {
-    return (
-      <div className="flex items-center space-x-4">
-        <button
-          onClick={onRegister}
-          className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center space-x-2"
-        >
-          <UserIcon className="h-4 w-4" />
-          <span>Register ENS</span>
-          <ArrowRightIcon className="h-4 w-4" />
-        </button>
-      </div>
-    )
-  }
-
-  return null
 }
