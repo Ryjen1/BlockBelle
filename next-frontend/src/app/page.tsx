@@ -63,12 +63,12 @@ export default function Home() {
       </header>
 
       <div className="relative bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div className="absolute inset-0 bg-black/10"></div>
         <Image
           src="/hero-image.jpg"
           alt="BlockBelle Hero"
           fill
-          className="object-cover opacity-20"
+          className="object-cover opacity-10"
           priority
         />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -92,7 +92,7 @@ export default function Home() {
                 View Demo
               </button>
             </div>
-            <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 border border-white border-opacity-20">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-xl">
               <h2 className="text-lg font-bold mb-2">Built for Web3 Women</h2>
               <p className="text-sm mb-3">
                 Connect with verified ENS identities, create private groups, and
@@ -100,7 +100,7 @@ export default function Home() {
               </p>
               <div className="grid md:grid-cols-3 gap-3">
                 <div className="text-center">
-                  <div className="bg-pink-500 bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1">
+                  <div className="bg-pink-500/30 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1 shadow-lg">
                     <span className="text-base">👩‍💻</span>
                   </div>
                   <h3 className="font-semibold mb-1 text-xs">ENS Verified</h3>
@@ -110,7 +110,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="bg-purple-500 bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1">
+                  <div className="bg-purple-500/30 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1 shadow-lg">
                     <span className="text-base">👥</span>
                   </div>
                   <h3 className="font-semibold mb-1 text-xs">Group Chats</h3>
@@ -119,7 +119,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="bg-indigo-500 bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1">
+                  <div className="bg-indigo-500/30 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1 shadow-lg">
                     <span className="text-base">💬</span>
                   </div>
                   <h3 className="font-semibold mb-1 text-xs">
