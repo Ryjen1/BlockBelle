@@ -16,6 +16,7 @@
     "@selfxyz/qrcode": "^1.0.17",
     "@tailwindcss/postcss": "^4.1.17",
     "@tanstack/react-query": "^5.90.10",
+    "@vercel/postgres": "^0.10.0",
     "autoprefixer": "^10.4.22",
     "ethers": "^6.15.0",
     "next": "^16.0.3",

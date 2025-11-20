@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// In-memory store (shared with verify route)
-// In production, this should be a database
-const verificationStore = new Map<string, any>();
+import { getVerification } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,19 +13,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user is verified
-    const verificationData = verificationStore.get(address.toLowerCase());
+    // Check if user is verified in database
+    const verificationData = await getVerification(address);
 
-    if (verificationData) {
-      return NextResponse.json({
-        verified: true,
-        ...verificationData,
-      });
-    }
-
-    return NextResponse.json({
-      verified: false,
-    });
+    return NextResponse.json(verificationData);
   } catch (error) {
     console.error('Error checking verification status:', error);
     return NextResponse.json(

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SelfBackendVerifier, DefaultConfigStore, AllIds } from '@selfxyz/core';
-
-// In-memory store for verification results (in production, use a database)
-const verificationStore = new Map<string, any>();
+import { saveVerification, initDatabase } from '@/lib/db';
 
 // Initialize Self Backend Verifier
 const getSelfVerifier = () => {
@@ -26,6 +24,9 @@ const getSelfVerifier = () => {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize database on first request (idempotent)
+    await initDatabase();
+    
     const body = await request.json();
     const { attestationId, proof, publicSignals, userContextData } = body;
 
@@ -71,13 +72,11 @@ export async function POST(request: NextRequest) {
     // Extract user identifier from userContextData
     const userIdentifier = result.userData?.userIdentifier;
 
-    // Store verification result
+    // Store verification result in database
     if (userIdentifier) {
-      verificationStore.set(userIdentifier.toLowerCase(), {
-        verified: true,
-        attestationId,
-        verifiedAt: new Date().toISOString(),
+      await saveVerification(userIdentifier, {
         selfDid: userIdentifier,
+        attestationId,
         nationality: result.discloseOutput?.nationality,
         gender: result.discloseOutput?.gender,
         minimumAge: result.discloseOutput?.minimumAge,
@@ -108,6 +107,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-// Export the verification store for use in status endpoint
-export { verificationStore };
