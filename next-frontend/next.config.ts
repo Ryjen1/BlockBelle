@@ -9,7 +9,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  turbopack: {},
+  // Exclude problematic server-side packages
+  serverExternalPackages: [
+    'pino',
+    'pino-pretty',
+    'thread-stream',
+    '@walletconnect/universal-provider',
+  ],
 };
 
 export default nextConfig;
