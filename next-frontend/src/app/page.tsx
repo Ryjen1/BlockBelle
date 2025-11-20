@@ -24,7 +24,6 @@ export default function Home() {
   };
 
   const handleStartChatting = () => {
-    console.log('Start Chatting button clicked');
     _setShowRegistrationCheck(true);
     setActiveTab('check');
   };
@@ -48,12 +47,7 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               <UserProfile />
               <SimpleOnboarding
-                onComplete={() => {
-                  console.log('SimpleOnboarding onComplete called');
-                  setActiveTab('main');
-                }}
                 onRegister={() => {
-                  console.log('SimpleOnboarding onRegister called');
                   setActiveTab('register');
                 }}
               />
@@ -145,7 +139,6 @@ export default function Home() {
           <div className="flex space-x-8">
             <button
               onClick={() => {
-                console.log('Register tab clicked');
                 setActiveTab('register');
               }}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
@@ -200,20 +193,42 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {activeTab === 'register' && (
-          <Register onRegistrationSuccess={handleRegistrationSuccess} />
-        )}
-        {activeTab === 'group' && <GroupChat />}
-        {activeTab === 'private' && <PrivateChat />}
-        {activeTab === 'main' && <MainChat />}
-        {activeTab === 'check' && (
-          <RegistrationCheck
-            onRegistered={handleRegistrationCheckComplete}
-            onNotRegistered={handleRegistrationRequired}
-          />
-        )}
-        {activeTab === 'account' && <Account />}
+      <main className="w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6">
+        <div className="content-container">
+          {activeTab === 'register' && (
+            <div className="w-full max-w-2xl mx-auto">
+              <Register onRegistrationSuccess={handleRegistrationSuccess} />
+            </div>
+          )}
+          {activeTab === 'group' && (
+            <div className="w-full">
+              <GroupChat />
+            </div>
+          )}
+          {activeTab === 'private' && (
+            <div className="w-full max-w-4xl mx-auto">
+              <PrivateChat />
+            </div>
+          )}
+          {activeTab === 'main' && (
+            <div className="w-full">
+              <MainChat />
+            </div>
+          )}
+          {activeTab === 'check' && (
+            <div className="w-full">
+              <RegistrationCheck
+                onRegistered={handleRegistrationCheckComplete}
+                onNotRegistered={handleRegistrationRequired}
+              />
+            </div>
+          )}
+          {activeTab === 'account' && (
+            <div className="w-full max-w-4xl mx-auto">
+              <Account />
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
