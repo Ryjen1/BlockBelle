@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Register from '@/components/Register';
 import GroupChat from '@/components/GroupChat';
 import PrivateChat from '@/components/PrivateChat';
@@ -18,26 +18,37 @@ export default function Home() {
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
 
-  const handleRegistrationSuccess = () => {
+  const handleRegistrationSuccess = useCallback(() => {
     _setHasRegistered(true);
     setActiveTab('private');
-  };
+  }, []);
 
-  const handleStartChatting = () => {
+  const handleStartChatting = useCallback(() => {
     console.log('Start Chatting button clicked');
     _setShowRegistrationCheck(true);
     setActiveTab('check');
-  };
+  }, []);
 
-  const handleRegistrationCheckComplete = () => {
+  const handleRegistrationCheckComplete = useCallback(() => {
     _setShowRegistrationCheck(false);
     setActiveTab('main');
-  };
+  }, []);
 
-  const handleRegistrationRequired = () => {
+  const handleRegistrationRequired = useCallback(() => {
     _setShowRegistrationCheck(false);
     setActiveTab('register');
-  };
+  }, []);
+
+  const handleOnboardingComplete = useCallback(() => {
+    console.log('SimpleOnboarding onComplete called - DISABLED');
+    // Disabled auto-navigation to prevent interference with user clicks
+    // setActiveTab('main');
+  }, []);
+
+  const handleOnboardingRegister = useCallback(() => {
+    console.log('SimpleOnboarding onRegister called');
+    setActiveTab('register');
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -48,14 +59,8 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               <UserProfile />
               <SimpleOnboarding
-                onComplete={() => {
-                  console.log('SimpleOnboarding onComplete called');
-                  setActiveTab('main');
-                }}
-                onRegister={() => {
-                  console.log('SimpleOnboarding onRegister called');
-                  setActiveTab('register');
-                }}
+                onComplete={handleOnboardingComplete}
+                onRegister={handleOnboardingRegister}
               />
             </div>
           </div>

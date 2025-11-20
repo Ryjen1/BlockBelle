@@ -21,6 +21,10 @@ export function useRegistration() {
      args: address ? [address] : undefined,
      query: {
        enabled: !!address && isConnected,
+       refetchInterval: false,
+       refetchOnWindowFocus: false,
+       refetchOnMount: false,
+       staleTime: Infinity,
      },
    })
 
@@ -31,6 +35,10 @@ export function useRegistration() {
      args: address ? [address] : undefined,
      query: {
        enabled: !!address && isConnected,
+       refetchInterval: false,
+       refetchOnWindowFocus: false,
+       refetchOnMount: false,
+       staleTime: Infinity,
      },
    })
 
@@ -44,12 +52,24 @@ export function useRegistration() {
        const [name, , registered] = userDetails as [string, string, boolean]
        const hasName = !!(name && name.length > 0)
 
-       setIsRegistered(registered)
-       setEnsName(hasName ? name : '')
+       setIsRegistered((prev) => {
+         if (prev !== registered) {
+           console.log('Registration status changed:', prev, '->', registered)
+           return registered
+         }
+         return prev
+       })
+       setEnsName((prev) => {
+         const newName = hasName ? name : ''
+         if (prev !== newName) {
+           return newName
+         }
+         return prev
+       })
        setIsLoading(false)
      } else {
-       setIsRegistered(false)
-       setEnsName('')
+       setIsRegistered((prev) => prev !== false ? false : prev)
+       setEnsName((prev) => prev !== '' ? '' : prev)
        setIsLoading(false)
      }
    }, [userDetails, registrationStatus, isLoadingUserDetails, isLoadingRegistrationStatus])
