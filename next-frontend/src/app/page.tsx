@@ -1,10 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-
-// Force dynamic rendering to avoid Next.js 15 prerendering bug
-export const dynamic = 'force-dynamic';
-
 import Register from '@/components/Register';
 import GroupChat from '@/components/GroupChat';
 import PrivateChat from '@/components/PrivateChat';

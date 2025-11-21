@@ -14,8 +14,22 @@ const nextConfig: NextConfig = {
     'pino',
     'pino-pretty',
     'thread-stream',
-    '@walletconnect/universal-provider',
   ],
+  // Add turbopack config
+  turbopack: {
+    root: process.cwd(),
+  },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      '@react-native-async-storage/async-storage': false,
+    };
+    return config;
+  },
+  // Workaround for Next.js 16 global-error prerendering bug
+  experimental: {
+    staticGenerationRetryCount: 0,
+  },
 };
 
 export default nextConfig;

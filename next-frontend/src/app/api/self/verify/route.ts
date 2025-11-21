@@ -75,6 +75,8 @@ export async function POST(request: NextRequest) {
     // Store verification result in database
     if (userIdentifier) {
       await saveVerification(userIdentifier, {
+        verified: true,
+        verifiedAt: new Date().toISOString(),
         selfDid: userIdentifier,
         attestationId,
         nationality: result.discloseOutput?.nationality,

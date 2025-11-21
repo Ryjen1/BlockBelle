@@ -6,18 +6,21 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from '@/config/wagmi';
 import { celo } from 'wagmi/chains';
 import '@rainbow-me/rainbowkit/styles.css';
-import { ReactNode } from 'react';
-
-// Create a stable query client instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000,
-    },
-  },
-});
+import { type ReactNode, useMemo } from 'react';
 
 export function Providers({ children }: { children: ReactNode }) {
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000,
+          },
+        },
+      }),
+    []
+  );
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

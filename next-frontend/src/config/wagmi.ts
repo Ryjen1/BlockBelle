@@ -5,7 +5,7 @@ export const config = getDefaultConfig({
   appName: 'BlockBelle',
   projectId: '54ce9aeda9332fba67ac4617e6d7ac1e',
   chains: [celo],
-  ssr: true,
+  ssr: false, // Changed to false to fix layout router error
 });
 
 // Add connection timeout and retry configuration
