@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
   ],
   // Add turbopack config
   turbopack: {
-    root: process.cwd(),
     resolveAlias: {
       '@': './src',
     },
