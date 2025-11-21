@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
   // Add turbopack config
   turbopack: {
     root: process.cwd(),
+    resolveAlias: {
+      '@': './src',
+    },
   },
   webpack: (config) => {
     config.resolve.fallback = {
