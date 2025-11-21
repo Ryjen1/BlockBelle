@@ -1,0 +1,13 @@
+{
+  "name": "blockbelle-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd next-frontend && npm run build",
+    "dev": "cd next-frontend && npm run dev",
+    "install": "cd next-frontend && npm install"
+  },
+  "workspaces": [
+    "next-frontend"
+  ]
+}
