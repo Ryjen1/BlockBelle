@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "cd next-frontend && npm run build",
-    "dev": "cd next-frontend && npm run dev",
-    "install": "cd next-frontend && npm install"
+    "build": "cd next-frontend && npm install && npm run build",
+    "dev": "cd next-frontend && npm install && npm run dev",
+    "start": "cd next-frontend && npm start"
   },
-  "workspaces": [
-    "next-frontend"
-  ]
+  "dependencies": {
+    "next": "^16.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
 }
