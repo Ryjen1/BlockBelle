@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   description: 'The elegant web3 chat dApp where women in blockchain connect, collaborate, and share their contributions through ENS-verified conversations.',
 };
 
-// Force dynamic rendering to prevent build-time errors with Web3 providers
-export const dynamic = 'force-dynamic';
-export const dynamicParams = true;
-export const revalidate = 0;
-
+// Web3 providers are client-side only ('use client'), so static generation works fine
 export default function RootLayout({
   children,
 }: {
