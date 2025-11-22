@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "cd next-frontend && npm install && npm run build",
-    "dev": "cd next-frontend && npm install && npm run dev",
+    "dev": "cd next-frontend && npm run dev",
     "start": "cd next-frontend && npm start"
   },
   "dependencies": {
