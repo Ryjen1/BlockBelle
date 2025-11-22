@@ -12,19 +12,25 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const rscPath = path.join(__dirname, '../.next/server/app/_global-error.rsc');
-const rscDir = path.dirname(rscPath);
+const appServerDir = path.join(__dirname, '../.next/server/app');
+const filesToCreate = [
+  '_global-error.rsc',
+  '_global-error.html'
+];
 
 // Only run if .next directory exists (after build)
 if (fs.existsSync(path.join(__dirname, '../.next'))) {
-  // Create directory if it doesn't exist
-  if (!fs.existsSync(rscDir)) {
-    fs.mkdirSync(rscDir, { recursive: true });
+  // Create app server directory if it doesn't exist
+  if (!fs.existsSync(appServerDir)) {
+    fs.mkdirSync(appServerDir, { recursive: true });
   }
   
-  // Create stub file if it doesn't exist
-  if (!fs.existsSync(rscPath)) {
-    fs.writeFileSync(rscPath, '');
-    console.log('✓ Created stub _global-error.rsc file for Vercel deployment');
-  }
+  // Create stub files
+  filesToCreate.forEach(filename => {
+    const filePath = path.join(appServerDir, filename);
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, '');
+      console.log(`✓ Created stub ${filename} file for Vercel deployment`);
+    }
+  });
 }
