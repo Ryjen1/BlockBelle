@@ -1,8 +1,6 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Use standalone output for better Vercel compatibility
-  output: 'standalone',
   images: {
     remotePatterns: [
       {
