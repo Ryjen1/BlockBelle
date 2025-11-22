@@ -1,0 +1,8 @@
+vite-frontend
+src
+test
+script
+foundry.toml
+.git
+.gitmodules
+node_modules
