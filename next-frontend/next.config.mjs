@@ -22,7 +22,6 @@ const nextConfig = {
   ],
   // Add turbopack config
   turbopack: {
-    root: __dirname,
     resolveAlias: {
       '@': './src',
     },
