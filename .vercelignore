@@ -6,3 +6,7 @@ foundry.toml
 .git
 .gitmodules
 node_modules
+# Exclude root config files that might confuse Vercel
+/next.config.js
+/package.json
+/package-lock.json
