@@ -17,9 +17,9 @@ const filesToCreate = [
   '_global-error.rsc',
   '_global-error.html',
   '_not-found.rsc',
-  '_not-found.html',
-  'index.rsc',
-  'index.html'
+  '_not-found.html'
+  // NOTE: Do NOT create index.rsc/html - Next.js generates these with actual content
+  // Creating empty stubs would override the real rendered content
 ];
 
 // Only run if .next directory exists (after build)
