@@ -11,7 +11,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename); \n\nconst nextDir = path.join(__dirname, '../.next');
+const __dirname = path.dirname(__filename);
+const nextDir = path.join(__dirname, '../.next');
 const appServerDir = path.join(nextDir, 'server/app');
 
 // Only run if .next directory exists (after build)
