@@ -15,7 +15,9 @@ const __dirname = path.dirname(__filename);
 const appServerDir = path.join(__dirname, '../.next/server/app');
 const filesToCreate = [
   '_global-error.rsc',
-  '_global-error.html'
+  '_global-error.html',
+  '_not-found.rsc',
+  '_not-found.html'
 ];
 
 // Only run if .next directory exists (after build)
@@ -24,7 +26,7 @@ if (fs.existsSync(path.join(__dirname, '../.next'))) {
   if (!fs.existsSync(appServerDir)) {
     fs.mkdirSync(appServerDir, { recursive: true });
   }
-  
+
   // Create stub files
   filesToCreate.forEach(filename => {
     const filePath = path.join(appServerDir, filename);
