@@ -22,7 +22,6 @@ const nextConfig = {
   ],
   // Add turbopack config
   turbopack: {
-    root: __dirname,  // Critical: prevents wrong root detection in monorepo
     resolveAlias: {
       '@': './src',
     },
