@@ -1,7 +1,7 @@
 vite-frontend
-src
-test
-script
+/src
+/test
+/script
 foundry.toml
 .git
 .gitmodules
