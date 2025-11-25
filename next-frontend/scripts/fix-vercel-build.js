@@ -17,7 +17,9 @@ const filesToCreate = [
   '_global-error.rsc',
   '_global-error.html',
   '_not-found.rsc',
-  '_not-found.html'
+  '_not-found.html',
+  'index.rsc',
+  'index.html'
 ];
 
 // Only run if .next directory exists (after build)
