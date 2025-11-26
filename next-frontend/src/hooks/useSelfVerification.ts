@@ -17,50 +17,57 @@ export function useSelfVerification() {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  // Fetch verification status from backend
+  const fetchVerificationStatus = async () => {
     if (!address) {
       setVerificationData({ selfVerified: false });
       setIsLoading(false);
       return;
     }
 
-    // Load verification data from localStorage
-    const loadVerificationData = () => {
-      try {
-        const stored = localStorage.getItem(`self_verification_${address}`);
-        if (stored) {
-          const data = JSON.parse(stored) as SelfVerificationData;
-          setVerificationData(data);
+    try {
+      const response = await fetch('/api/self/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.verified) {
+          setVerificationData({
+            selfVerified: true,
+            selfDid: data.selfDid,
+            verifiedAt: data.verifiedAt,
+            nationality: data.nationality,
+            gender: data.gender,
+            minimumAge: data.minimumAge,
+          });
         } else {
           setVerificationData({ selfVerified: false });
         }
-      } catch (error) {
-        console.error('Error loading verification data:', error);
+      } else {
         setVerificationData({ selfVerified: false });
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching verification status:', error);
+      setVerificationData({ selfVerified: false });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    loadVerificationData();
+  useEffect(() => {
+    fetchVerificationStatus();
   }, [address]);
 
-  const saveVerification = (data: Omit<SelfVerificationData, 'selfVerified'>) => {
-    if (!address) return;
-
-    const verificationData: SelfVerificationData = {
-      selfVerified: true,
-      ...data,
-      verifiedAt: new Date().toISOString(),
-    };
-
-    localStorage.setItem(`self_verification_${address}`, JSON.stringify(verificationData));
-    setVerificationData(verificationData);
+  const saveVerification = async (data: Omit<SelfVerificationData, 'selfVerified'>) => {
+    // Verification is already saved by backend, just refresh from server
+    await fetchVerificationStatus();
   };
 
   const clearVerification = () => {
-    if (!address) return;
-    localStorage.removeItem(`self_verification_${address}`);
+    // Clear on client side (backend would need a delete endpoint to truly clear)
     setVerificationData({ selfVerified: false });
   };
 
@@ -69,5 +76,6 @@ export function useSelfVerification() {
     isLoading,
     saveVerification,
     clearVerification,
+    refreshVerification: fetchVerificationStatus,
   };
 }

@@ -43,56 +43,14 @@ export default function Account() {
         ],
         nationality: true,
         gender: true,
-      },
-    }).build();
 
-    setSelfApp(app);
-  }, [address, isConnected, ensName]);
-
-  const handleSuccessfulVerification = async () => {
-    setIsVerifying(true);
-    try {
-      // Wait a bit for the backend to process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Fetch verification result from backend
-      const response = await fetch('/api/self/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.verified) {
-          saveVerification({
-            selfDid: data.selfDid || address,
-            nationality: data.nationality,
-            gender: data.gender,
-            minimumAge: data.minimumAge,
-          });
-          setShowQRCode(false);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching verification status:', error);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const handleVerificationError = (error: { error_code?: string; reason?: string }) => {
-    console.error('Verification error:', error);
-    setIsVerifying(false);
-  };
-
-  if (!isConnected || !address) {
-    return (
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Account</h2>
-        <p className="text-gray-600">Please connect your wallet to view your account.</p>
-      </div>
-    );
+        if(!isConnected || !address) {
+          return (
+            <div className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Account</h2>
+              <p className="text-gray-600">Please connect your wallet to view your account.</p>
+            </div>
+          );
   }
 
   return (
