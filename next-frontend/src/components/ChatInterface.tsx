@@ -5,6 +5,8 @@ import UserList from './UserList';
 import { useChat } from '@/hooks/useChat';
 import { useUsernames } from '@/hooks/useUsernames';
 import { useAccount } from 'wagmi';
+import Tier3Badge from '@/components/Tier3Badge';
+import { usePublicVerification } from '@/hooks/usePublicVerification';
 
 interface NotificationProps {
   message: string
@@ -48,6 +50,9 @@ const ChatInterface: React.FC = () => {
     type: 'info',
     show: false,
   })
+  
+  // Check if selected user is tier 3 (public verification)
+  const { isVerified: selectedUserVerified } = usePublicVerification(selectedUser || undefined)
 
   // Component cleanup on unmount
   React.useEffect(() => {
@@ -130,9 +135,12 @@ const ChatInterface: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">
-                      {getCachedUsername(selectedUser)}
-                    </h3>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="font-semibold text-gray-900">
+                        {getCachedUsername(selectedUser)}
+                      </h3>
+                      {selectedUserVerified && <Tier3Badge size="sm" />}
+                    </div>
                     <p className="text-xs text-gray-500">
                       {selectedUser.slice(0, 6)}...{selectedUser.slice(-4)}
                     </p>
@@ -173,6 +181,14 @@ const ChatInterface: React.FC = () => {
                           ? 'bg-indigo-600 text-white'
                           : 'bg-gray-200 text-gray-900'
                       }`}>
+                        {!isOwnMessage && selectedUserVerified && (
+                          <div className="flex items-center gap-1 mb-1">
+                            <p className="text-xs font-semibold text-gray-700">
+                              {getCachedUsername(selectedUser)}
+                            </p>
+                            <Tier3Badge size="sm" />
+                          </div>
+                        )}
                         <p className="text-sm">{message.content}</p>
                         <p className={`text-xs mt-1 ${
                           isOwnMessage ? 'text-indigo-200' : 'text-gray-500'

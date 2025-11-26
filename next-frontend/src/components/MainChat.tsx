@@ -17,6 +17,8 @@ import {
 import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { getUserDetailsFromContract } from '@/utils/contractReads';
+import Tier3Badge from '@/components/Tier3Badge';
+import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
 
 const registryAbi = parseAbi([
   'function getAllUsers() external view returns (address[])',
@@ -62,6 +64,12 @@ export default function MainChat({ onClose }: MainChatProps) {
     const [searchTerm, setSearchTerm] = useState('')
     const [userNames, setUserNames] = useState<Map<string, string>>(new Map())
     const [isLoadingMessages, setIsLoadingMessages] = useState(false)
+
+    // Get verification status for selected chat user
+    const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
+    const { isVerified: selectedUserVerified } = useBulkPublicVerification(
+      recipientAddress ? [recipientAddress] : []
+    )
 
     // Fetch real registered users from smart contract
     const { data: allUsers, refetch: refetchUsers } = useReadContract({
@@ -150,8 +158,6 @@ export default function MainChat({ onClose }: MainChatProps) {
     // Usernames are now handled in the other useEffect above
 
     // Fetch messages for selected chat using wagmi
-    const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
-
     const { data: conversation, refetch: refetchMessages } = useReadContract({
       address: CONTRACT_ADDRESSES.chat,
       abi: chatAbi,
@@ -427,7 +433,10 @@ export default function MainChat({ onClose }: MainChatProps) {
                   )}
                 </div>
                 <div>
-                  <h2 className="font-semibold text-gray-900">{selectedChat.name}</h2>
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="font-semibold text-gray-900">{selectedChat.name}</h2>
+                    {selectedUserVerified.verifications[recipientAddress || ''] && <Tier3Badge size="sm" />}
+                  </div>
                   <p className="text-sm text-gray-500">
                     {selectedChat.isOnline ? 'Online' : 'Offline'}
                   </p>
@@ -456,25 +465,38 @@ export default function MainChat({ onClose }: MainChatProps) {
                   <p className="text-gray-400 text-sm">Start the conversation!</p>
                 </div>
               ) : (
-                messages.map((msg, index) => (
-                  <div key={index} className={`flex ${msg.sender === address ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                      msg.sender === address
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-white text-gray-900 shadow-sm'
-                    }`}>
-                      <p>{msg.content}</p>
-                      <div className={`text-xs mt-1 ${
-                        msg.sender === address ? 'text-blue-100' : 'text-gray-500'
+                messages.map((msg, index) => {
+                  const isOwnMessage = msg.sender === address;
+                  const senderVerified = !isOwnMessage && selectedUserVerified.verifications[msg.sender];
+                  
+                  return (
+                    <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                        isOwnMessage
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-white text-gray-900 shadow-sm'
                       }`}>
-                        {formatTime(msg.timestamp)}
-                        {msg.sender === address && (
-                          <CheckCircleIcon className="h-3 w-3 inline ml-1" />
+                        {!isOwnMessage && (
+                          <div className="flex items-center gap-1 mb-1">
+                            <p className="text-xs font-semibold text-gray-700">
+                              {userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`}
+                            </p>
+                            {senderVerified && <Tier3Badge size="sm" />}
+                          </div>
                         )}
+                        <p>{msg.content}</p>
+                        <div className={`text-xs mt-1 ${
+                          isOwnMessage ? 'text-blue-100' : 'text-gray-500'
+                        }`}>
+                          {formatTime(msg.timestamp)}
+                          {isOwnMessage && (
+                            <CheckCircleIcon className="h-3 w-3 inline ml-1" />
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
 

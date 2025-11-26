@@ -7,11 +7,12 @@ import type { SelfApp } from '@selfxyz/qrcode';
 import { useRegistration } from '@/hooks/useRegistration';
 import { useSelfVerification } from '@/hooks/useSelfVerification';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import Tier3Badge from '@/components/Tier3Badge';
 
 export default function Account() {
   const { address, isConnected } = useAccount();
   const { isRegistered, ensName } = useRegistration();
-  const { verificationData, isLoading: isLoadingVerification, saveVerification } = useSelfVerification();
+  const { verificationData, isLoading: isLoadingVerification, refreshVerification } = useSelfVerification();
   const [selfApp, setSelfApp] = useState<SelfApp | null>(null);
   const [showQRCode, setShowQRCode] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -52,27 +53,15 @@ export default function Account() {
   const handleSuccessfulVerification = async () => {
     setIsVerifying(true);
     try {
-      // Wait a bit for the backend to process
+      // Wait a bit for the backend to process the verification
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Fetch verification result from backend
-      const response = await fetch('/api/self/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.verified) {
-          saveVerification({
-            selfDid: data.selfDid || address,
-            nationality: data.nationality,
-            gender: data.gender,
-            minimumAge: data.minimumAge,
-          });
-          setShowQRCode(false);
-        }
+      // Refresh verification status from backend API
+      await refreshVerification();
+      
+      // Close QR code modal if verification successful
+      if (verificationData.selfVerified) {
+        setShowQRCode(false);
       }
     } catch (error) {
       console.error('Error fetching verification status:', error);
@@ -88,8 +77,8 @@ export default function Account() {
 
   if (!isConnected || !address) {
     return (
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Account</h2>
+      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
+        <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">Account</h2>
         <p className="text-gray-600">Please connect your wallet to view your account.</p>
       </div>
     );
@@ -98,26 +87,29 @@ export default function Account() {
   return (
     <div className="space-y-6">
       {/* Account Info */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Account Information</h2>
+      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
+        <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">Account Information</h2>
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Wallet Address</label>
+            <label className="block text-sm font-medium text-blockbelle-purple">Wallet Address</label>
             <p className="mt-1 text-sm text-gray-900 font-mono">{address}</p>
           </div>
           {isRegistered && ensName && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">ENS Name</label>
-              <p className="mt-1 text-sm text-gray-900">{ensName}</p>
+              <label className="block text-sm font-medium text-blockbelle-purple">ENS Name</label>
+              <div className="mt-1 flex items-center gap-2">
+                <p className="text-sm text-gray-900">{ensName}</p>
+                {verificationData.selfVerified && <Tier3Badge size="sm" />}
+              </div>
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Registration Status</label>
+            <label className="block text-sm font-medium text-blockbelle-purple">Registration Status</label>
             <div className="mt-1 flex items-center">
               {isRegistered ? (
                 <>
-                  <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />
-                  <span className="text-sm text-green-600 font-medium">Registered</span>
+                  <CheckCircleIcon className="h-5 w-5 text-blockbelle-pink mr-2" />
+                  <span className="text-sm text-blockbelle-pink font-medium">Registered</span>
                 </>
               ) : (
                 <>
@@ -127,27 +119,40 @@ export default function Account() {
               )}
             </div>
           </div>
+          {verificationData.selfVerified && (
+            <div>
+              <label className="block text-sm font-medium text-blockbelle-purple">Verification Tier</label>
+              <div className="mt-1">
+                <Tier3Badge size="md" showLabel={true} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Self Verification Section */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Identity Verification</h2>
+      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
+        <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">Identity Verification</h2>
         <p className="text-sm text-gray-600 mb-6">
-          Verify your identity using Self Protocol to unlock additional features and build trust in the community.
+          Verify your identity using Self Protocol to unlock <span className="font-semibold text-blockbelle-purple">Tier 3 status</span> and build trust in the community.
         </p>
 
         {isLoadingVerification ? (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blockbelle-purple"></div>
           </div>
         ) : verificationData.selfVerified ? (
-          <div className="border border-green-200 bg-green-50 rounded-lg p-6">
+          <div className="border-2 border-blockbelle-gold bg-gradient-to-br from-blockbelle-gold/10 to-blockbelle-gold/5 rounded-xl p-6 shadow-lg">
             <div className="flex items-start">
-              <CheckCircleIcon className="h-6 w-6 text-green-500 mr-3 mt-0.5" />
+              <div className="mr-3 mt-0.5">
+                <Tier3Badge size="lg" />
+              </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-green-900 mb-2">Verified ✓</h3>
-                <div className="space-y-2 text-sm text-green-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-semibold text-blockbelle-purple">Tier 3 - Verified</h3>
+                  <CheckCircleIcon className="h-5 w-5 text-blockbelle-pink" />
+                </div>
+                <div className="space-y-2 text-sm text-gray-700">
                   <p>
                     <span className="font-medium">Verified At:</span>{' '}
                     {verificationData.verifiedAt
@@ -179,7 +184,7 @@ export default function Account() {
               <div>
                 <button
                   onClick={() => setShowQRCode(true)}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md"
+                  className="gradient-blockbelle hover:opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   Verify with Self Protocol
                 </button>
@@ -205,7 +210,7 @@ export default function Account() {
                   <div className="flex justify-center">
                     {isVerifying ? (
                       <div className="text-center py-8">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blockbelle-purple mx-auto mb-4"></div>
                         <p className="text-sm text-gray-600">Processing verification...</p>
                       </div>
                     ) : (
@@ -226,11 +231,14 @@ export default function Account() {
       </div>
 
       {/* Additional Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-blue-900 mb-2">About Self Protocol</h3>
-        <p className="text-xs text-blue-800">
+      <div className="bg-gradient-to-br from-blockbelle-purple/10 to-blockbelle-indigo/10 border border-blockbelle-purple/30 rounded-xl p-4">
+        <h3 className="text-sm font-semibold text-blockbelle-purple mb-2">About Self Protocol & Tier 3</h3>
+        <p className="text-xs text-gray-700 mb-2">
           Self Protocol provides privacy-preserving identity verification using zero-knowledge proofs.
           Your personal information is never shared - only the verification result is confirmed on-chain.
+        </p>
+        <p className="text-xs text-blockbelle-purple font-medium">
+          ✨ Tier 3 users display a crown badge next to their username, indicating verified identity status.
         </p>
       </div>
     </div>

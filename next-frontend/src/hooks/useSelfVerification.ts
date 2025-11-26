@@ -24,50 +24,79 @@ export function useSelfVerification() {
       return;
     }
 
-    // Load verification data from localStorage
-    const loadVerificationData = () => {
+    // Fetch verification data from backend API (not localStorage)
+    const fetchVerificationData = async () => {
+      setIsLoading(true);
       try {
-        const stored = localStorage.getItem(`self_verification_${address}`);
-        if (stored) {
-          const data = JSON.parse(stored) as SelfVerificationData;
-          setVerificationData(data);
+        const response = await fetch('/api/self/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.verified) {
+            setVerificationData({
+              selfVerified: true,
+              selfDid: data.selfDid,
+              verifiedAt: data.verifiedAt,
+              nationality: data.nationality,
+              gender: data.gender,
+              minimumAge: data.minimumAge,
+            });
+          } else {
+            setVerificationData({ selfVerified: false });
+          }
         } else {
           setVerificationData({ selfVerified: false });
         }
       } catch (error) {
-        console.error('Error loading verification data:', error);
+        console.error('Error fetching verification data:', error);
         setVerificationData({ selfVerified: false });
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadVerificationData();
+    fetchVerificationData();
   }, [address]);
 
-  const saveVerification = (data: Omit<SelfVerificationData, 'selfVerified'>) => {
+  // Refresh verification status (call after successful verification)
+  const refreshVerification = async () => {
     if (!address) return;
 
-    const verificationData: SelfVerificationData = {
-      selfVerified: true,
-      ...data,
-      verifiedAt: new Date().toISOString(),
-    };
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/self/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
 
-    localStorage.setItem(`self_verification_${address}`, JSON.stringify(verificationData));
-    setVerificationData(verificationData);
-  };
-
-  const clearVerification = () => {
-    if (!address) return;
-    localStorage.removeItem(`self_verification_${address}`);
-    setVerificationData({ selfVerified: false });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.verified) {
+          setVerificationData({
+            selfVerified: true,
+            selfDid: data.selfDid,
+            verifiedAt: data.verifiedAt,
+            nationality: data.nationality,
+            gender: data.gender,
+            minimumAge: data.minimumAge,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing verification data:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
     verificationData,
     isLoading,
-    saveVerification,
-    clearVerification,
+    refreshVerification,
   };
 }

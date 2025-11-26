@@ -3,6 +3,8 @@
 import React from 'react';
 import { useUsernames } from '@/hooks/useUsernames';
 import { useAccount } from 'wagmi';
+import Tier3Badge from '@/components/Tier3Badge';
+import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
 
 interface UserListProps {
   onUserSelect?: (address: string) => void
@@ -12,6 +14,12 @@ interface UserListProps {
 const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
   const { allUsers, isLoadingUsers, getCachedUsername } = useUsernames()
   const { address: currentUserAddress } = useAccount()
+  
+  // Filter out current user from the list
+  const otherUsers = allUsers.filter((addr: string) => addr.toLowerCase() !== currentUserAddress?.toLowerCase())
+  
+  // Fetch public verification status for all users
+  const { verifications: userVerifications } = useBulkPublicVerification(otherUsers)
 
   if (isLoadingUsers) {
     return (
@@ -24,9 +32,6 @@ const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
       </div>
     )
   }
-
-  // Filter out current user from the list
-  const otherUsers = allUsers.filter((addr: string) => addr.toLowerCase() !== currentUserAddress?.toLowerCase())
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -63,9 +68,12 @@ const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {getCachedUsername(userAddress)}
-                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {getCachedUsername(userAddress)}
+                    </p>
+                    {userVerifications[userAddress] && <Tier3Badge size="sm" />}
+                  </div>
                   <p className="text-xs text-gray-500 truncate">
                     {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
                   </p>

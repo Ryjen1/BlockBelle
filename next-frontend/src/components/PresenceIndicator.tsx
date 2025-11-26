@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Tier3Badge from '@/components/Tier3Badge';
+import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
 
 interface UserPresence {
   address: string
@@ -21,6 +23,10 @@ export default function PresenceIndicator({
   showDetails = false
 }: PresenceIndicatorProps) {
   const [presenceData, setPresenceData] = useState<UserPresence[]>(users)
+  
+  // Fetch public verification status for all users
+  const userAddresses = users.map(u => u.address)
+  const { verifications: userVerifications } = useBulkPublicVerification(userAddresses)
 
   // Simulate real-time presence updates
   useEffect(() => {
@@ -93,7 +99,10 @@ export default function PresenceIndicator({
               </div>
 
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{user.ensName}</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-medium text-gray-900">{user.ensName}</p>
+                  {userVerifications[user.address] && <Tier3Badge size="sm" />}
+                </div>
                 <p className="text-xs text-green-600">Online now</p>
               </div>
             </div>
@@ -121,7 +130,10 @@ export default function PresenceIndicator({
                 </div>
 
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{user.ensName}</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-sm font-medium text-gray-900">{user.ensName}</p>
+                    {userVerifications[user.address] && <Tier3Badge size="sm" />}
+                  </div>
                   <p className="text-xs text-gray-500">
                     Last seen {formatLastSeen(user.lastSeen)}
                   </p>
