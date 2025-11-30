@@ -19,10 +19,10 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
   if (isLoading) {
     return (
       <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+        <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
         <div className="text-right">
-          <div className="w-20 h-4 bg-gray-200 rounded animate-pulse"></div>
-          <div className="w-16 h-3 bg-gray-200 rounded animate-pulse mt-1"></div>
+          <div className="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+          <div className="w-16 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mt-1"></div>
         </div>
       </div>
     )
@@ -41,16 +41,16 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
           </div>
         )}
         <div className="text-right">
-          <div className={`font-medium ${isRegistered ? 'text-gray-900' : 'text-gray-600'}`}>
+          <div className={`font-medium ${isRegistered ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
             {displayName}
           </div>
           {isRegistered && (
-            <div className="text-xs text-green-600 font-medium">
+            <div className="text-xs text-green-600 dark:text-green-400 font-medium">
               ✓ Verified
             </div>
           )}
           {!isRegistered && (
-            <div className="text-xs text-amber-600">
+            <div className="text-xs text-amber-600 dark:text-amber-400">
               Not registered
             </div>
           )}
@@ -58,7 +58,7 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
       </div>
       <button
         onClick={() => disconnect()}
-        className="text-gray-500 hover:text-gray-700 text-sm underline"
+        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm underline"
         title="Disconnect wallet"
       >
         Disconnect
