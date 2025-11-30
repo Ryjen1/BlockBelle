@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserList from './UserList';
 import { useChat } from '@/hooks/useChat';
 import { useUsernames } from '@/hooks/useUsernames';
 import { useAccount } from 'wagmi';
+import { useNotifications, useAppFocus } from '@/contexts/NotificationContext';
 
 interface NotificationProps {
   message: string
@@ -41,6 +42,8 @@ const ChatInterface: React.FC = () => {
     sendMessage,
     selectUser,
   } = useChat()
+  const { showNewMessageNotification, isEnabled } = useNotifications()
+  const isFocused = useAppFocus()
 
   const [messageInput, setMessageInput] = useState('')
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info'; show: boolean }>({
@@ -48,6 +51,7 @@ const ChatInterface: React.FC = () => {
     type: 'info',
     show: false,
   })
+  const [previousMessageCount, setPreviousMessageCount] = useState(0)
 
   // Component cleanup on unmount
   React.useEffect(() => {
@@ -60,6 +64,31 @@ const ChatInterface: React.FC = () => {
       setMessageInput('')
     }
   }, [])
+
+  // Show notifications for new messages when app is not focused
+  React.useEffect(() => {
+    if (isFocused || !isEnabled || !selectedUser || messages.length === 0) {
+      setPreviousMessageCount(messages.length)
+      return
+    }
+
+    const newMessages = messages.slice(previousMessageCount)
+    const latestMessage = newMessages[newMessages.length - 1]
+    
+    if (latestMessage && latestMessage.sender.toLowerCase() !== address?.toLowerCase()) {
+      const senderName = getCachedUsername(latestMessage.sender)
+      const isGroupChat = false // Assuming private chat for now, will be enhanced later
+      
+      showNewMessageNotification(
+        senderName,
+        latestMessage.content,
+        isGroupChat ? 'group' : 'private',
+        selectedUser
+      )
+    }
+    
+    setPreviousMessageCount(messages.length)
+  }, [messages, isFocused, isEnabled, selectedUser, address, getCachedUsername, showNewMessageNotification, previousMessageCount])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()

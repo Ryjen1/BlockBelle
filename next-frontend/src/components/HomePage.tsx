@@ -1,4 +1,4 @@
-io'use client';
+'use client';
 
 import { useState, useCallback } from 'react';
 import Register from '@/components/Register';
@@ -10,11 +10,12 @@ import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import ThemeToggle from '@/components/ThemeToggle';
+import NotificationSettings from '@/components/NotificationSettings';
 import Image from 'next/image';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<
-    'register' | 'group' | 'private' | 'main' | 'check' | 'account'
+    'register' | 'group' | 'private' | 'main' | 'check' | 'account' | 'notifications'
   >('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
@@ -202,6 +203,16 @@ export default function HomePage() {
             >
               Account
             </button>
+            <button
+              onClick={() => setActiveTab('notifications')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'notifications'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+              }`}
+            >
+              Notifications
+            </button>
           </div>
         </div>
       </nav>
@@ -220,6 +231,7 @@ export default function HomePage() {
           />
         )}
         {activeTab === 'account' && <Account />}
+        {activeTab === 'notifications' && <NotificationSettings />}
       </main>
     </div>
   );

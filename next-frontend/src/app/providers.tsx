@@ -8,6 +8,7 @@ import { celo } from 'wagmi/chains';
 import '@rainbow-me/rainbowkit/styles.css';
 import { type ReactNode, useMemo } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { NotificationProvider } from '@/contexts/NotificationContext';
 
 export function Providers({ children }: { children: ReactNode }) {
   const queryClient = useMemo(
@@ -24,17 +25,19 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ThemeProvider>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider
-            modalSize="compact"
-            initialChain={celo}
-            showRecentTransactions={true}
-          >
-            {children}
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
+      <NotificationProvider>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider
+              modalSize="compact"
+              initialChain={celo}
+              showRecentTransactions={true}
+            >
+              {children}
+            </RainbowKitProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </NotificationProvider>
     </ThemeProvider>
   );
 }
