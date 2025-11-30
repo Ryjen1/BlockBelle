@@ -6,5 +6,4 @@ broadcast/
 cache/
 node_modules/
 dist/
-/lib/
-artifacts
+.gitmodules

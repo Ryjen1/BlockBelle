@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import Register from '@/components/Register';
 import GroupChat from '@/components/GroupChat';
 import PrivateChat from '@/components/PrivateChat';
@@ -11,27 +11,12 @@ import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import Image from 'next/image';
 
-// Onboarding imports
-import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
-import { FeatureHighlights } from '@/components/onboarding/FeatureHighlights';
-import { TutorialOverlay } from '@/components/onboarding/TutorialOverlay';
-import { useOnboardingStore } from '@/lib/store/onboarding-store';
-
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<
     'register' | 'group' | 'private' | 'main' | 'check' | 'account'
   >('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
-
-  // Onboarding state
-  const { currentStep, isCompleted, isVisible } = useOnboardingStore();
-  // Prevent hydration mismatch by only rendering after mount
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleRegistrationSuccess = useCallback(() => {
     _setHasRegistered(true);
@@ -67,24 +52,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Onboarding Flow */}
-      {mounted && !isCompleted && isVisible && (
-        <>
-          {currentStep === 'welcome' && <WelcomeScreen />}
-          {currentStep === 'features' && <FeatureHighlights />}
-          {currentStep === 'tutorial' && <TutorialOverlay />}
-        </>
-      )}
-
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <h1 className="text-3xl font-bold text-gray-900">BlockBelle</h1>
             <div className="flex items-center space-x-4">
-              {/* Wrapped UserProfile to add ID for tutorial */}
-              <div id="wallet-connect-btn">
-                <UserProfile />
-              </div>
+              <UserProfile />
               <SimpleOnboarding
                 onComplete={handleOnboardingComplete}
                 onRegister={handleOnboardingRegister}
@@ -176,7 +149,6 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             <button
-              id="ens-register-btn"
               onClick={() => {
                 console.log('Register tab clicked');
                 setActiveTab('register');
@@ -190,10 +162,11 @@ export default function HomePage() {
             </button>
             <button
               onClick={() => setActiveTab('group')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'group'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'group'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+              }`}
             >
               Group Chat
             </button>
@@ -203,26 +176,31 @@ export default function HomePage() {
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'private'
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
             >
               Private Chat
             </button>
             <button
-              id="chat-nav-item"
               onClick={() => setActiveTab('main')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'main'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'main'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+              }`}
             >
               Chat App
             </button>
             <button
-              id="self-verify-btn"
               onClick={() => setActiveTab('account')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'account'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'account'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+              }`}
             >
               Account
             </button>
