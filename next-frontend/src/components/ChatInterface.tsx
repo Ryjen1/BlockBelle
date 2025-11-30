@@ -15,13 +15,13 @@ interface NotificationProps {
 const Notification: React.FC<NotificationProps> = ({ message, type, show }) => {
   if (!show) return null
 
-  const bgColor = type === 'success' ? 'bg-green-100 border-green-500' :
-                  type === 'error' ? 'bg-red-100 border-red-500' :
-                  'bg-blue-100 border-blue-500'
+  const bgColor = type === 'success' ? 'bg-green-100 dark:bg-green-900/50 border-green-500' :
+                  type === 'error' ? 'bg-red-100 dark:bg-red-900/50 border-red-500' :
+                  'bg-blue-100 dark:bg-blue-900/50 border-blue-500'
 
-  const textColor = type === 'success' ? 'text-green-800' :
-                    type === 'error' ? 'text-red-800' :
-                    'text-blue-800'
+  const textColor = type === 'success' ? 'text-green-800 dark:text-green-200' :
+                    type === 'error' ? 'text-red-800 dark:text-red-200' :
+                    'text-blue-800 dark:text-blue-200'
 
   return (
     <div className={`fixed top-4 right-4 z-50 p-4 rounded-md border-l-4 ${bgColor} ${textColor} shadow-lg max-w-sm`}>
@@ -100,9 +100,9 @@ const ChatInterface: React.FC = () => {
   if (!isConnected || !address) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Connect Your Wallet</h2>
-          <p className="text-gray-600">Please connect your wallet to start chatting.</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/20 p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Connect Your Wallet</h2>
+          <p className="text-gray-600 dark:text-gray-400">Please connect your wallet to start chatting.</p>
         </div>
       </div>
     )
@@ -119,9 +119,9 @@ const ChatInterface: React.FC = () => {
 
         {/* Chat Area */}
         <div className="flex-1 min-w-0">
-          <div className="bg-white rounded-lg shadow-md h-80 lg:h-96 flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/20 h-80 lg:h-96 flex flex-col">
             {/* Chat Header */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
               {selectedUser ? (
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -140,8 +140,8 @@ const ChatInterface: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-center">
-                  <h3 className="font-semibold text-gray-900">Select a user to start chatting</h3>
-                  <p className="text-sm text-gray-500">Choose someone from the list to begin your conversation</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Select a user to start chatting</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Choose someone from the list to begin your conversation</p>
                 </div>
               )}
             </div>
@@ -150,18 +150,18 @@ const ChatInterface: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {isLoadingMessages ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
-                  <span className="ml-2 text-gray-600">Loading messages...</span>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
+                  <span className="ml-2 text-gray-600 dark:text-gray-400">Loading messages...</span>
                 </div>
               ) : messages.length === 0 ? (
                 <div className="text-center py-8">
-                  <div className="text-gray-400 mb-2">
+                  <div className="text-gray-400 dark:text-gray-500 mb-2">
                     <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>
-                  <p className="text-gray-600">No messages yet.</p>
-                  <p className="text-sm text-gray-500">Start the conversation!</p>
+                  <p className="text-gray-600 dark:text-gray-400">No messages yet.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-500">Start the conversation!</p>
                 </div>
               ) : (
                 messages.map((message, index) => {
@@ -170,12 +170,12 @@ const ChatInterface: React.FC = () => {
                     <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                         isOwnMessage
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-gray-200 text-gray-900'
+                          ? 'bg-indigo-600 dark:bg-indigo-700 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                       }`}>
                         <p className="text-sm">{message.content}</p>
                         <p className={`text-xs mt-1 ${
-                          isOwnMessage ? 'text-indigo-200' : 'text-gray-500'
+                          isOwnMessage ? 'text-indigo-200 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400'
                         }`}>
                           {formatTimestamp(message.timestamp)}
                         </p>
@@ -188,7 +188,7 @@ const ChatInterface: React.FC = () => {
 
             {/* Message Input */}
             {selectedUser && (
-              <div className="p-4 border-t border-gray-200">
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                 <form onSubmit={handleSendMessage}>
                   <div className="flex space-x-3">
                     <input
@@ -196,13 +196,13 @@ const ChatInterface: React.FC = () => {
                       value={messageInput}
                       onChange={(e) => setMessageInput(e.target.value)}
                       placeholder="Type your message..."
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
                       disabled={isSending}
                     />
                     <button
                       type="submit"
                       disabled={!messageInput.trim() || isSending}
-                      className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSending ? 'Sending...' : 'Send'}
                     </button>
