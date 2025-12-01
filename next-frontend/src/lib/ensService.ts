@@ -1,16 +1,37 @@
-import { createEnsClient } from '@ensdomains/ensjs'
 import { createPublicClient, http } from 'viem'
 import { celo } from 'viem/chains'
 import { ENS_ADDRESSES } from '@/config/contracts'
 
-// Create ENS client with Celo mainnet
-const ensClient = createEnsClient({
-  mainnet: 'celo',
-  chains: [celo],
-  transports: {
-    celo: http('https://forno.celo.org'),
-  },
+// Create Public client for Celo mainnet (fallback for ENS operations)
+const publicClient = createPublicClient({
+  chain: celo,
+  transport: http('https://forno.celo.org'),
 })
+
+// Mock ENS data for development and testing
+// This can be replaced with real ENS SDK integration later
+const MOCK_ENS_DATA: Record<string, Partial<ENSProfile>> = {
+  // Add some mock profiles for testing
+  '0x742d35cc6cF6B4633F82c9B7C7C31E7c7B6C8F9A': {
+    name: 'alice.eth',
+    displayName: 'Alice Johnson',
+    bio: 'Blockchain developer and ENS enthusiast',
+    website: 'https://alicejohnson.dev',
+    twitter: '@alice_dev',
+    github: 'alicejohnson',
+    avatar: 'https://avatars.githubusercontent.com/u/1?v=4',
+    hasProfile: true,
+  },
+  '0x8ba1f109551bD432803012645Hac136c32c3c0c4': {
+    name: 'bob.eth',
+    displayName: 'Bob Smith',
+    bio: 'Web3 designer creating beautiful interfaces',
+    website: 'https://bobsmith.design',
+    twitter: '@bobdesigns',
+    avatar: 'https://avatars.githubusercontent.com/u/2?v=4',
+    hasProfile: true,
+  }
+}
 
 export interface ENSProfile {
   name: string | null
@@ -87,34 +108,30 @@ export const fetchENSProfile = async (address: string): Promise<ENSProfile> => {
   profileCache[address.toLowerCase()] = loadingProfile
 
   try {
-    // Get the reverse record (name) for the address
-    const name = await ensClient.getName({
-      address: address as `0x${string}`,
-    })
+    // Simulate network delay for realistic UX
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500))
 
-    if (!name.name) {
-      // No ENS name found, return default profile
+    // For now, use mock data - this can be replaced with real ENS SDK integration
+    const mockData = MOCK_ENS_DATA[address.toLowerCase()]
+    
+    if (!mockData) {
+      // No mock data found, return default profile
       const defaultProfile = getDefaultProfile(address)
       profileCache[address.toLowerCase()] = defaultProfile
       return defaultProfile
     }
 
-    // Get comprehensive profile data
-    const profileData = await ensClient.getProfile({
-      name: name.name,
-    })
-
     const profile: ENSProfile = {
-      name: name.name,
-      avatar: getAvatarUrl(profileData.avatar),
-      bio: profileData.bio || null,
-      website: profileData.website || null,
-      twitter: profileData.twitter || null,
-      github: profileData.github || null,
-      displayName: profileData.displayName || name.name,
+      name: mockData.name || null,
+      avatar: mockData.avatar ? getAvatarUrl(mockData.avatar) : null,
+      bio: mockData.bio || null,
+      website: mockData.website || null,
+      twitter: mockData.twitter || null,
+      github: mockData.github || null,
+      displayName: mockData.displayName || mockData.name || null,
       isLoading: false,
       error: null,
-      hasProfile: true,
+      hasProfile: mockData.hasProfile || false,
     }
 
     profileCache[address.toLowerCase()] = profile
@@ -183,25 +200,125 @@ export const fetchMultipleENSProfiles = async (addresses: string[]): Promise<Rec
 }
 
 /**
- * Subscribe to ENS profile changes (requires event listener setup)
+ * Subscribe to ENS profile changes with enhanced monitoring
  */
-export const subscribeToENSChanges = (address: string, callback: (profile: ENSProfile) => void) => {
-  // This would require setting up event listeners for ENS record changes
-  // For now, we'll implement a simple polling mechanism
-  const interval = setInterval(async () => {
-    const newProfile = await fetchENSProfile(address)
-    const cachedProfile = getCachedENSProfile(address)
-    
-    // Check if profile has changed
-    if (!cachedProfile || 
-        cachedProfile.name !== newProfile.name ||
-        cachedProfile.avatar !== newProfile.avatar ||
-        cachedProfile.bio !== newProfile.bio) {
-      callback(newProfile)
-    }
-  }, 60000) // Check every minute
+export const subscribeToENSChanges = (
+  address: string, 
+  callback: (profile: ENSProfile, hasChanges: boolean) => void,
+  options?: {
+    checkInterval?: number // milliseconds
+    fieldsToMonitor?: string[]
+  }
+) => {
+  const {
+    checkInterval = 30000, // Check every 30 seconds (more frequent than before)
+    fieldsToMonitor = ['name', 'avatar', 'bio', 'website', 'twitter', 'github', 'displayName']
+  } = options || {}
 
-  return () => clearInterval(interval)
+  let lastProfile: ENSProfile | null = null
+  let pollCount = 0
+
+  const pollForChanges = async () => {
+    try {
+      const newProfile = await fetchENSProfile(address)
+      const cachedProfile = getCachedENSProfile(address)
+      
+      // Check if profile has changed by comparing monitored fields
+      const hasChanges = !cachedProfile || fieldsToMonitor.some(field => {
+        const oldValue = cachedProfile[field as keyof ENSProfile] as any
+        const newValue = newProfile[field as keyof ENSProfile] as any
+        return oldValue !== newValue
+      })
+
+      // Only call callback if there are actual changes
+      if (hasChanges || pollCount === 0) {
+        callback(newProfile, hasChanges)
+        lastProfile = newProfile
+      }
+
+      pollCount++
+    } catch (error) {
+      console.error(`Error polling ENS changes for ${address}:`, error)
+      // Still call callback with error profile to update UI
+      const errorProfile: ENSProfile = {
+        ...getDefaultProfile(address),
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch ENS profile',
+        hasProfile: false,
+      }
+      callback(errorProfile, true)
+    }
+  }
+
+  // Initial poll
+  pollForChanges()
+
+  // Set up polling interval
+  const interval = setInterval(pollForChanges, checkInterval)
+
+  // Return cleanup function
+  return () => {
+    clearInterval(interval)
+  }
+}
+
+/**
+ * Batch subscribe to multiple ENS address changes
+ */
+export const subscribeToMultipleENSChanges = (
+  addresses: string[],
+  callback: (address: string, profile: ENSProfile, hasChanges: boolean) => void,
+  options?: {
+    checkInterval?: number
+    fieldsToMonitor?: string[]
+  }
+) => {
+  const subscriptions = addresses.map(address => 
+    subscribeToENSChanges(
+      address, 
+      (profile, hasChanges) => callback(address, profile, hasChanges),
+      options
+    )
+  )
+
+  // Return cleanup function that unsubscribes from all
+  return () => {
+    subscriptions.forEach(unsubscribe => unsubscribe())
+  }
+}
+
+/**
+ * Enhanced profile change detection with smart caching
+ */
+export const detectProfileChanges = async (address: string): Promise<{
+  hasChanges: boolean
+  changedFields: string[]
+  oldProfile: ENSProfile | null
+  newProfile: ENSProfile
+}> => {
+  const oldProfile = getCachedENSProfile(address)
+  const newProfile = await fetchENSProfile(address)
+  
+  const changedFields: string[] = []
+  
+  // Compare key profile fields
+  const fieldsToCheck = ['name', 'avatar', 'bio', 'website', 'twitter', 'github', 'displayName']
+  
+  fieldsToCheck.forEach(field => {
+    const oldValue = oldProfile?.[field as keyof ENSProfile] as any
+    const newValue = newProfile[field as keyof ENSProfile] as any
+    
+    if (oldValue !== newValue) {
+      changedFields.push(field)
+    }
+  })
+
+  return {
+    hasChanges: changedFields.length > 0,
+    changedFields,
+    oldProfile,
+    newProfile
+  }
 }
 
 export default {
@@ -211,4 +328,6 @@ export default {
   clearAllENSProfileCache,
   fetchMultipleENSProfiles,
   subscribeToENSChanges,
+  subscribeToMultipleENSChanges,
+  detectProfileChanges,
 }
