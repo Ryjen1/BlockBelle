@@ -22,6 +22,7 @@ import ChatSearch from './ChatSearch';
 import MessageHighlighter from './MessageHighlighter';
 import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
 import { useMessageSearch, type Message as SearchMessage } from '@/hooks/useMessageSearch';
+import MessageBubble from './MessageBubble';
 
 const registryAbi = parseAbi([
   'function getAllUsers() external view returns (address[])',
@@ -490,39 +491,18 @@ export default function MainChat({ onClose }: MainChatProps) {
                 (isSearchActive ? filteredMessages : messages).map((msg, index) => {
                   const isOwnMessage = msg.sender === address;
                   const senderVerified = !isOwnMessage && selectedUserVerified.verifications[msg.sender];
+                  const senderName = userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`;
                   
                   return (
                     <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        isOwnMessage
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-900 shadow-sm'
-                      }`}>
-                        {!isOwnMessage && (
-                          <div className="flex items-center gap-1 mb-1">
-                            <p className="text-xs font-semibold text-gray-700">
-                              {userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`}
-                            </p>
-                            {senderVerified && <Tier3Badge size="sm" />}
-                          </div>
-                        )}
-                        {isSearchActive ? (
-                          <MessageHighlighter 
-                            message={msg as any} 
-                            searchTerm={searchFilters.content}
-                          />
-                        ) : (
-                          <p>{msg.content}</p>
-                        )}
-                        <div className={`text-xs mt-1 ${
-                          isOwnMessage ? 'text-blue-100' : 'text-gray-500'
-                        }`}>
-                          {formatTime(msg.timestamp)}
-                          {isOwnMessage && (
-                            <CheckCircleIcon className="h-3 w-3 inline ml-1" />
-                          )}
-                        </div>
-                      </div>
+                      <MessageBubble
+                        content={isSearchActive ? getHighlightedContent(msg as any, searchFilters.content || '') || msg.content : msg.content}
+                        isOwnMessage={isOwnMessage}
+                        senderName={senderName}
+                        timestamp={msg.timestamp}
+                        showSender={!isOwnMessage}
+                        className={senderVerified ? 'border-l-4 border-green-400' : ''}
+                      />
                     </div>
                   );
                 })
