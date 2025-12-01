@@ -9,11 +9,13 @@ import UserProfile from '@/components/UserProfile';
 import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
+import ThemeToggle from '@/components/ThemeToggle';
+import NotificationSettings from '@/components/NotificationSettings';
 import Image from 'next/image';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<
-    'register' | 'group' | 'private' | 'main' | 'check' | 'account'
+    'register' | 'group' | 'private' | 'main' | 'check' | 'account' | 'notifications'
   >('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
@@ -51,12 +53,13 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+      <header className="bg-white dark:bg-gray-800 shadow-lg dark:shadow-gray-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">BlockBelle</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">BlockBelle</h1>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               <UserProfile />
               <SimpleOnboarding
                 onComplete={handleOnboardingComplete}
@@ -97,9 +100,9 @@ export default function HomePage() {
                 View Demo
               </button>
             </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-xl">
-              <h2 className="text-lg font-bold mb-2">Built for Web3 Women</h2>
-              <p className="text-sm mb-3">
+            <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md rounded-xl p-4 border border-white/20 dark:border-gray-700/50 shadow-xl">
+              <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">Built for Web3 Women</h2>
+              <p className="text-sm mb-3 text-gray-800 dark:text-gray-200">
                 Connect with verified ENS identities, create private groups, and
                 build meaningful relationships in the web3 space.
               </p>
@@ -145,7 +148,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <nav className="bg-white shadow">
+      <nav className="bg-white dark:bg-gray-800 shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             <button
@@ -153,11 +156,10 @@ export default function HomePage() {
                 console.log('Register tab clicked');
                 setActiveTab('register');
               }}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'register'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'register'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+                }`}
             >
               Register
             </button>
@@ -165,8 +167,8 @@ export default function HomePage() {
               onClick={() => setActiveTab('group')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'group'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               Group Chat
@@ -175,8 +177,8 @@ export default function HomePage() {
               onClick={() => setActiveTab('private')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'private'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               Private Chat
@@ -185,8 +187,8 @@ export default function HomePage() {
               onClick={() => setActiveTab('main')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'main'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               Chat App
@@ -195,11 +197,21 @@ export default function HomePage() {
               onClick={() => setActiveTab('account')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'account'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               Account
+            </button>
+            <button
+              onClick={() => setActiveTab('notifications')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'notifications'
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+              }`}
+            >
+              Notifications
             </button>
           </div>
         </div>
@@ -219,6 +231,7 @@ export default function HomePage() {
           />
         )}
         {activeTab === 'account' && <Account />}
+        {activeTab === 'notifications' && <NotificationSettings />}
       </main>
     </div>
   );
