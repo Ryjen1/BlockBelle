@@ -8,8 +8,11 @@ import { useAccount } from 'wagmi';
 import ENSProfile from '@/components/ENSProfile';
 import { useENSDisplayInfo } from '@/hooks/useENSProfile';
 import Tier3Badge from '@/components/Tier3Badge';
+import ChatSearch from './ChatSearch';
+import MessageHighlighter from './MessageHighlighter';
 import { usePublicVerification } from '@/hooks/usePublicVerification';
 import { useNotifications, useAppFocus } from '@/contexts/NotificationContext';
+import { useMessageSearch } from '@/hooks/useMessageSearch';
 
 interface NotificationProps {
   message: string
@@ -48,6 +51,16 @@ const ChatInterface: React.FC = () => {
   } = useChat()
   const { showNewMessageNotification, isEnabled } = useNotifications()
   const isFocused = useAppFocus()
+  
+  // Message search functionality
+  const {
+    filteredMessages,
+    searchFilters,
+    isSearchActive,
+    searchStats,
+    updateFilters,
+    clearFilters,
+  } = useMessageSearch(messages)
   
   // Get ENS profile info for the selected user
   const { displayInfo: selectedUserDisplayInfo } = useENSDisplayInfo(selectedUser)
@@ -233,6 +246,16 @@ const ChatInterface: React.FC = () => {
               )}
             </div>
 
+            {/* Chat Search */}
+            {selectedUser && (
+              <ChatSearch
+                onSearchChange={updateFilters}
+                onClearSearch={clearFilters}
+                isSearchActive={isSearchActive}
+                searchStats={searchStats}
+              />
+            )}
+
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {isLoadingMessages ? (
@@ -240,7 +263,7 @@ const ChatInterface: React.FC = () => {
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
                   <span className="ml-2 text-gray-600 dark:text-gray-400">Loading messages...</span>
                 </div>
-              ) : messages.length === 0 ? (
+              ) : (isSearchActive ? filteredMessages : messages).length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-gray-400 dark:text-gray-500 mb-2">
                     <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -251,7 +274,7 @@ const ChatInterface: React.FC = () => {
                   <p className="text-sm text-gray-500 dark:text-gray-500">Start the conversation!</p>
                 </div>
               ) : (
-                messages.map((message, index) => {
+                (isSearchActive ? filteredMessages : messages).map((message, index) => {
                   const isOwnMessage = message.sender.toLowerCase() === address.toLowerCase()
                   const messageSenderDisplayInfo = useENSDisplayInfo(message.sender)
                   
@@ -275,7 +298,14 @@ const ChatInterface: React.FC = () => {
                             {messageSenderDisplayInfo.displayInfo.isVerified && <Tier3Badge size="sm" />}
                           </div>
                         )}
-                        <p className="text-sm">{message.content}</p>
+                        {isSearchActive ? (
+                          <MessageHighlighter 
+                            message={message as any} 
+                            searchTerm={searchFilters.content}
+                          />
+                        ) : (
+                          <p className="text-sm">{message.content}</p>
+                        )}
                         <p className={`text-xs mt-1 ${
                           isOwnMessage ? 'text-indigo-200 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400'
                         }`}>
