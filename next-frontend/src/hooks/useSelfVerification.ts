@@ -25,6 +25,37 @@ export function useSelfVerification() {
       return;
     }
 
+<<<<<<< HEAD
+    // Fetch verification data from backend API (not localStorage)
+    const fetchVerificationData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/self/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.verified) {
+            setVerificationData({
+              selfVerified: true,
+              selfDid: data.selfDid,
+              verifiedAt: data.verifiedAt,
+              nationality: data.nationality,
+              gender: data.gender,
+              minimumAge: data.minimumAge,
+            });
+          } else {
+            setVerificationData({ selfVerified: false });
+          }
+        } else {
+          setVerificationData({ selfVerified: false });
+        }
+      } catch (error) {
+        console.error('Error fetching verification data:', error);
+=======
     try {
       const response = await fetch('/api/self/status', {
         method: 'POST',
@@ -47,6 +78,7 @@ export function useSelfVerification() {
           setVerificationData({ selfVerified: false });
         }
       } else {
+>>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
         setVerificationData({ selfVerified: false });
       }
     } catch (error) {
@@ -57,6 +89,41 @@ export function useSelfVerification() {
     }
   };
 
+<<<<<<< HEAD
+    fetchVerificationData();
+  }, [address]);
+
+  // Refresh verification status (call after successful verification)
+  const refreshVerification = async () => {
+    if (!address) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/self/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.verified) {
+          setVerificationData({
+            selfVerified: true,
+            selfDid: data.selfDid,
+            verifiedAt: data.verifiedAt,
+            nationality: data.nationality,
+            gender: data.gender,
+            minimumAge: data.minimumAge,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing verification data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+=======
   useEffect(() => {
     fetchVerificationStatus();
   }, [address]);
@@ -69,13 +136,18 @@ export function useSelfVerification() {
   const clearVerification = () => {
     // Clear on client side (backend would need a delete endpoint to truly clear)
     setVerificationData({ selfVerified: false });
+>>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
   };
 
   return {
     verificationData,
     isLoading,
+<<<<<<< HEAD
+    refreshVerification,
+=======
     saveVerification,
     clearVerification,
     refreshVerification: fetchVerificationStatus,
+>>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
   };
 }

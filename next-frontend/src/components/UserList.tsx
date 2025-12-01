@@ -3,6 +3,10 @@
 import React from 'react';
 import { useUsernames } from '@/hooks/useUsernames';
 import { useAccount } from 'wagmi';
+import Tier3Badge from '@/components/Tier3Badge';
+import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
+import ENSProfile from '@/components/ENSProfile';
+import { useENSProfiles } from '@/hooks/useENSProfile';
 
 interface UserListProps {
   onUserSelect?: (address: string) => void
@@ -12,6 +16,15 @@ interface UserListProps {
 const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
   const { allUsers, isLoadingUsers, getCachedUsername } = useUsernames()
   const { address: currentUserAddress } = useAccount()
+  
+  // Filter out current user from the list
+  const otherUsers = allUsers.filter((addr: string) => addr.toLowerCase() !== currentUserAddress?.toLowerCase())
+  
+  // Fetch public verification status for all users
+  const { verifications: userVerifications } = useBulkPublicVerification(otherUsers)
+  
+  // Fetch ENS profiles for all users
+  const { profiles: ensProfiles, loadingStates: ensLoadingStates } = useENSProfiles(otherUsers)
 
   if (isLoadingUsers) {
     return (
@@ -24,9 +37,6 @@ const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
       </div>
     )
   }
-
-  // Filter out current user from the list
-  const otherUsers = allUsers.filter((addr: string) => addr.toLowerCase() !== currentUserAddress?.toLowerCase())
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/20 p-6">
@@ -44,46 +54,117 @@ const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
         </div>
       ) : (
         <div className="space-y-2 max-h-96 overflow-y-auto">
-          {otherUsers.map((userAddress: string) => (
-            <div
-              key={userAddress}
-              onClick={() => onUserSelect?.(userAddress)}
-              className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-                selectedUser === userAddress
-                  ? 'bg-indigo-100 dark:bg-indigo-900/50 border-2 border-indigo-300 dark:border-indigo-600'
-                  : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border-2 border-transparent'
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">
-                      {getCachedUsername(userAddress).charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {getCachedUsername(userAddress)}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
-                  </p>
-                </div>
-                {selectedUser === userAddress && (
+          {otherUsers.map((userAddress: string) => {
+            const isVerified = userVerifications[userAddress] || false
+            const ensProfile = ensProfiles[userAddress.toLowerCase()]
+            const isLoadingENS = ensLoadingStates[userAddress.toLowerCase()] || false
+            
+            return (
+              <div
+                key={userAddress}
+                onClick={() => onUserSelect?.(userAddress)}
+                className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                  selectedUser === userAddress
+                    ? 'bg-indigo-100 dark:bg-indigo-900/50 border-2 border-indigo-300 dark:border-indigo-600'
+                    : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border-2 border-transparent'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
-                    <div className="w-2 h-2 bg-indigo-600 dark:bg-indigo-400 rounded-full"></div>
+                    <ENSProfile
+                      address={userAddress}
+                      size="md"
+                      className=""
+                      showBadge={false}
+                      showFullProfile={false}
+                      fallbackToAddress={true}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                        {ensProfile?.displayName || ensProfile?.name || getCachedUsername(userAddress)}
+                      </p>
+                      {isVerified && <Tier3Badge size="sm" />}
+                      {ensProfile?.hasProfile && (
+                        <div className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200">
+                          ENS
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        {ensProfile?.bio || `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`}
+                      </p>
+                      {isLoadingENS && (
+                        <div className="animate-spin rounded-full h-3 w-3 border-b border-indigo-600 dark:border-indigo-400"></div>
+                      )}
+                    </div>
+                  </div>
+                  {selectedUser === userAddress && (
+                    <div className="flex-shrink-0">
+                      <div className="w-2 h-2 bg-indigo-600 dark:bg-indigo-400 rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Show additional ENS profile info on hover */}
+                {ensProfile?.hasProfile && (
+                  <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600 opacity-0 hover:opacity-100 transition-opacity duration-200">
+                    <div className="flex gap-2 text-xs">
+                      {ensProfile.website && (
+                        <a
+                          href={ensProfile.website.startsWith('http') ? ensProfile.website : `https://${ensProfile.website}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Website
+                        </a>
+                      )}
+                      {ensProfile.twitter && (
+                        <a
+                          href={`https://twitter.com/${ensProfile.twitter.replace('@', '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 dark:text-blue-300 hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Twitter
+                        </a>
+                      )}
+                      {ensProfile.github && (
+                        <a
+                          href={`https://github.com/${ensProfile.github}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-700 dark:text-gray-300 hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          GitHub
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
         <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
           Total users: {otherUsers.length}
+          {otherUsers.length > 0 && (
+            <div className="mt-1">
+              <span className="text-green-600 dark:text-green-400">
+                {Object.values(ensProfiles).filter(p => p?.hasProfile).length}
+              </span>
+              <span className="text-gray-500 dark:text-gray-400"> with ENS profiles</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

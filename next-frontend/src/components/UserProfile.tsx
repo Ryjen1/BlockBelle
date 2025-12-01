@@ -2,6 +2,8 @@
 
 import { useAccount, useDisconnect } from 'wagmi';
 import { useRegistration } from '@/hooks/useRegistration';
+import { usePublicVerification } from '@/hooks/usePublicVerification';
+import Tier3Badge from '@/components/Tier3Badge';
 
 interface UserProfileProps {
   showFullAddress?: boolean
@@ -11,6 +13,7 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { isRegistered, ensName, isLoading } = useRegistration()
+  const { isVerified } = usePublicVerification(address)
 
   if (!isConnected || !address) {
     return null // Let SimpleOnboarding handle the connect button
@@ -41,11 +44,20 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
           </div>
         )}
         <div className="text-right">
+<<<<<<< HEAD
+          <div className={`font-medium ${isRegistered ? 'text-gray-900' : 'text-gray-600'} flex items-center gap-1.5 justify-end`}>
+=======
           <div className={`font-medium ${isRegistered ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
+>>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
             {displayName}
+            {isVerified && <Tier3Badge size="sm" />}
           </div>
           {isRegistered && (
+<<<<<<< HEAD
+            <div className="text-xs text-blockbelle-pink font-medium">
+=======
             <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+>>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
               ✓ Verified
             </div>
           )}
