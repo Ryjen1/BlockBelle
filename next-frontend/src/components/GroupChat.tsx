@@ -5,6 +5,9 @@ import { useWriteContract, useReadContract, useWatchContractEvent, usePublicClie
 import { parseAbi } from 'viem';
 import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
+import ChatSearch from './ChatSearch';
+import MessageHighlighter from './MessageHighlighter';
+import { useMessageSearch } from '@/hooks/useMessageSearch';
 
 const chatAbi = parseAbi([
   'function createGroup(string _name) external returns (uint256)',
@@ -33,6 +36,16 @@ export default function GroupChat() {
    const [newGroupName, setNewGroupName] = useState('')
    const [newMember, setNewMember] = useState('')
    const [userNames, setUserNames] = useState<Record<string, string>>({})
+
+   // Message search functionality
+   const {
+     filteredMessages,
+     searchFilters,
+     isSearchActive,
+     searchStats,
+     updateFilters,
+     clearFilters,
+   } = useMessageSearch(messages)
 
    const { writeContract } = useWriteContract()
    const publicClient = usePublicClient()
@@ -166,6 +179,15 @@ export default function GroupChat() {
             <div className="md:col-span-2">
               {selectedGroup && (
                 <>
+                  {/* Chat Search */}
+                  <ChatSearch
+                    onSearchChange={updateFilters}
+                    onClearSearch={clearFilters}
+                    isSearchActive={isSearchActive}
+                    searchStats={searchStats}
+                    className="mb-4"
+                  />
+
                   <div className="mb-4">
                     <input
                       type="text"
@@ -183,14 +205,22 @@ export default function GroupChat() {
                   </div>
 
                   <div className="border rounded p-4 h-64 overflow-y-auto mb-4">
-                    {messages.length === 0 ? (
+                    {(isSearchActive ? filteredMessages : messages).length === 0 ? (
                       <div className="text-center text-gray-500 py-8">
-                        <p>No messages yet. Start the conversation!</p>
+                        <p>{isSearchActive ? 'No messages match your search criteria.' : 'No messages yet. Start the conversation!'}</p>
                       </div>
                     ) : (
-                      messages.map((msg, index) => (
+                      (isSearchActive ? filteredMessages : messages).map((msg, index) => (
                         <div key={index} className="mb-2">
-                          <span className="font-semibold">{userNames[msg.sender] || msg.sender.slice(0, 6) + '...' + msg.sender.slice(-4)}:</span> {msg.content}
+                          <span className="font-semibold">{userNames[msg.sender] || msg.sender.slice(0, 6) + '...' + msg.sender.slice(-4)}:</span>{' '}
+                          {isSearchActive ? (
+                            <MessageHighlighter 
+                              message={msg as any} 
+                              searchTerm={searchFilters.content}
+                            />
+                          ) : (
+                            msg.content
+                          )}
                         </div>
                       ))
                     )}
