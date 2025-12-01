@@ -10,6 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ensdomains/ensjs": "^3.0.0",
+    "@ensdomains/ens-contracts": "^0.0.22",
     "@heroicons/react": "^2.2.0",
     "@rainbow-me/rainbowkit": "^2.2.9",
     "@selfxyz/core": "^1.1.0-beta.7",
