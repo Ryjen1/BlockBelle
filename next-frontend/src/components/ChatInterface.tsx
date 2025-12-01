@@ -13,6 +13,7 @@ import MessageHighlighter from './MessageHighlighter';
 import { usePublicVerification } from '@/hooks/usePublicVerification';
 import { useNotifications, useAppFocus } from '@/contexts/NotificationContext';
 import { useMessageSearch } from '@/hooks/useMessageSearch';
+import MessageBubble from './MessageBubble';
 
 interface NotificationProps {
   message: string
@@ -277,41 +278,22 @@ const ChatInterface: React.FC = () => {
                 (isSearchActive ? filteredMessages : messages).map((message, index) => {
                   const isOwnMessage = message.sender.toLowerCase() === address.toLowerCase()
                   const messageSenderDisplayInfo = useENSDisplayInfo(message.sender)
+                  const senderName = messageSenderDisplayInfo.displayInfo.displayName || `${message.sender.slice(0, 6)}...${message.sender.slice(-4)}`;
                   
                   return (
                     <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        isOwnMessage
-                          ? 'bg-indigo-600 dark:bg-indigo-700 text-white'
-                          : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                      }`}>
-                        {!isOwnMessage && (selectedUserVerified || messageSenderDisplayInfo.displayInfo.hasProfile) && (
-                          <div className="flex items-center gap-1 mb-1">
-                            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                              {messageSenderDisplayInfo.displayInfo.displayName}
-                            </p>
-                            {messageSenderDisplayInfo.displayInfo.hasProfile && (
-                              <div className="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200">
-                                ENS
-                              </div>
-                            )}
-                            {messageSenderDisplayInfo.displayInfo.isVerified && <Tier3Badge size="sm" />}
-                          </div>
-                        )}
-                        {isSearchActive ? (
-                          <MessageHighlighter 
-                            message={message as any} 
-                            searchTerm={searchFilters.content}
-                          />
-                        ) : (
-                          <p className="text-sm">{message.content}</p>
-                        )}
-                        <p className={`text-xs mt-1 ${
-                          isOwnMessage ? 'text-indigo-200 dark:text-indigo-300' : 'text-gray-500 dark:text-gray-400'
-                        }`}>
-                          {formatTimestamp(message.timestamp)}
-                        </p>
-                      </div>
+                      <MessageBubble
+                        content={isSearchActive ? (searchFilters.content ? message.content.replace(new RegExp(searchFilters.content, 'gi'), `<mark>${searchFilters.content}</mark>`) : message.content) : message.content}
+                        isOwnMessage={isOwnMessage}
+                        senderName={senderName}
+                        timestamp={message.timestamp}
+                        showSender={!isOwnMessage && (selectedUserVerified || messageSenderDisplayInfo.displayInfo.hasProfile)}
+                        className={`${
+                          isOwnMessage 
+                            ? 'bg-indigo-600 dark:bg-indigo-700 text-white' 
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                        } ${messageSenderDisplayInfo.displayInfo.isVerified ? 'border-l-4 border-green-400' : ''}`}
+                      />
                     </div>
                   )
                 })
