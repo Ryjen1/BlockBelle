@@ -1,10 +1,24 @@
-AllIds,
-  new DefaultConfigStore({
-    minimumAge: 18,
-    excludedCountries: ['CUB', 'IRN', 'PRK', 'RUS'], // Cuba, Iran, North Korea, Russia
-    ofac: false,
-  }),
-  'hex'
+import { NextRequest, NextResponse } from 'next/server';
+import { SelfBackendVerifier, DefaultConfigStore, AllIds } from '@selfxyz/core';
+import { saveVerification, initDatabase } from '@/lib/db';
+
+// Initialize Self Backend Verifier
+const getSelfVerifier = () => {
+  const scope = process.env.SELF_SCOPE || 'blockbelle-chat';
+  const endpoint = process.env.NEXT_PUBLIC_SELF_VERIFY_URL || `${process.env.NEXT_PUBLIC_BASE_URL}/api/self/verify`;
+  const useMockPassport = process.env.SELF_USE_MOCK_PASSPORT === 'true';
+
+  return new SelfBackendVerifier(
+    scope,
+    endpoint,
+    useMockPassport,
+    AllIds,
+    new DefaultConfigStore({
+      minimumAge: 18,
+      excludedCountries: ['CUB', 'IRN', 'PRK', 'RUS'], // Cuba, Iran, North Korea, Russia
+      ofac: false,
+    }),
+    'hex'
   );
 };
 
