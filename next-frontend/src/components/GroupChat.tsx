@@ -204,25 +204,50 @@ export default function GroupChat() {
                     </button>
                   </div>
 
-                  <div className="border rounded p-4 h-64 overflow-y-auto mb-4">
+                  <div className="border rounded p-4 h-64 overflow-y-auto mb-4 bg-gray-50">
                     {(isSearchActive ? filteredMessages : messages).length === 0 ? (
                       <div className="text-center text-gray-500 py-8">
                         <p>{isSearchActive ? 'No messages match your search criteria.' : 'No messages yet. Start the conversation!'}</p>
                       </div>
                     ) : (
-                      (isSearchActive ? filteredMessages : messages).map((msg, index) => (
-                        <div key={index} className="mb-2">
-                          <span className="font-semibold">{userNames[msg.sender] || msg.sender.slice(0, 6) + '...' + msg.sender.slice(-4)}:</span>{' '}
-                          {isSearchActive ? (
-                            <MessageHighlighter 
-                              message={msg as any} 
-                              searchTerm={searchFilters.content}
-                            />
-                          ) : (
-                            msg.content
-                          )}
-                        </div>
-                      ))
+                      (isSearchActive ? filteredMessages : messages).map((msg, index) => {
+                        const isOwnMessage = msg.sender === address
+                        return (
+                          <div key={index} className={`flex mb-3 ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`max-w-xs sm:max-w-sm md:max-w-md px-4 py-2 rounded-lg shadow-sm break-words ${
+                              isOwnMessage
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-white text-gray-900 border border-gray-200'
+                            }`}>
+                              {!isOwnMessage && (
+                                <div className="flex items-center gap-1 mb-1">
+                                  <p className="text-xs font-semibold text-gray-700">
+                                    {userNames[msg.sender] || msg.sender.slice(0, 6) + '...' + msg.sender.slice(-4)}
+                                  </p>
+                                </div>
+                              )}
+                              <div className="text-sm leading-relaxed">
+                                {isSearchActive ? (
+                                  <MessageHighlighter 
+                                    message={msg as any} 
+                                    searchTerm={searchFilters.content}
+                                  />
+                                ) : (
+                                  <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+                                )}
+                              </div>
+                              <div className={`text-xs mt-1 ${
+                                isOwnMessage ? 'text-blue-100' : 'text-gray-500'
+                              }`}>
+                                {new Date(Number(msg.timestamp) * 1000).toLocaleTimeString([], {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })
                     )}
                   </div>
 
