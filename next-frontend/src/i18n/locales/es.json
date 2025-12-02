@@ -1,0 +1,85 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "settings": "Configuración",
+    "language": "Idioma",
+    "theme": "Tema"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "chat": "Chat",
+    "groups": "Grupos",
+    "profile": "Perfil",
+    "notifications": "Notificaciones",
+    "account": "Cuenta"
+  },
+  "homepage": {
+    "welcome": "Bienvenido a BlockBelle",
+    "subtitle": "Tu plataforma de comunicación descentralizada",
+    "getStarted": "Comenzar",
+    "learnMore": "Saber Más"
+  },
+  "notifications": {
+    "title": "Configuración de Notificaciones",
+    "enableDesktop": "Habilitar Notificaciones de Escritorio",
+    "enableSound": "Habilitar Notificaciones de Sonido",
+    "enablePush": "Habilitar Notificaciones Push",
+    "muteAll": "Silenciar Todo",
+    "clearAll": "Limpiar Todo"
+  },
+  "chat": {
+    "placeholder": "Escribe tu mensaje...",
+    "send": "Enviar",
+    "attach": "Adjuntar",
+    "online": "En línea",
+    "offline": "Sin conexión",
+    "typing": "Escribiendo...",
+    "newMessage": "Nuevo mensaje",
+    "noMessages": "Aún no hay mensajes",
+    "startConversation": "Inicia una conversación"
+  },
+  "account": {
+    "title": "Configuración de Cuenta",
+    "profile": "Perfil",
+    "security": "Seguridad",
+    "privacy": "Privacidad",
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "wallet": "Cartera",
+    "disconnect": "Desconectar",
+    "verifyIdentity": "Verificar Identidad"
+  },
+  "registration": {
+    "title": "Registro",
+    "createAccount": "Crear Cuenta",
+    "connectWallet": "Conectar Cartera",
+    "verifyIdentity": "Verificar Identidad",
+    "completeProfile": "Completar Perfil",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "signIn": "Iniciar Sesión"
+  },
+  "errors": {
+    "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "network": "Error de red. Por favor, verifica tu conexión.",
+    "validation": "Por favor, verifica tu entrada e inténtalo de nuevo.",
+    "unauthorized": "No estás autorizado para realizar esta acción.",
+    "notFound": "El recurso solicitado no fue encontrado.",
+    "serverError": "Error del servidor. Por favor, inténtalo de nuevo más tarde."
+  }
+}

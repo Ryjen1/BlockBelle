@@ -1,0 +1,85 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "settings": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème"
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "chat": "Chat",
+    "groups": "Groupes",
+    "profile": "Profil",
+    "notifications": "Notifications",
+    "account": "Compte"
+  },
+  "homepage": {
+    "welcome": "Bienvenue sur BlockBelle",
+    "subtitle": "Votre plateforme de communication décentralisée",
+    "getStarted": "Commencer",
+    "learnMore": "En Savoir Plus"
+  },
+  "notifications": {
+    "title": "Paramètres de Notification",
+    "enableDesktop": "Activer les Notifications Bureau",
+    "enableSound": "Activer les Notifications Sonores",
+    "enablePush": "Activer les Notifications Push",
+    "muteAll": "Tout Mutest",
+    "clearAll": "Tout Effacer"
+  },
+  "chat": {
+    "placeholder": "Tapez votre message...",
+    "send": "Envoyer",
+    "attach": "Joindre",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "typing": "En train de taper...",
+    "newMessage": "Nouveau message",
+    "noMessages": "Pas encore de messages",
+    "startConversation": "Commencer une conversation"
+  },
+  "account": {
+    "title": "Paramètres du Compte",
+    "profile": "Profil",
+    "security": "Sécurité",
+    "privacy": "Confidentialité",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "wallet": "Portefeuille",
+    "disconnect": "Se déconnecter",
+    "verifyIdentity": "Vérifier l'Identité"
+  },
+  "registration": {
+    "title": "Inscription",
+    "createAccount": "Créer un Compte",
+    "connectWallet": "Connecter le Portefeuille",
+    "verifyIdentity": "Vérifier l'Identité",
+    "completeProfile": "Compléter le Profil",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signIn": "Se Connecter"
+  },
+  "errors": {
+    "generic": "Quelque chose s'est mal passé. Veuillez réessayer.",
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "validation": "Veuillez vérifier votre saisie et réessayer.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+    "notFound": "La ressource demandée n'a pas été trouvée.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard."
+  }
+}

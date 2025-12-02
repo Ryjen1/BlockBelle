@@ -1,0 +1,85 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "navigation": {
+    "home": "Home",
+    "chat": "Chat",
+    "groups": "Groups",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "account": "Account"
+  },
+  "homepage": {
+    "welcome": "Welcome to BlockBelle",
+    "subtitle": "Your decentralized communication platform",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  },
+  "notifications": {
+    "title": "Notification Settings",
+    "enableDesktop": "Enable Desktop Notifications",
+    "enableSound": "Enable Sound Notifications",
+    "enablePush": "Enable Push Notifications",
+    "muteAll": "Mute All",
+    "clearAll": "Clear All"
+  },
+  "chat": {
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "attach": "Attach",
+    "online": "Online",
+    "offline": "Offline",
+    "typing": "Typing...",
+    "newMessage": "New message",
+    "noMessages": "No messages yet",
+    "startConversation": "Start a conversation"
+  },
+  "account": {
+    "title": "Account Settings",
+    "profile": "Profile",
+    "security": "Security",
+    "privacy": "Privacy",
+    "username": "Username",
+    "email": "Email",
+    "wallet": "Wallet",
+    "disconnect": "Disconnect",
+    "verifyIdentity": "Verify Identity"
+  },
+  "registration": {
+    "title": "Registration",
+    "createAccount": "Create Account",
+    "connectWallet": "Connect Wallet",
+    "verifyIdentity": "Verify Identity",
+    "completeProfile": "Complete Profile",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "validation": "Please check your input and try again.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "serverError": "Server error. Please try again later."
+  }
+}
