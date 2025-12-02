@@ -110,7 +110,8 @@ const ChatInterface: React.FC = () => {
         senderName,
         latestMessage.content,
         isGroupChat ? 'group' : 'private',
-        selectedUser
+        selectedUser,
+        latestMessage.sender
       )
     }
     
