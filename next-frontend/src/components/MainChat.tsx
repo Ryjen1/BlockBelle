@@ -18,7 +18,11 @@ import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { getUserDetailsFromContract } from '@/utils/contractReads';
 import Tier3Badge from '@/components/Tier3Badge';
+import ChatSearch from './ChatSearch';
+import MessageHighlighter from './MessageHighlighter';
 import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
+import { useMessageSearch, type Message as SearchMessage } from '@/hooks/useMessageSearch';
+import MessageBubble from './MessageBubble';
 
 const registryAbi = parseAbi([
   'function getAllUsers() external view returns (address[])',
@@ -30,7 +34,7 @@ const chatAbi = parseAbi([
   'function getConversation(address user1, address user2) external view returns ((address sender, address receiver, string content, uint256 timestamp)[])',
 ])
 
-interface Message {
+interface ChatMessage {
   sender: string
   content: string
   timestamp: bigint
@@ -57,7 +61,7 @@ export default function MainChat({ onClose }: MainChatProps) {
     const { address } = useAccount()
     const { writeContract } = useWriteContract()
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
-    const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<ChatMessage[]>([])
     const [newMessage, setNewMessage] = useState('')
     const [chats, setChats] = useState<Chat[]>([])
     const [showMembersList, setShowMembersList] = useState(false)
@@ -65,9 +69,20 @@ export default function MainChat({ onClose }: MainChatProps) {
     const [userNames, setUserNames] = useState<Map<string, string>>(new Map())
     const [isLoadingMessages, setIsLoadingMessages] = useState(false)
 
+    // Message search functionality
+    const {
+        filteredMessages,
+        searchFilters,
+        isSearchActive,
+        searchStats,
+        updateFilters,
+        clearFilters,
+        getHighlightedContent
+    } = useMessageSearch(messages)
+
     // Get verification status for selected chat user
     const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
-    const { isVerified: selectedUserVerified } = useBulkPublicVerification(
+    const selectedUserVerified = useBulkPublicVerification(
       recipientAddress ? [recipientAddress] : []
     )
 
@@ -171,7 +186,7 @@ export default function MainChat({ onClose }: MainChatProps) {
     // Update messages when conversation data changes
     useEffect(() => {
       if (conversation) {
-        const formattedMessages: Message[] = conversation.map((msg: any) => ({
+        const formattedMessages: ChatMessage[] = conversation.map((msg: any) => ({
           sender: msg.sender,
           content: msg.content,
           timestamp: BigInt(msg.timestamp),
@@ -195,7 +210,7 @@ export default function MainChat({ onClose }: MainChatProps) {
           if ((to === address && selectedChat?.id === `private_${from}`) ||
               (from === address && selectedChat?.id === `private_${to}`)) {
 
-            const newMessage: Message = {
+            const newMessage: ChatMessage = {
               sender: from,
               content: message,
               timestamp: BigInt(timestamp),
@@ -240,7 +255,7 @@ export default function MainChat({ onClose }: MainChatProps) {
        })
 
        // Add message to local state for immediate UI feedback
-       const message: Message = {
+       const message: ChatMessage = {
          sender: address!,
          content: newMessage,
          timestamp: BigInt(Date.now()),
@@ -435,7 +450,7 @@ export default function MainChat({ onClose }: MainChatProps) {
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h2 className="font-semibold text-gray-900">{selectedChat.name}</h2>
-                    {selectedUserVerified.verifications[recipientAddress || ''] && <Tier3Badge size="sm" />}
+                    {recipientAddress && selectedUserVerified.verifications[recipientAddress] && <Tier3Badge size="sm" />}
                   </div>
                   <p className="text-sm text-gray-500">
                     {selectedChat.isOnline ? 'Online' : 'Offline'}
@@ -456,6 +471,14 @@ export default function MainChat({ onClose }: MainChatProps) {
               </div>
             </div>
 
+            {/* Chat Search */}
+            <ChatSearch
+              onSearchChange={updateFilters}
+              onClearSearch={clearFilters}
+              isSearchActive={isSearchActive}
+              searchStats={searchStats}
+            />
+
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
               {messages.length === 0 ? (
@@ -465,35 +488,21 @@ export default function MainChat({ onClose }: MainChatProps) {
                   <p className="text-gray-400 text-sm">Start the conversation!</p>
                 </div>
               ) : (
-                messages.map((msg, index) => {
+                (isSearchActive ? filteredMessages : messages).map((msg, index) => {
                   const isOwnMessage = msg.sender === address;
                   const senderVerified = !isOwnMessage && selectedUserVerified.verifications[msg.sender];
+                  const senderName = userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`;
                   
                   return (
                     <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        isOwnMessage
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-900 shadow-sm'
-                      }`}>
-                        {!isOwnMessage && (
-                          <div className="flex items-center gap-1 mb-1">
-                            <p className="text-xs font-semibold text-gray-700">
-                              {userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`}
-                            </p>
-                            {senderVerified && <Tier3Badge size="sm" />}
-                          </div>
-                        )}
-                        <p>{msg.content}</p>
-                        <div className={`text-xs mt-1 ${
-                          isOwnMessage ? 'text-blue-100' : 'text-gray-500'
-                        }`}>
-                          {formatTime(msg.timestamp)}
-                          {isOwnMessage && (
-                            <CheckCircleIcon className="h-3 w-3 inline ml-1" />
-                          )}
-                        </div>
-                      </div>
+                      <MessageBubble
+                        content={isSearchActive ? getHighlightedContent(msg as any, searchFilters.content || '') || msg.content : msg.content}
+                        isOwnMessage={isOwnMessage}
+                        senderName={senderName}
+                        timestamp={msg.timestamp}
+                        showSender={!isOwnMessage}
+                        className={senderVerified ? 'border-l-4 border-green-400' : ''}
+                      />
                     </div>
                   );
                 })

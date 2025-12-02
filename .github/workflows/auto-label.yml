@@ -1,0 +1,164 @@
+name: Auto Label Issues and PRs
+
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened, edited, synchronize]
+  label:
+    types: [created, deleted]
+
+jobs:
+  label_issues:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' || github.event.action == 'edited'
+    
+    steps:
+    - name: Label enhancement issues
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const issue = context.payload.issue || context.payload.pull_request;
+          const title = issue.title.toLowerCase();
+          const body = (issue.body || '').toLowerCase();
+          const content = `${title} ${body}`;
+          
+          const labels = [];
+          
+          // Frontend labels
+          if (content.match(/\b(ui|ux|frontend|react|nextjs|component|interface|design|css|tailwind)\b/)) {
+            labels.push('frontend');
+          }
+          
+          // Backend labels
+          if (content.match(/\b(api|backend|server|database|postgres|neon)\b/)) {
+            labels.push('backend');
+          }
+          
+          // Smart contract labels
+          if (content.match(/\b(solidity|contract|smart|blockchain|foundry|whispr)\b/)) {
+            labels.push('smart-contracts');
+          }
+          
+          // Documentation labels
+          if (content.match(/\b(doc|readme|guide|tutorial|documentation)\b/)) {
+            labels.push('documentation');
+          }
+          
+          // Testing labels
+          if (content.match(/\b(test|testing|unit|integration|e2e|coverage)\b/)) {
+            labels.push('testing');
+          }
+          
+          // Bug labels
+          if (content.match(/\b(bug|error|fix|broken|issue|problem)\b/)) {
+            labels.push('bug');
+          }
+          
+          // Enhancement labels
+          if (content.match(/\b(feature|enhancement|improve|add|implement|support)\b/)) {
+            labels.push('enhancement');
+          }
+          
+          // Help wanted labels
+          const hasHelpWantedKeywords = content.match(/\b(help|welcome|contribution|community)\b/);
+          const isEnhancement = labels.includes('enhancement') || labels.includes('documentation') || labels.includes('testing');
+          const isBug = labels.includes('bug');
+          
+          if (hasHelpWantedKeywords || (isEnhancement && !isBug)) {
+            labels.push('help wanted');
+          }
+          
+          // Good first issue labels
+          const hasGoodFirstKeywords = content.match(/\b(simple|easy|beginner|starter|quick)\b/);
+          const isShortContent = content.length < 500;
+          const isDocOnly = labels.includes('documentation') && !labels.includes('smart-contracts') && !labels.includes('backend');
+          
+          if ((hasGoodFirstKeywords || isDocOnly) && isShortContent && !content.match(/\b(complex|advanced|security)\b/)) {
+            labels.push('good first issue');
+          }
+          
+          // Apply labels if any were identified
+          if (labels.length > 0) {
+            try {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labels
+              });
+              console.log(`Applied labels to ${issue.html_url}: ${labels.join(', ')}`);
+            } catch (error) {
+              console.log(`Error applying labels: ${error.message}`);
+            }
+          }
+  
+  welcome_new_contributors:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened'
+    
+    steps:
+    - name: Welcome new contributors
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const issue = context.payload.issue || context.payload.pull_request;
+          const isPR = !!context.payload.pull_request;
+          const url = issue.html_url;
+          
+          if (context.actor !== context.repo.owner) {
+            const welcomeMessage = isPR 
+              ? `🎉 Thanks for your contribution to BlockBelle! We'll review your pull request shortly.`
+              : `👋 Welcome to BlockBelle! Thanks for your interest in helping improve this project.`;
+            
+            const helpMessage = `📝 Looking for ways to help? Check out our ["help wanted" issues](${context.payload.repository.html_url}/labels/help%20wanted) and [good first issues](${context.payload.repository.html_url}/labels/good%20first%20issue)!`;
+            
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `${welcomeMessage}\n\n${helpMessage}\n\n💡 Don't forget to check out our [contribution guide](${context.payload.repository.html_url}/blob/main/docs/help-wanted-labels-guide.md) for more details!`
+              });
+            } catch (error) {
+              console.log(`Error creating welcome comment: ${error.message}`);
+            }
+          }
+  
+  weekly_label_review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: Review and suggest labels for old issues
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+          
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            since: oneWeekAgo,
+            per_page: 100
+          });
+          
+          for (const issue of issues) {
+            const hasHelpWanted = issue.labels.some(label => label.name === 'help wanted');
+            const hasGoodFirst = issue.labels.some(label => label.name === 'good first issue');
+            const hasEnhancement = issue.labels.some(label => label.name === 'enhancement');
+            
+            // Suggest help wanted for unlabelled enhancements
+            if (!hasHelpWanted && hasEnhancement) {
+              console.log(`Suggesting 'help wanted' label for issue: ${issue.title}`);
+              
+              // Add a comment suggesting the label
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `💡 This issue looks like it could benefit from community help! Consider adding the \`help wanted\` label to attract contributors.`
+              });
+            }
+          }
