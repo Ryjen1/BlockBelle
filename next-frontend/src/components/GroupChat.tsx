@@ -8,6 +8,8 @@ import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import ChatSearch from './ChatSearch';
 import MessageHighlighter from './MessageHighlighter';
 import { useMessageSearch } from '@/hooks/useMessageSearch';
+import { useMute } from '@/hooks/useMute';
+import MuteButton from '@/components/MuteButton';
 
 const chatAbi = parseAbi([
   'function createGroup(string _name) external returns (uint256)',
@@ -36,6 +38,9 @@ export default function GroupChat() {
    const [newGroupName, setNewGroupName] = useState('')
    const [newMember, setNewMember] = useState('')
    const [userNames, setUserNames] = useState<Record<string, string>>({})
+   
+   // Mute functionality
+   const { isGroupMuted } = useMute()
 
    // Message search functionality
    const {
@@ -179,6 +184,27 @@ export default function GroupChat() {
             <div className="md:col-span-2">
               {selectedGroup && (
                 <>
+                  {/* Group Header */}
+                  <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Group {selectedGroup}</h3>
+                        <p className="text-sm text-gray-500">Active group chat</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <MuteButton
+                          targetGroupId={selectedGroup.toString()}
+                          muteType="group"
+                          variant="icon"
+                          size="md"
+                          onMuteChange={() => {
+                            // Refresh will happen automatically via the hook
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Chat Search */}
                   <ChatSearch
                     onSearchChange={updateFilters}
