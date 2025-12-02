@@ -41,7 +41,8 @@
     "enableSound": "Enable Sound Notifications",
     "enablePush": "Enable Push Notifications",
     "muteAll": "Mute All",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "language": "Language"
   },
   "chat": {
     "placeholder": "Type your message...",

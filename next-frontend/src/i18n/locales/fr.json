@@ -41,7 +41,8 @@
     "enableSound": "Activer les Notifications Sonores",
     "enablePush": "Activer les Notifications Push",
     "muteAll": "Tout Mutest",
-    "clearAll": "Tout Effacer"
+    "clearAll": "Tout Effacer",
+    "language": "Langue"
   },
   "chat": {
     "placeholder": "Tapez votre message...",

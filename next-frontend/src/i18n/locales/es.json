@@ -41,7 +41,8 @@
     "enableSound": "Habilitar Notificaciones de Sonido",
     "enablePush": "Habilitar Notificaciones Push",
     "muteAll": "Silenciar Todo",
-    "clearAll": "Limpiar Todo"
+    "clearAll": "Limpiar Todo",
+    "language": "Idioma"
   },
   "chat": {
     "placeholder": "Escribe tu mensaje...",
