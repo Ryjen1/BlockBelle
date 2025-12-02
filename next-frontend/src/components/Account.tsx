@@ -28,10 +28,10 @@ export default function Account() {
       version: 2,
       appName: process.env.NEXT_PUBLIC_SELF_APP_NAME || 'BlockBelle',
       scope: process.env.NEXT_PUBLIC_SELF_SCOPE || 'blockbelle-chat',
-      endpoint: process.env.NEXT_PUBLIC_SELF_ENDPOINT || `${window.location.origin}/api/self/verify`,
+      endpoint: '0x802116977C25b9C4987A07Ab516C4724f36F3043', // Deployed ProofOfHuman contract
       logoBase64: 'https://i.postimg.cc/mrmVf9hm/self.png',
       userId: address,
-      endpointType: (process.env.NEXT_PUBLIC_SELF_ENDPOINT_TYPE as any) || 'staging_https',
+      endpointType: 'celo', // Celo Mainnet
       userIdType: 'hex',
       userDefinedData: `BlockBelle verification for ${ensName || address}`,
       disclosures: {
@@ -58,7 +58,7 @@ export default function Account() {
 
       // Refresh verification status from backend API
       await refreshVerification();
-      
+
       // Close QR code modal if verification successful
       if (verificationData.selfVerified) {
         setShowQRCode(false);
