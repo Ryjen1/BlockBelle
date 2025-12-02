@@ -1,13 +1,12 @@
 'use client';
 
-import { useLocale } from 'next-intl';
-import { routing, useRouter } from '@/i18n/routing';
 import { useState } from 'react';
 
 export default function LanguageToggle() {
-  const locale = useLocale();
-  const router = useRouter();
+  // const locale = useLocale(); // TODO: Enable when next-intl is installed
+  // const router = useRouter(); // TODO: Enable when next-intl is installed
   const [isOpen, setIsOpen] = useState(false);
+  const locale = 'en'; // Default for now
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -18,8 +17,8 @@ export default function LanguageToggle() {
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
 
   const handleLanguageChange = (newLocale: string) => {
-    // Update the URL with the new locale
-    router.replace({ pathname: window.location.pathname }, { locale: newLocale });
+    // TODO: Implement language switching when next-intl is installed
+    console.log('Switch to language:', newLocale);
     setIsOpen(false);
   };
 

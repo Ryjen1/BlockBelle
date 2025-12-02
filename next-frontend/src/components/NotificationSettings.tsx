@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react';
 import { useNotifications } from '@/contexts/NotificationContext';
-import { useTranslations } from 'next-intl';
 import LanguageToggle from './LanguageToggle';
 
 export default function NotificationSettings() {
-  const t = useTranslations('notifications');
+  // const t = useTranslations('notifications'); // TODO: Enable when next-intl is installed
   const {
     permission,
     isSupported,
@@ -222,12 +221,12 @@ export default function NotificationSettings() {
             {/* Language Settings */}
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                {t('language')}
+                Language
               </h4>
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {t('language')}
+                    Language
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Select your preferred language
