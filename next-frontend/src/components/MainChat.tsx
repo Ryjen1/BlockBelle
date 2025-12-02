@@ -14,11 +14,18 @@ import {
   EllipsisVerticalIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline'
+import { useMute } from '@/hooks/useMute';
+import MuteButton from '@/components/MuteButton';
+import MutedList from '@/components/MutedList';
 import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { getUserDetailsFromContract } from '@/utils/contractReads';
 import Tier3Badge from '@/components/Tier3Badge';
+import ChatSearch from './ChatSearch';
+import MessageHighlighter from './MessageHighlighter';
 import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
+import { useMessageSearch, type Message as SearchMessage } from '@/hooks/useMessageSearch';
+import MessageBubble from './MessageBubble';
 
 const registryAbi = parseAbi([
   'function getAllUsers() external view returns (address[])',
@@ -30,7 +37,7 @@ const chatAbi = parseAbi([
   'function getConversation(address user1, address user2) external view returns ((address sender, address receiver, string content, uint256 timestamp)[])',
 ])
 
-interface Message {
+interface ChatMessage {
   sender: string
   content: string
   timestamp: bigint
@@ -56,14 +63,27 @@ interface MainChatProps {
 export default function MainChat({ onClose }: MainChatProps) {
     const { address } = useAccount()
     const { writeContract } = useWriteContract()
+    const { isUserMuted, isGroupMuted } = useMute()
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
-    const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<ChatMessage[]>([])
     const [newMessage, setNewMessage] = useState('')
     const [chats, setChats] = useState<Chat[]>([])
     const [showMembersList, setShowMembersList] = useState(false)
+    const [showMutedList, setShowMutedList] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [userNames, setUserNames] = useState<Map<string, string>>(new Map())
     const [isLoadingMessages, setIsLoadingMessages] = useState(false)
+
+    // Message search functionality
+    const {
+        filteredMessages,
+        searchFilters,
+        isSearchActive,
+        searchStats,
+        updateFilters,
+        clearFilters,
+        getHighlightedContent
+    } = useMessageSearch(messages)
 
     // Get verification status for selected chat user
     const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
@@ -171,7 +191,7 @@ export default function MainChat({ onClose }: MainChatProps) {
     // Update messages when conversation data changes
     useEffect(() => {
       if (conversation) {
-        const formattedMessages: Message[] = conversation.map((msg: any) => ({
+        const formattedMessages: ChatMessage[] = conversation.map((msg: any) => ({
           sender: msg.sender,
           content: msg.content,
           timestamp: BigInt(msg.timestamp),
@@ -195,7 +215,7 @@ export default function MainChat({ onClose }: MainChatProps) {
           if ((to === address && selectedChat?.id === `private_${from}`) ||
               (from === address && selectedChat?.id === `private_${to}`)) {
 
-            const newMessage: Message = {
+            const newMessage: ChatMessage = {
               sender: from,
               content: message,
               timestamp: BigInt(timestamp),
@@ -240,7 +260,7 @@ export default function MainChat({ onClose }: MainChatProps) {
        })
 
        // Add message to local state for immediate UI feedback
-       const message: Message = {
+       const message: ChatMessage = {
          sender: address!,
          content: newMessage,
          timestamp: BigInt(Date.now()),
@@ -333,6 +353,15 @@ export default function MainChat({ onClose }: MainChatProps) {
               >
                 <UserIcon className="h-5 w-5" />
               </button>
+              <button
+                onClick={() => setShowMutedList(!showMutedList)}
+                className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full"
+                title="View Muted"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M5.636 15.536a5 5 0 010-7.072m-2.828 9.9a9 9 0 010-14.142" />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -415,6 +444,13 @@ export default function MainChat({ onClose }: MainChatProps) {
         </div>
       )}
 
+      {/* Muted List Sidebar */}
+      {showMutedList && (
+        <div className="w-80 bg-white border-r border-gray-200">
+          <MutedList onClose={() => setShowMutedList(false)} />
+        </div>
+      )}
+
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {selectedChat ? (
@@ -450,11 +486,36 @@ export default function MainChat({ onClose }: MainChatProps) {
                 <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full">
                   <VideoCameraIcon className="h-5 w-5" />
                 </button>
+                {selectedChat && (
+                  <MuteButton
+                    targetUserAddress={selectedChat.type === 'private' ? selectedChat.id.replace('private_', '') : undefined}
+                    targetGroupId={selectedChat.type === 'group' ? selectedChat.id : undefined}
+                    muteType={selectedChat.type === 'private' ? 'user' : 'group'}
+                    variant="icon"
+                    size="md"
+                    onMuteChange={() => {
+                      // Refresh chat state if needed
+                      setChats(prev => prev.map(chat => 
+                        chat.id === selectedChat.id 
+                          ? { ...chat, lastMessage: chat.lastMessage, lastMessageTime: chat.lastMessageTime }
+                          : chat
+                      ))
+                    }}
+                  />
+                )}
                 <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full">
                   <EllipsisVerticalIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
+
+            {/* Chat Search */}
+            <ChatSearch
+              onSearchChange={updateFilters}
+              onClearSearch={clearFilters}
+              isSearchActive={isSearchActive}
+              searchStats={searchStats}
+            />
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
@@ -468,32 +529,18 @@ export default function MainChat({ onClose }: MainChatProps) {
                 messages.map((msg, index) => {
                     const isOwnMessage = msg.sender === address;
                     const senderVerified = !isOwnMessage && userVerifications[msg.sender];
+                    const senderName = userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`;
                   
                   return (
                     <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        isOwnMessage
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white text-gray-900 shadow-sm'
-                      }`}>
-                        {!isOwnMessage && (
-                          <div className="flex items-center gap-1 mb-1">
-                            <p className="text-xs font-semibold text-gray-700">
-                              {userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`}
-                            </p>
-                            {senderVerified && <Tier3Badge size="sm" />}
-                          </div>
-                        )}
-                        <p>{msg.content}</p>
-                        <div className={`text-xs mt-1 ${
-                          isOwnMessage ? 'text-blue-100' : 'text-gray-500'
-                        }`}>
-                          {formatTime(msg.timestamp)}
-                          {isOwnMessage && (
-                            <CheckCircleIcon className="h-3 w-3 inline ml-1" />
-                          )}
-                        </div>
-                      </div>
+                      <MessageBubble
+                        content={isSearchActive ? getHighlightedContent(msg as any, searchFilters.content || '') || msg.content : msg.content}
+                        isOwnMessage={isOwnMessage}
+                        senderName={senderName}
+                        timestamp={msg.timestamp}
+                        showSender={!isOwnMessage}
+                        className={senderVerified ? 'border-l-4 border-green-400' : ''}
+                      />
                     </div>
                   );
                 })

@@ -67,9 +67,21 @@ export function useSelfVerification() {
     await fetchVerificationStatus();
   };
 
+  const saveVerification = async (data: Omit<SelfVerificationData, 'selfVerified'>) => {
+    // Verification is already saved by backend, just refresh from server
+    await fetchVerificationStatus();
+  };
+
+  const clearVerification = () => {
+    // Clear on client side (backend would need a delete endpoint to truly clear)
+    setVerificationData({ selfVerified: false });
+  };
+
   return {
     verificationData,
     isLoading,
+    saveVerification,
+    clearVerification,
     refreshVerification,
   };
 }
