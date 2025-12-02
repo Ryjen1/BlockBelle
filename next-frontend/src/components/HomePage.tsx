@@ -10,10 +10,12 @@ import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageToggle from '@/components/LanguageToggle';
 import NotificationSettings from '@/components/NotificationSettings';
 import Image from 'next/image';
 
 export default function HomePage() {
+  // const t = useTranslations(); // TODO: Enable when next-intl is installed
   const [activeTab, setActiveTab] = useState<
     'register' | 'group' | 'private' | 'main' | 'check' | 'account' | 'notifications'
   >('register');
@@ -60,6 +62,7 @@ export default function HomePage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">BlockBelle</h1>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
+              <LanguageToggle />
               <UserProfile />
               <SimpleOnboarding
                 onComplete={handleOnboardingComplete}
