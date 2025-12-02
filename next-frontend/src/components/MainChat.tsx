@@ -82,7 +82,7 @@ export default function MainChat({ onClose }: MainChatProps) {
 
     // Get verification status for selected chat user
     const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
-    const selectedUserVerified = useBulkPublicVerification(
+    const { verifications: userVerifications } = useBulkPublicVerification(
       recipientAddress ? [recipientAddress] : []
     )
 
@@ -450,7 +450,7 @@ export default function MainChat({ onClose }: MainChatProps) {
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h2 className="font-semibold text-gray-900">{selectedChat.name}</h2>
-                    {recipientAddress && selectedUserVerified.verifications[recipientAddress] && <Tier3Badge size="sm" />}
+                    {recipientAddress && userVerifications[recipientAddress] && <Tier3Badge size="sm" />}
                   </div>
                   <p className="text-sm text-gray-500">
                     {selectedChat.isOnline ? 'Online' : 'Offline'}
@@ -488,10 +488,10 @@ export default function MainChat({ onClose }: MainChatProps) {
                   <p className="text-gray-400 text-sm">Start the conversation!</p>
                 </div>
               ) : (
-                (isSearchActive ? filteredMessages : messages).map((msg, index) => {
-                  const isOwnMessage = msg.sender === address;
-                  const senderVerified = !isOwnMessage && selectedUserVerified.verifications[msg.sender];
-                  const senderName = userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`;
+                messages.map((msg, index) => {
+                    const isOwnMessage = msg.sender === address;
+                    const senderVerified = !isOwnMessage && userVerifications[msg.sender];
+                    const senderName = userNames.get(msg.sender) || `${msg.sender.slice(0, 6)}...${msg.sender.slice(-4)}`;
                   
                   return (
                     <div key={index} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
