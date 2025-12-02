@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { notificationService, NotificationSettings } from '@/lib/notificationService';
+import { useMute } from '@/hooks/useMute';
 
 interface NotificationContextType {
   // Permission state
@@ -19,13 +20,15 @@ interface NotificationContextType {
     senderName: string,
     message: string,
     chatType: 'group' | 'private',
-    chatId?: string
+    chatId?: string,
+    senderAddress?: string
   ) => Promise<Notification | null>;
   showMentionNotification: (
     senderName: string,
     message: string,
     chatType: 'group' | 'private',
-    chatId?: string
+    chatId?: string,
+    senderAddress?: string
   ) => Promise<Notification | null>;
   clearAllNotifications: () => void;
   testNotification: () => Promise<Notification | null>;
@@ -43,6 +46,9 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     privateChatEnabled: true,
     mentionOnly: false,
   });
+  
+  // Get mute functionality
+  const { isUserMuted, isGroupMuted } = useMute();
 
   // Initialize notification service
   useEffect(() => {
@@ -91,10 +97,20 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     senderName: string,
     message: string,
     chatType: 'group' | 'private',
-    chatId?: string
+    chatId?: string,
+    senderAddress?: string
   ): Promise<Notification | null> => {
     if (permission !== 'granted' || !settings.enabled) {
       return null;
+    }
+
+    // Check if sender/group is muted
+    if (senderAddress && isUserMuted(senderAddress)) {
+      return null; // Don't show notification for muted users
+    }
+    
+    if (chatId && chatType === 'group' && isGroupMuted(chatId)) {
+      return null; // Don't show notification for muted groups
     }
 
     const notification = await notificationService.showNewMessageNotification(
@@ -116,10 +132,20 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     senderName: string,
     message: string,
     chatType: 'group' | 'private',
-    chatId?: string
+    chatId?: string,
+    senderAddress?: string
   ): Promise<Notification | null> => {
     if (permission !== 'granted' || !settings.enabled) {
       return null;
+    }
+
+    // Check if sender/group is muted (mentions bypass mute for now, but this can be changed)
+    if (senderAddress && isUserMuted(senderAddress) && !settings.mentionOnly) {
+      return null; // Don't show notification for muted users unless mention-only mode
+    }
+    
+    if (chatId && chatType === 'group' && isGroupMuted(chatId) && !settings.mentionOnly) {
+      return null; // Don't show notification for muted groups unless mention-only mode
     }
 
     const notification = await notificationService.showMentionNotification(
