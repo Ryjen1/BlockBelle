@@ -7,7 +7,12 @@
     "dev": "next dev",
     "build": "next build && node scripts/fix-vercel-build.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "e2e:install": "playwright install --with-deps",
+    "e2e:show-report": "playwright show-report"
   },
   "dependencies": {
     "@ensdomains/ensjs": "^3.0.0",
@@ -32,6 +37,7 @@
     "wagmi": "^2.19.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
     "@types/node": "^24.10.1",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
