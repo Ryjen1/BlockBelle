@@ -10,10 +10,13 @@ import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageToggle from '@/components/LanguageToggle';
 import NotificationSettings from '@/components/NotificationSettings';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export default function HomePage() {
+  const t = useTranslations();
   const [activeTab, setActiveTab] = useState<
     'register' | 'group' | 'private' | 'main' | 'check' | 'account' | 'notifications'
   >('register');
@@ -60,6 +63,7 @@ export default function HomePage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">BlockBelle</h1>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
+              <LanguageToggle />
               <UserProfile />
               <SimpleOnboarding
                 onComplete={handleOnboardingComplete}
@@ -161,7 +165,7 @@ export default function HomePage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                 }`}
             >
-              Register
+              {t('registration')}
             </button>
             <button
               onClick={() => setActiveTab('group')}
@@ -171,7 +175,7 @@ export default function HomePage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              Group Chat
+              {t('navigation.groups')}
             </button>
             <button
               onClick={() => setActiveTab('private')}
@@ -181,7 +185,7 @@ export default function HomePage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              Private Chat
+              {t('navigation.chat')}
             </button>
             <button
               onClick={() => setActiveTab('main')}
@@ -191,7 +195,7 @@ export default function HomePage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              Chat App
+              {t('navigation.chat')}
             </button>
             <button
               onClick={() => setActiveTab('account')}
@@ -201,7 +205,7 @@ export default function HomePage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              Account
+              {t('navigation.account')}
             </button>
             <button
               onClick={() => setActiveTab('notifications')}
@@ -211,7 +215,7 @@ export default function HomePage() {
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              Notifications
+              {t('navigation.notifications')}
             </button>
           </div>
         </div>
