@@ -5,7 +5,7 @@ import { saveVerification, initDatabase } from '@/lib/db';
 // Initialize Self Backend Verifier
 const getSelfVerifier = () => {
   const scope = process.env.SELF_SCOPE || 'blockbelle-chat';
-  const endpoint = process.env.SELF_ENDPOINT || `${process.env.NEXT_PUBLIC_BASE_URL}/api/self/verify`;
+  const endpoint = process.env.NEXT_PUBLIC_SELF_VERIFY_URL || `${process.env.NEXT_PUBLIC_BASE_URL}/api/self/verify`;
   const useMockPassport = process.env.SELF_USE_MOCK_PASSPORT === 'true';
 
   return new SelfBackendVerifier(
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   try {
     // Initialize database on first request (idempotent)
     await initDatabase();
-    
+
     const body = await request.json();
     const { attestationId, proof, publicSignals, userContextData } = body;
 
