@@ -9,8 +9,8 @@
  * - Experience appropriate UI limitations
  */
 
-import { test, expect } from '../fixtures/chat-fixtures'
-import { MOCK_USERS } from '../fixtures/chat-fixtures'
+import { test, expect } from '../../fixtures/chat-fixtures'
+import { MOCK_USERS } from '../../fixtures/chat-fixtures'
 
 test.describe('Non-Verified User Chat Flows', () => {
   let unverifiedUser: typeof MOCK_USERS[2]

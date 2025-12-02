@@ -9,8 +9,8 @@
  * - Group permissions and access control
  */
 
-import { test, expect } from '../fixtures/chat-fixtures'
-import { MOCK_USERS } from '../fixtures/chat-fixtures'
+import { test, expect } from '../../fixtures/chat-fixtures'
+import { MOCK_USERS } from '../../fixtures/chat-fixtures'
 
 test.describe('Group Chat Functionality', () => {
   test.beforeEach(async ({ page, mockWalletConnection, setupMockContract }) => {

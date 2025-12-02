@@ -8,8 +8,8 @@
  * - Message ordering and timestamp verification
  */
 
-import { test, expect } from '../fixtures/chat-fixtures'
-import { MOCK_USERS, MOCK_MESSAGES } from '../fixtures/chat-fixtures'
+import { test, expect } from '../../fixtures/chat-fixtures'
+import { MOCK_USERS, MOCK_MESSAGES } from '../../fixtures/chat-fixtures'
 
 test.describe('Message Delivery Scenarios', () => {
   test.beforeEach(async ({ page, mockWalletConnection, setupMockContract }) => {

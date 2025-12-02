@@ -9,8 +9,8 @@
  * - Access all chat features
  */
 
-import { test, expect } from '../fixtures/chat-fixtures'
-import { MOCK_USERS } from '../fixtures/chat-fixtures'
+import { test, expect } from '../../fixtures/chat-fixtures'
+import { MOCK_USERS } from '../../fixtures/chat-fixtures'
 
 test.describe('ENS-Verified User Chat Flows', () => {
   let verifiedUser: typeof MOCK_USERS[0]

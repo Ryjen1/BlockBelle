@@ -9,8 +9,8 @@
  * - Rate limiting and abuse prevention
  */
 
-import { test, expect } from '../fixtures/chat-fixtures'
-import { MOCK_USERS } from '../fixtures/chat-fixtures'
+import { test, expect } from '../../fixtures/chat-fixtures'
+import { MOCK_USERS } from '../../fixtures/chat-fixtures'
 
 test.describe('Chat Route Security Protections', () => {
   test.beforeEach(async ({ page, mockWalletConnection, setupMockContract }) => {
