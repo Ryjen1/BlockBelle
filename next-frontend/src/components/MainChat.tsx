@@ -14,6 +14,9 @@ import {
   EllipsisVerticalIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline'
+import { useMute } from '@/hooks/useMute';
+import MuteButton from '@/components/MuteButton';
+import MutedList from '@/components/MutedList';
 import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { getUserDetailsFromContract } from '@/utils/contractReads';
@@ -60,11 +63,13 @@ interface MainChatProps {
 export default function MainChat({ onClose }: MainChatProps) {
     const { address } = useAccount()
     const { writeContract } = useWriteContract()
+    const { isUserMuted, isGroupMuted } = useMute()
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
     const [messages, setMessages] = useState<ChatMessage[]>([])
     const [newMessage, setNewMessage] = useState('')
     const [chats, setChats] = useState<Chat[]>([])
     const [showMembersList, setShowMembersList] = useState(false)
+    const [showMutedList, setShowMutedList] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [userNames, setUserNames] = useState<Map<string, string>>(new Map())
     const [isLoadingMessages, setIsLoadingMessages] = useState(false)
@@ -348,6 +353,15 @@ export default function MainChat({ onClose }: MainChatProps) {
               >
                 <UserIcon className="h-5 w-5" />
               </button>
+              <button
+                onClick={() => setShowMutedList(!showMutedList)}
+                className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full"
+                title="View Muted"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M5.636 15.536a5 5 0 010-7.072m-2.828 9.9a9 9 0 010-14.142" />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -430,6 +444,13 @@ export default function MainChat({ onClose }: MainChatProps) {
         </div>
       )}
 
+      {/* Muted List Sidebar */}
+      {showMutedList && (
+        <div className="w-80 bg-white border-r border-gray-200">
+          <MutedList onClose={() => setShowMutedList(false)} />
+        </div>
+      )}
+
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {selectedChat ? (
@@ -465,6 +486,23 @@ export default function MainChat({ onClose }: MainChatProps) {
                 <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full">
                   <VideoCameraIcon className="h-5 w-5" />
                 </button>
+                {selectedChat && (
+                  <MuteButton
+                    targetUserAddress={selectedChat.type === 'private' ? selectedChat.id.replace('private_', '') : undefined}
+                    targetGroupId={selectedChat.type === 'group' ? selectedChat.id : undefined}
+                    muteType={selectedChat.type === 'private' ? 'user' : 'group'}
+                    variant="icon"
+                    size="md"
+                    onMuteChange={() => {
+                      // Refresh chat state if needed
+                      setChats(prev => prev.map(chat => 
+                        chat.id === selectedChat.id 
+                          ? { ...chat, lastMessage: chat.lastMessage, lastMessageTime: chat.lastMessageTime }
+                          : chat
+                      ))
+                    }}
+                  />
+                )}
                 <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full">
                   <EllipsisVerticalIcon className="h-5 w-5" />
                 </button>
