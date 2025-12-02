@@ -1,0 +1,7 @@
+{
+    "name": "contracts",
+    "version": "1.0.0",
+    "dependencies": {
+        "@selfxyz/contracts": "^1.2.0"
+    }
+}
