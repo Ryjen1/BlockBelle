@@ -28,10 +28,10 @@ export default function Account() {
       version: 2,
       appName: process.env.NEXT_PUBLIC_SELF_APP_NAME || 'BlockBelle',
       scope: process.env.NEXT_PUBLIC_SELF_SCOPE || 'blockbelle-chat',
-      endpoint: process.env.NEXT_PUBLIC_SELF_ENDPOINT || `${window.location.origin}/api/self/verify`,
+      endpoint: '0x72493afca2789da494dd3695d74b50de7774336a', // ProofOfHuman contract
       logoBase64: 'https://i.postimg.cc/mrmVf9hm/self.png',
       userId: address,
-      endpointType: (process.env.NEXT_PUBLIC_SELF_ENDPOINT_TYPE as any) || 'staging_https',
+      endpointType: 'celo', // Celo Mainnet
       userIdType: 'hex',
       userDefinedData: `BlockBelle verification for ${ensName || address}`,
       disclosures: {
@@ -53,18 +53,13 @@ export default function Account() {
   const handleSuccessfulVerification = async () => {
     setIsVerifying(true);
     try {
-      // Wait a bit for the backend to process the verification
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Wait for blockchain confirmation
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-      // Refresh verification status from backend API
-      await refreshVerification();
-      
-      // Close QR code modal if verification successful
-      if (verificationData.selfVerified) {
-        setShowQRCode(false);
-      }
+      // Verification status will auto-update via blockchain polling
+      setShowQRCode(false);
     } catch (error) {
-      console.error('Error fetching verification status:', error);
+      console.error('Error during verification:', error);
     } finally {
       setIsVerifying(false);
     }
