@@ -28,7 +28,7 @@ export default function Account() {
       version: 2,
       appName: process.env.NEXT_PUBLIC_SELF_APP_NAME || 'BlockBelle',
       scope: process.env.NEXT_PUBLIC_SELF_SCOPE || 'blockbelle-chat',
-      endpoint: '0x72493afca2789da494dd3695d74b50de7774336a', // ProofOfHuman contract
+      endpoint: process.env.NEXT_PUBLIC_SELF_ENDPOINT || '0x72493afca2789da494dd3695d74b50de7774336a', // ProofOfHuman contract
       logoBase64: 'https://i.postimg.cc/mrmVf9hm/self.png',
       userId: address,
       endpointType: 'celo', // Celo Mainnet

@@ -21,6 +21,9 @@ contract ProofOfHuman is SelfVerificationRoot {
     
     // Mapping to store verification status for all users
     mapping(address => bool) public isVerified;
+    
+    // Mapping to store verification timestamps
+    mapping(address => uint256) public verificationTimestamp;
 
     // Verification config storage
     SelfStructs.VerificationConfigV2 public verificationConfig;
@@ -70,6 +73,7 @@ contract ProofOfHuman is SelfVerificationRoot {
         
         // Mark user as verified in mapping
         isVerified[userAddress] = true;
+        verificationTimestamp[userAddress] = block.timestamp;
 
         emit VerificationCompleted(output, userData);
     }
