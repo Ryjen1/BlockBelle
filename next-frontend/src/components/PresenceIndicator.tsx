@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Tier3Badge from '@/components/Tier3Badge';
-import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
+import { useBulkSelfVerification } from '@/hooks/useBulkSelfVerification';
 
 interface UserPresence {
   address: string
@@ -24,9 +24,9 @@ export default function PresenceIndicator({
 }: PresenceIndicatorProps) {
   const [presenceData, setPresenceData] = useState<UserPresence[]>(users)
   
-  // Fetch public verification status for all users
+  // Fetch on-chain verification status for all users
   const userAddresses = users.map(u => u.address)
-  const { verifications: userVerifications } = useBulkPublicVerification(userAddresses)
+  const { verifications: userVerifications } = useBulkSelfVerification(userAddresses)
 
   // Simulate real-time presence updates
   useEffect(() => {

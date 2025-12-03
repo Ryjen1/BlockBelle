@@ -6,7 +6,7 @@ import { useChat } from '@/hooks/useChat';
 import { useUsernames } from '@/hooks/useUsernames';
 import { useAccount } from 'wagmi';
 import Tier3Badge from '@/components/Tier3Badge';
-import { usePublicVerification } from '@/hooks/usePublicVerification';
+import { useBulkSelfVerification } from '@/hooks/useBulkSelfVerification';
 
 interface NotificationProps {
   message: string
@@ -51,8 +51,9 @@ const ChatInterface: React.FC = () => {
     show: false,
   })
   
-  // Check if selected user is tier 3 (public verification)
-  const { isVerified: selectedUserVerified } = usePublicVerification(selectedUser || undefined)
+  // Check if selected user is tier 3 (on-chain verification)
+  const { verifications: userVerifications } = useBulkSelfVerification(selectedUser ? [selectedUser] : [])
+  const selectedUserVerified = selectedUser ? userVerifications[selectedUser] : false
 
   // Component cleanup on unmount
   React.useEffect(() => {

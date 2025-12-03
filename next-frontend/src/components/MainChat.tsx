@@ -18,7 +18,7 @@ import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { getUserDetailsFromContract } from '@/utils/contractReads';
 import Tier3Badge from '@/components/Tier3Badge';
-import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
+import { useBulkSelfVerification } from '@/hooks/useBulkSelfVerification';
 
 const registryAbi = parseAbi([
   'function getAllUsers() external view returns (address[])',
@@ -65,9 +65,9 @@ export default function MainChat({ onClose }: MainChatProps) {
     const [userNames, setUserNames] = useState<Map<string, string>>(new Map())
     const [isLoadingMessages, setIsLoadingMessages] = useState(false)
 
-    // Get verification status for selected chat user
+    // Get on-chain verification status for selected chat user
     const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
-    const { verifications: userVerifications } = useBulkPublicVerification(
+    const { verifications: userVerifications } = useBulkSelfVerification(
       recipientAddress ? [recipientAddress] : []
     )
 

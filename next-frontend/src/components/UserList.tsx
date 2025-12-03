@@ -4,7 +4,7 @@ import React from 'react';
 import { useUsernames } from '@/hooks/useUsernames';
 import { useAccount } from 'wagmi';
 import Tier3Badge from '@/components/Tier3Badge';
-import { useBulkPublicVerification } from '@/hooks/usePublicVerification';
+import { useBulkSelfVerification } from '@/hooks/useBulkSelfVerification';
 
 interface UserListProps {
   onUserSelect?: (address: string) => void
@@ -18,8 +18,8 @@ const UserList: React.FC<UserListProps> = ({ onUserSelect, selectedUser }) => {
   // Filter out current user from the list
   const otherUsers = allUsers.filter((addr: string) => addr.toLowerCase() !== currentUserAddress?.toLowerCase())
   
-  // Fetch public verification status for all users
-  const { verifications: userVerifications } = useBulkPublicVerification(otherUsers)
+  // Fetch on-chain verification status for all users
+  const { verifications: userVerifications } = useBulkSelfVerification(otherUsers)
 
   if (isLoadingUsers) {
     return (
