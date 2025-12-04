@@ -280,7 +280,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **Website**: [blockbelle.vercel.app](https://blockbelle.vercel.app)
+- **Website**: [chata-bella.vercel.app](https://chata-bella.vercel.app)
 - **Twitter**: [@BlockBelle](https://twitter.com/BlockBelle) *(coming soon)*
 - **Discord**: [Join our community](https://discord.gg/blockbelle) *(coming soon)*
 
