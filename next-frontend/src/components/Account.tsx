@@ -16,6 +16,8 @@ export default function Account() {
   const [selfApp, setSelfApp] = useState<SelfApp | null>(null);
   const [showQRCode, setShowQRCode] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verifiedGender, setVerifiedGender] = useState<'female' | 'male' | null>(null);
 
   useEffect(() => {
     if (!address || !isConnected) {
@@ -50,14 +52,47 @@ export default function Account() {
     setSelfApp(app);
   }, [address, isConnected, ensName]);
 
-  const handleSuccessfulVerification = async () => {
+  const handleSuccessfulVerification = async (verificationResult?: any) => {
     setIsVerifying(true);
+
     try {
-      // Wait for blockchain confirmation
+      // Extract gender from Self Protocol response
+      // The verificationResult should contain the disclosed data
+      console.log('Verification result:', verificationResult);
+
+      // Try to extract gender from the response
+      // Self Protocol may return it in different formats, so we check multiple possibilities
+      const gender = verificationResult?.gender ||
+        verificationResult?.disclosures?.gender ||
+        verificationResult?.data?.gender;
+
+      console.log('Extracted gender:', gender);
+
+      // Store the gender
+      if (gender) {
+        setVerifiedGender(gender.toLowerCase());
+      }
+
+      // Check if user is female
+      const isFemale = gender?.toLowerCase() === 'female' || gender?.toLowerCase() === 'f';
+
+      if (!isFemale) {
+        // Male or other gender - show redirect message immediately
+        setIsVerifying(false);
+        setShowQRCode(false);
+        setShowVerificationModal(true);
+        return; // Don't proceed with blockchain verification
+      }
+
+      // Female - proceed with blockchain verification
       await new Promise(resolve => setTimeout(resolve, 3000));
 
-      // Verification status will auto-update via blockchain polling
       setShowQRCode(false);
+
+      // Show success modal after a brief delay
+      setTimeout(() => {
+        setShowVerificationModal(true);
+      }, 1000);
     } catch (error) {
       console.error('Error during verification:', error);
     } finally {
@@ -236,6 +271,58 @@ export default function Account() {
           ✨ Tier 3 users display a crown badge next to their username, indicating verified identity status.
         </p>
       </div>
+
+      {/* Gender-Specific Verification Modal */}
+      {showVerificationModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center shadow-2xl transform transition-all">
+            {verifiedGender === 'female' || verificationData.gender?.toLowerCase() === 'female' ? (
+              // Female Success Message
+              <>
+                <div className="text-7xl mb-4 animate-bounce">👑</div>
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-700 bg-clip-text text-transparent mb-3">
+                  Congratulations, Queen!
+                </h3>
+                <p className="text-xl text-gray-700 mb-6 font-medium">
+                  You're officially verified
+                </p>
+                <p className="text-sm text-gray-600 mb-8">
+                  Welcome to BlockBelle - where queens in Web3 connect, collaborate, and thrive together.
+                </p>
+                <button
+                  onClick={() => setShowVerificationModal(false)}
+                  className="gradient-blockbelle hover:opacity-90 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
+                >
+                  Enter BlockBelle 👑
+                </button>
+              </>
+            ) : (
+              // Male or Other Gender Redirect Message
+              <>
+                <div className="text-7xl mb-4">💪</div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                  Love the support, King!
+                </h3>
+                <p className="text-lg text-gray-700 mb-6 font-medium">
+                  BlockBelle is a queens-only space
+                </p>
+                <p className="text-sm text-gray-600 mb-8">
+                  This platform is exclusively for women in Web3. Want to support? Share BlockBelle with the amazing women builders in your network!
+                </p>
+                <button
+                  onClick={() => {
+                    setShowVerificationModal(false);
+                    setShowQRCode(false);
+                  }}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-4 px-8 rounded-xl transition-all duration-200 w-full"
+                >
+                  Close
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
