@@ -4,7 +4,7 @@
 
 BlockBelle is a decentralized chat application built on Celo that creates a safe, verified space for women in the Web3 ecosystem to connect, collaborate, and thrive together.
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://blockbelle.vercel.app)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://chata-bella.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built on Celo](https://img.shields.io/badge/Built%20on-Celo-green)](https://celo.org)
 
