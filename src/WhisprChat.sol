@@ -15,6 +15,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         address receiver;
         string content;
         uint256 timestamp;
+        bool isPinned;
     }
 
     // Group struct for group conversations
@@ -22,6 +23,15 @@ contract WhisprChat is AutomationCompatibleInterface {
         string name;
         string avatarHash;
         address[] members;
+        uint256 pinnedMessageId;
+    }
+
+    // Pinned message struct
+    struct PinnedMessage {
+        uint256 messageId;
+        address sender;
+        string content;
+        uint256 timestamp;
     }
 
     // Mapping from conversation ID to array of messages
@@ -32,6 +42,12 @@ contract WhisprChat is AutomationCompatibleInterface {
 
     // Mapping from group ID to array of messages
     mapping(uint256 => Message[]) private groupConversations;
+
+    // Mapping from conversation ID to pinned message
+    mapping(bytes32 => PinnedMessage) private conversationPinnedMessages;
+
+    // Mapping from group ID to pinned message
+    mapping(uint256 => PinnedMessage) private groupPinnedMessages;
 
     // Counter for group IDs
     uint256 public groupCounter;
@@ -58,6 +74,10 @@ contract WhisprChat is AutomationCompatibleInterface {
     event GroupCreated(uint256 indexed groupId, string name, address indexed creator);
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
+    event MessagePinned(address indexed from, address indexed to, uint256 messageId, uint256 timestamp);
+    event GroupMessagePinned(uint256 indexed groupId, address indexed sender, uint256 messageId, uint256 timestamp);
+    event MessageUnpinned(address indexed from, address indexed to, uint256 timestamp);
+    event GroupMessageUnpinned(uint256 indexed groupId, address indexed sender, uint256 timestamp);
 
     /**
      * @dev Constructor to initialize Chainlink price feeds and automation interval
@@ -69,7 +89,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         ethUsdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         btcEthPriceFeed = AggregatorV3Interface(0xCfe54B5c468301f0C6AE4a63F9b6C1d28932D7dc);
         bnbEthPriceFeed = AggregatorV3Interface(0x9Ae3a6b1E5F0c5C60b675ECa8d7edD0Eed417F07);
-        
+
         interval = _interval;
         lastTimeStamp = block.timestamp;
     }
@@ -92,7 +112,8 @@ contract WhisprChat is AutomationCompatibleInterface {
             sender: msg.sender,
             receiver: to,
             content: content,
-            timestamp: block.timestamp
+            timestamp: block.timestamp,
+            isPinned: false
         });
 
         conversations[conversationId].push(newMessage);
@@ -152,7 +173,8 @@ contract WhisprChat is AutomationCompatibleInterface {
         groups[groupId] = Group({
             name: name,
             avatarHash: avatarHash,
-            members: finalMembers
+            members: finalMembers,
+            pinnedMessageId: 0
         });
 
         // Emit event
@@ -176,7 +198,8 @@ contract WhisprChat is AutomationCompatibleInterface {
             sender: msg.sender,
             receiver: address(0), // No specific receiver for group messages
             content: content,
-            timestamp: block.timestamp
+            timestamp: block.timestamp,
+            isPinned: false
         });
 
         groupConversations[groupId].push(newMessage);
@@ -193,7 +216,7 @@ contract WhisprChat is AutomationCompatibleInterface {
     function getGroupConversation(uint256 groupId) external view returns (Message[] memory) {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(isGroupMember(groupId, msg.sender), "Not a member of this group");
-        
+
         return groupConversations[groupId];
     }
 
@@ -206,7 +229,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      */
     function getGroupDetails(uint256 groupId) external view returns (string memory name, string memory avatarHash, address[] memory members) {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
-        
+
         Group memory group = groups[groupId];
         return (group.name, group.avatarHash, group.members);
     }
@@ -292,7 +315,8 @@ contract WhisprChat is AutomationCompatibleInterface {
                 sender: ORACLE_BOT,
                 receiver: address(0),
                 content: priceMessages[i],
-                timestamp: block.timestamp
+                timestamp: block.timestamp,
+                isPinned: false
             });
 
             groupConversations[groupId].push(oracleMessage);
@@ -340,6 +364,130 @@ contract WhisprChat is AutomationCompatibleInterface {
     }
 
     /**
+     * @dev Pin a message in a conversation
+     * @param to The address of the other user in the conversation
+     * @param messageId The ID of the message to pin
+     */
+    function pinMessage(address to, uint256 messageId) external {
+        require(to != address(0), "Invalid receiver address");
+        require(to != msg.sender, "Cannot pin message in conversation with yourself");
+
+        bytes32 conversationId = getConversationId(msg.sender, to);
+        Message[] storage conversationMessages = conversations[conversationId];
+
+        require(messageId < conversationMessages.length, "Invalid message ID");
+        require(!conversationMessages[messageId].isPinned, "Message is already pinned");
+
+        conversationMessages[messageId].isPinned = true;
+
+        conversationPinnedMessages[conversationId] = PinnedMessage({
+            messageId: messageId,
+            sender: conversationMessages[messageId].sender,
+            content: conversationMessages[messageId].content,
+            timestamp: conversationMessages[messageId].timestamp
+        });
+
+        emit MessagePinned(msg.sender, to, messageId, block.timestamp);
+    }
+
+    /**
+     * @dev Unpin a message in a conversation
+     * @param to The address of the other user in the conversation
+     */
+    function unpinMessage(address to) external {
+        require(to != address(0), "Invalid receiver address");
+        require(to != msg.sender, "Cannot unpin message in conversation with yourself");
+
+        bytes32 conversationId = getConversationId(msg.sender, to);
+        Message[] storage conversationMessages = conversations[conversationId];
+
+        // Find the currently pinned message and unpin it
+        for (uint256 i = 0; i < conversationMessages.length; i++) {
+            if (conversationMessages[i].isPinned) {
+                conversationMessages[i].isPinned = false;
+                delete conversationPinnedMessages[conversationId];
+                emit MessageUnpinned(msg.sender, to, block.timestamp);
+                return;
+            }
+        }
+
+        revert("No pinned message found");
+    }
+
+    /**
+     * @dev Get the pinned message in a conversation
+     * @param user1 First user address
+     * @param user2 Second user address
+     * @return The pinned message if exists
+     */
+    function getPinnedMessage(address user1, address user2) external view returns (PinnedMessage memory) {
+        bytes32 conversationId = getConversationId(user1, user2);
+        return conversationPinnedMessages[conversationId];
+    }
+
+    /**
+     * @dev Pin a message in a group conversation
+     * @param groupId The ID of the group
+     * @param messageId The ID of the message to pin
+     */
+    function pinGroupMessage(uint256 groupId, uint256 messageId) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, msg.sender), "Not a member of this group");
+
+        Message[] storage groupMessages = groupConversations[groupId];
+
+        require(messageId < groupMessages.length, "Invalid message ID");
+        require(!groupMessages[messageId].isPinned, "Message is already pinned");
+
+        groupMessages[messageId].isPinned = true;
+
+        groupPinnedMessages[groupId] = PinnedMessage({
+            messageId: messageId,
+            sender: groupMessages[messageId].sender,
+            content: groupMessages[messageId].content,
+            timestamp: groupMessages[messageId].timestamp
+        });
+
+        groups[groupId].pinnedMessageId = messageId;
+
+        emit GroupMessagePinned(groupId, msg.sender, messageId, block.timestamp);
+    }
+
+    /**
+     * @dev Unpin a message in a group conversation
+     * @param groupId The ID of the group
+     */
+    function unpinGroupMessage(uint256 groupId) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, msg.sender), "Not a member of this group");
+
+        Message[] storage groupMessages = groupConversations[groupId];
+
+        // Find the currently pinned message and unpin it
+        for (uint256 i = 0; i < groupMessages.length; i++) {
+            if (groupMessages[i].isPinned) {
+                groupMessages[i].isPinned = false;
+                delete groupPinnedMessages[groupId];
+                groups[groupId].pinnedMessageId = 0;
+                emit GroupMessageUnpinned(groupId, msg.sender, block.timestamp);
+                return;
+            }
+        }
+
+        revert("No pinned message found");
+    }
+
+    /**
+     * @dev Get the pinned message in a group conversation
+     * @param groupId The ID of the group
+     * @return The pinned message if exists
+     */
+    function getGroupPinnedMessage(uint256 groupId) external view returns (PinnedMessage memory) {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        return groupPinnedMessages[groupId];
+    }
+
+    /**
      * @dev Helper function to convert int to string
      * @param _i Integer to convert
      * @return String representation of the integer
@@ -348,30 +496,30 @@ contract WhisprChat is AutomationCompatibleInterface {
         if (_i == 0) {
             return "0";
         }
-        
+
         bool negative = _i < 0;
         uint256 temp = uint256(negative ? -_i : _i);
         uint256 digits;
-        
+
         uint256 tempValue = temp;
         while (tempValue != 0) {
             digits++;
             tempValue /= 10;
         }
-        
+
         bytes memory buffer = new bytes(negative ? digits + 1 : digits);
         uint256 index = buffer.length;
-        
+
         while (temp != 0) {
             index--;
             buffer[index] = bytes1(uint8(48 + temp % 10));
             temp /= 10;
         }
-        
+
         if (negative) {
             buffer[0] = "-";
         }
-        
+
         return string(buffer);
     }
 

@@ -38,9 +38,15 @@ const ChatInterface: React.FC = () => {
   const {
     selectedUser,
     messages,
+    pinnedMessage,
     isLoadingMessages,
+    isLoadingPinnedMessage,
     isSending,
+    isPinning,
+    isUnpinning,
     sendMessage,
+    pinMessage,
+    unpinMessage,
     selectUser,
   } = useChat()
 
@@ -50,7 +56,7 @@ const ChatInterface: React.FC = () => {
     type: 'info',
     show: false,
   })
-  
+
   // Check if selected user is tier 3 (on-chain verification)
   const { verifications: userVerifications } = useBulkSelfVerification(selectedUser ? [selectedUser] : [])
   const selectedUserVerified = selectedUser ? userVerifications[selectedUser] : false
@@ -84,6 +90,50 @@ const ChatInterface: React.FC = () => {
       console.error('Failed to send message:', error)
       setNotification({
         message: 'Failed to send message. Please try again.',
+        type: 'error',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 5000)
+    }
+  }
+
+  const handlePinMessage = async (messageId: number) => {
+    if (!selectedUser || isPinning) return
+
+    try {
+      await pinMessage(messageId)
+      setNotification({
+        message: 'Message pinned successfully!',
+        type: 'success',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 3000)
+    } catch (error) {
+      console.error('Failed to pin message:', error)
+      setNotification({
+        message: 'Failed to pin message. Please try again.',
+        type: 'error',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 5000)
+    }
+  }
+
+  const handleUnpinMessage = async () => {
+    if (!selectedUser || isUnpinning) return
+
+    try {
+      await unpinMessage()
+      setNotification({
+        message: 'Message unpinned successfully!',
+        type: 'success',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 3000)
+    } catch (error) {
+      console.error('Failed to unpin message:', error)
+      setNotification({
+        message: 'Failed to unpin message. Please try again.',
         type: 'error',
         show: true,
       })
@@ -155,6 +205,29 @@ const ChatInterface: React.FC = () => {
               )}
             </div>
 
+            {/* Pinned Message Display */}
+            {pinnedMessage && (
+              <div className="p-4 border-b border-gray-200 bg-yellow-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium text-gray-800">Pinned Message</span>
+                    <span className="text-xs text-gray-500">by {pinnedMessage.sender.slice(0, 6)}...{pinnedMessage.sender.slice(-4)}</span>
+                  </div>
+                  <button
+                    onClick={handleUnpinMessage}
+                    disabled={isUnpinning}
+                    className="text-xs text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                  >
+                    {isUnpinning ? 'Unpinning...' : 'Unpin'}
+                  </button>
+                </div>
+                <p className="text-sm text-gray-700 mt-1">{pinnedMessage.content}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {formatTimestamp(pinnedMessage.timestamp)}
+                </p>
+              </div>
+            )}
+
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {isLoadingMessages ? (
@@ -190,7 +263,18 @@ const ChatInterface: React.FC = () => {
                             <Tier3Badge size="sm" />
                           </div>
                         )}
-                        <p className="text-sm">{message.content}</p>
+                        <div className="flex items-start justify-between">
+                          <p className="text-sm">{message.content}</p>
+                          {!message.isPinned && isOwnMessage && (
+                            <button
+                              onClick={() => handlePinMessage(index)}
+                              disabled={isPinning}
+                              className="ml-2 text-xs text-blue-400 hover:text-blue-600 disabled:opacity-50"
+                            >
+                              {isPinning ? 'Pinning...' : 'Pin'}
+                            </button>
+                          )}
+                        </div>
                         <p className={`text-xs mt-1 ${
                           isOwnMessage ? 'text-indigo-200' : 'text-gray-500'
                         }`}>

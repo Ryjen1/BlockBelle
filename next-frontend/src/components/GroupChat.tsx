@@ -10,9 +10,12 @@ const chatAbi = parseAbi([
   'function createGroup(string _name) external returns (uint256)',
   'function addMember(uint256 _groupId, address _member) external',
   'function sendGroupMessage(uint256 _groupId, string _content) external',
-  'function getGroupMessages(uint256 _groupId, uint256 _start, uint256 _count) external view returns ((address sender, string content, uint256 timestamp)[])',
+  'function getGroupMessages(uint256 _groupId, uint256 _start, uint256 _count) external view returns ((address sender, string content, uint256 timestamp, bool isPinned)[])',
   'function getGroupMembers(uint256 _groupId) external view returns (address[])',
   'function groupCount() external view returns (uint256)',
+  'function pinGroupMessage(uint256 _groupId, uint256 _messageId) external',
+  'function unpinGroupMessage(uint256 _groupId) external',
+  'function getGroupPinnedMessage(uint256 _groupId) external view returns ((uint256 messageId, address sender, string content, uint256 timestamp))',
 ])
 
 const registryAbi = parseAbi([
@@ -24,15 +27,25 @@ interface Message {
   sender: string
   content: string
   timestamp: bigint
+  isPinned?: boolean
+}
+
+interface PinnedMessage {
+  messageId: bigint
+  sender: string
+  content: string
+  timestamp: bigint
 }
 
 export default function GroupChat() {
    const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
    const [messages, setMessages] = useState<Message[]>([])
+   const [pinnedMessage, setPinnedMessage] = useState<PinnedMessage | null>(null)
    const [newMessage, setNewMessage] = useState('')
    const [newGroupName, setNewGroupName] = useState('')
    const [newMember, setNewMember] = useState('')
    const [userNames, setUserNames] = useState<Record<string, string>>({})
+   const [isLoadingPinnedMessage, setIsLoadingPinnedMessage] = useState(false)
 
    const { writeContract } = useWriteContract()
    const publicClient = usePublicClient()
@@ -50,11 +63,30 @@ export default function GroupChat() {
      args: selectedGroup ? [BigInt(selectedGroup), 0n, 100n] : undefined,
    })
 
+   const { data: pinnedMessageData } = useReadContract({
+     address: CONTRACT_ADDRESSES.chat,
+     abi: chatAbi,
+     functionName: 'getGroupPinnedMessage',
+     args: selectedGroup ? [BigInt(selectedGroup)] : undefined,
+     query: {
+       enabled: !!selectedGroup,
+     },
+   })
+
    useEffect(() => {
       if (groupMessages) {
         setMessages(groupMessages as Message[])
       }
-    }, [groupMessages])
+   }, [groupMessages])
+
+   useEffect(() => {
+     if (pinnedMessageData) {
+       setPinnedMessage(pinnedMessageData as PinnedMessage)
+       setIsLoadingPinnedMessage(false)
+     } else {
+       setPinnedMessage(null)
+     }
+   }, [pinnedMessageData])
 
    useEffect(() => {
      if (allUsers && allUsers.length > 0 && publicClient) {
@@ -120,6 +152,26 @@ export default function GroupChat() {
     setNewMessage('')
   }
 
+  const handlePinMessage = (messageId: number) => {
+    if (!selectedGroup) return
+    writeContract({
+      address: CONTRACT_ADDRESSES.chat,
+      abi: chatAbi,
+      functionName: 'pinGroupMessage',
+      args: [BigInt(selectedGroup), BigInt(messageId)],
+    })
+  }
+
+  const handleUnpinMessage = () => {
+    if (!selectedGroup) return
+    writeContract({
+      address: CONTRACT_ADDRESSES.chat,
+      abi: chatAbi,
+      functionName: 'unpinGroupMessage',
+      args: [BigInt(selectedGroup)],
+    })
+  }
+
   const handleMemberSelect = (member: { address: string; ensName: string }) => {
     setNewMember(member.address)
   }
@@ -166,6 +218,31 @@ export default function GroupChat() {
             <div className="md:col-span-2">
               {selectedGroup && (
                 <>
+                  {/* Pinned Message Display */}
+                  {pinnedMessage && (
+                    <div className="mb-4 p-4 border rounded bg-yellow-50">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium text-gray-800">Pinned Message</span>
+                          <span className="text-xs text-gray-500">by {pinnedMessage.sender.slice(0, 6)}...{pinnedMessage.sender.slice(-4)}</span>
+                        </div>
+                        <button
+                          onClick={handleUnpinMessage}
+                          className="text-xs text-blue-600 hover:text-blue-800"
+                        >
+                          Unpin
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-700 mt-1">{pinnedMessage.content}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(Number(pinnedMessage.timestamp) * 1000).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="mb-4">
                     <input
                       type="text"
@@ -190,7 +267,19 @@ export default function GroupChat() {
                     ) : (
                       messages.map((msg, index) => (
                         <div key={index} className="mb-2">
-                          <span className="font-semibold">{userNames[msg.sender] || msg.sender.slice(0, 6) + '...' + msg.sender.slice(-4)}:</span> {msg.content}
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <span className="font-semibold">{userNames[msg.sender] || msg.sender.slice(0, 6) + '...' + msg.sender.slice(-4)}:</span> {msg.content}
+                            </div>
+                            {!msg.isPinned && (
+                              <button
+                                onClick={() => handlePinMessage(index)}
+                                className="text-xs text-blue-500 hover:text-blue-700 ml-2"
+                              >
+                                Pin
+                              </button>
+                            )}
+                          </div>
                         </div>
                       ))
                     )}
