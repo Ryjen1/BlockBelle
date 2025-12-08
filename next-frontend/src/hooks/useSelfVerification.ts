@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 
 export interface SelfVerificationData {
   selfVerified: boolean;
@@ -10,61 +10,78 @@ export interface SelfVerificationData {
   minimumAge?: string;
 }
 
+const PROOF_OF_HUMAN_ADDRESS = (process.env.NEXT_PUBLIC_SELF_ENDPOINT || '0x72493afCa2789dA494DD3695d74b50DE7774336A') as `0x${string}`;
+
+const PROOF_OF_HUMAN_ABI = [
+  {
+    inputs: [{ name: '', type: 'address' }],
+    name: 'isVerified',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: '', type: 'address' }],
+    name: 'verificationTimestamp',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
+
 export function useSelfVerification() {
   const { address } = useAccount();
   const [verificationData, setVerificationData] = useState<SelfVerificationData>({
     selfVerified: false,
   });
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch verification status from backend API
-  const fetchVerificationStatus = async () => {
+  // Read verification status from blockchain using mapping
+  const { data: isVerifiedOnChain, isLoading: isLoadingVerified } = useReadContract({
+    address: PROOF_OF_HUMAN_ADDRESS,
+    abi: PROOF_OF_HUMAN_ABI,
+    functionName: 'isVerified',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    }
+  });
+
+  // Read verification timestamp from blockchain
+  const { data: timestamp, isLoading: isLoadingTimestamp } = useReadContract({
+    address: PROOF_OF_HUMAN_ADDRESS,
+    abi: PROOF_OF_HUMAN_ABI,
+    functionName: 'verificationTimestamp',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address && !!isVerifiedOnChain,
+    }
+  });
+
+  const isLoading = isLoadingVerified || isLoadingTimestamp;
+
+  useEffect(() => {
     if (!address) {
       setVerificationData({ selfVerified: false });
-      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/self/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address }),
-      });
+    const verified = !!isVerifiedOnChain;
+    let verifiedAt: string | undefined;
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.verified) {
-          setVerificationData({
-            selfVerified: true,
-            selfDid: data.selfDid,
-            verifiedAt: data.verifiedAt,
-            nationality: data.nationality,
-            gender: data.gender,
-            minimumAge: data.minimumAge,
-          });
-        } else {
-          setVerificationData({ selfVerified: false });
-        }
-      } else {
-        setVerificationData({ selfVerified: false });
-      }
-    } catch (error) {
-      console.error('Error fetching verification status:', error);
-      setVerificationData({ selfVerified: false });
-    } finally {
-      setIsLoading(false);
+    if (verified && timestamp) {
+      // Convert Unix timestamp to ISO string
+      verifiedAt = new Date(Number(timestamp) * 1000).toISOString();
     }
-  };
 
-  useEffect(() => {
-    fetchVerificationStatus();
-  }, [address]);
+    setVerificationData({
+      selfVerified: verified,
+      verifiedAt,
+    });
+  }, [address, isVerifiedOnChain, timestamp]);
 
-  // Refresh verification status (call after successful verification)
+  // Refresh is handled automatically by wagmi's useReadContract
   const refreshVerification = async () => {
-    await fetchVerificationStatus();
+    // No-op: wagmi automatically refetches on block changes
   };
 
   const saveVerification = async (data: Omit<SelfVerificationData, 'selfVerified'>) => {

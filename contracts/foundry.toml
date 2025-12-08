@@ -1,0 +1,15 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+remappings = [
+    "@selfxyz/contracts/=lib/self/contracts/",
+    "forge-std/=lib/forge-std/src/"
+]
+
+[rpc_endpoints]
+celo = "https://forno.celo.org"
+celo-sepolia = "https://alfajores-forno.celo-testnet.org"
+
+[etherscan]
+celo = { key = "${CELOSCAN_API_KEY}", url = "https://api.celoscan.io/api" }

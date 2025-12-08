@@ -13,9 +13,12 @@ const chatAbi = parseAbi([
   'function createGroup(string _name) external returns (uint256)',
   'function addMember(uint256 _groupId, address _member) external',
   'function sendGroupMessage(uint256 _groupId, string _content) external',
-  'function getGroupMessages(uint256 _groupId, uint256 _start, uint256 _count) external view returns ((address sender, string content, uint256 timestamp)[])',
+  'function getGroupMessages(uint256 _groupId, uint256 _start, uint256 _count) external view returns ((address sender, string content, uint256 timestamp, bool isPinned)[])',
   'function getGroupMembers(uint256 _groupId) external view returns (address[])',
   'function groupCount() external view returns (uint256)',
+  'function pinGroupMessage(uint256 _groupId, uint256 _messageId) external',
+  'function unpinGroupMessage(uint256 _groupId) external',
+  'function getGroupPinnedMessage(uint256 _groupId) external view returns ((uint256 messageId, address sender, string content, uint256 timestamp))',
 ])
 
 const registryAbi = parseAbi([
@@ -27,15 +30,25 @@ interface Message {
   sender: string
   content: string
   timestamp: bigint
+  isPinned?: boolean
+}
+
+interface PinnedMessage {
+  messageId: bigint
+  sender: string
+  content: string
+  timestamp: bigint
 }
 
 export default function GroupChat() {
    const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
    const [messages, setMessages] = useState<Message[]>([])
+   const [pinnedMessage, setPinnedMessage] = useState<PinnedMessage | null>(null)
    const [newMessage, setNewMessage] = useState('')
    const [newGroupName, setNewGroupName] = useState('')
    const [newMember, setNewMember] = useState('')
    const [userNames, setUserNames] = useState<Record<string, string>>({})
+   const [isLoadingPinnedMessage, setIsLoadingPinnedMessage] = useState(false)
 
    // Message search functionality
    const {
@@ -63,11 +76,30 @@ export default function GroupChat() {
      args: selectedGroup ? [BigInt(selectedGroup), 0n, 100n] : undefined,
    })
 
+   const { data: pinnedMessageData } = useReadContract({
+     address: CONTRACT_ADDRESSES.chat,
+     abi: chatAbi,
+     functionName: 'getGroupPinnedMessage',
+     args: selectedGroup ? [BigInt(selectedGroup)] : undefined,
+     query: {
+       enabled: !!selectedGroup,
+     },
+   })
+
    useEffect(() => {
       if (groupMessages) {
         setMessages(groupMessages as Message[])
       }
-    }, [groupMessages])
+   }, [groupMessages])
+
+   useEffect(() => {
+     if (pinnedMessageData) {
+       setPinnedMessage(pinnedMessageData as PinnedMessage)
+       setIsLoadingPinnedMessage(false)
+     } else {
+       setPinnedMessage(null)
+     }
+   }, [pinnedMessageData])
 
    useEffect(() => {
      if (allUsers && allUsers.length > 0 && publicClient) {
@@ -131,6 +163,26 @@ export default function GroupChat() {
       args: [BigInt(selectedGroup), newMessage],
     })
     setNewMessage('')
+  }
+
+  const handlePinMessage = (messageId: number) => {
+    if (!selectedGroup) return
+    writeContract({
+      address: CONTRACT_ADDRESSES.chat,
+      abi: chatAbi,
+      functionName: 'pinGroupMessage',
+      args: [BigInt(selectedGroup), BigInt(messageId)],
+    })
+  }
+
+  const handleUnpinMessage = () => {
+    if (!selectedGroup) return
+    writeContract({
+      address: CONTRACT_ADDRESSES.chat,
+      abi: chatAbi,
+      functionName: 'unpinGroupMessage',
+      args: [BigInt(selectedGroup)],
+    })
   }
 
   const handleMemberSelect = (member: { address: string; ensName: string }) => {

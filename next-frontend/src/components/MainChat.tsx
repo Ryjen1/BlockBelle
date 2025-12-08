@@ -82,7 +82,7 @@ export default function MainChat({ onClose }: MainChatProps) {
 
     // Get verification status for selected chat user
     const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
-    const { verifications: userVerifications } = useBulkPublicVerification(
+    const { verifications: userVerifications } = useBulkSelfVerification(
       recipientAddress ? [recipientAddress] : []
     )
 

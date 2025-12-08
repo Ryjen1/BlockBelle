@@ -45,9 +45,15 @@ const ChatInterface: React.FC = () => {
   const {
     selectedUser,
     messages,
+    pinnedMessage,
     isLoadingMessages,
+    isLoadingPinnedMessage,
     isSending,
+    isPinning,
+    isUnpinning,
     sendMessage,
+    pinMessage,
+    unpinMessage,
     selectUser,
   } = useChat()
   const { showNewMessageNotification, isEnabled } = useNotifications()
@@ -134,6 +140,50 @@ const ChatInterface: React.FC = () => {
       console.error('Failed to send message:', error)
       setNotification({
         message: 'Failed to send message. Please try again.',
+        type: 'error',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 5000)
+    }
+  }
+
+  const handlePinMessage = async (messageId: number) => {
+    if (!selectedUser || isPinning) return
+
+    try {
+      await pinMessage(messageId)
+      setNotification({
+        message: 'Message pinned successfully!',
+        type: 'success',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 3000)
+    } catch (error) {
+      console.error('Failed to pin message:', error)
+      setNotification({
+        message: 'Failed to pin message. Please try again.',
+        type: 'error',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 5000)
+    }
+  }
+
+  const handleUnpinMessage = async () => {
+    if (!selectedUser || isUnpinning) return
+
+    try {
+      await unpinMessage()
+      setNotification({
+        message: 'Message unpinned successfully!',
+        type: 'success',
+        show: true,
+      })
+      setTimeout(() => setNotification({ message: '', type: 'info', show: false }), 3000)
+    } catch (error) {
+      console.error('Failed to unpin message:', error)
+      setNotification({
+        message: 'Failed to unpin message. Please try again.',
         type: 'error',
         show: true,
       })

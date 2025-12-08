@@ -2,7 +2,7 @@
 
 import { useAccount, useDisconnect } from 'wagmi';
 import { useRegistration } from '@/hooks/useRegistration';
-import { usePublicVerification } from '@/hooks/usePublicVerification';
+import { useSelfVerification } from '@/hooks/useSelfVerification';
 import Tier3Badge from '@/components/Tier3Badge';
 
 interface UserProfileProps {
@@ -13,7 +13,7 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { isRegistered, ensName, isLoading } = useRegistration()
-  const { isVerified } = usePublicVerification(address)
+  const { verificationData } = useSelfVerification()
 
   if (!isConnected || !address) {
     return null // Let SimpleOnboarding handle the connect button
@@ -50,7 +50,7 @@ export default function UserProfile({ showFullAddress = false }: UserProfileProp
           <div className={`font-medium ${isRegistered ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
 >>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
             {displayName}
-            {isVerified && <Tier3Badge size="sm" />}
+            {verificationData.selfVerified && <Tier3Badge size="sm" />}
           </div>
           {isRegistered && (
 <<<<<<< HEAD
