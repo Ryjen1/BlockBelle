@@ -46,9 +46,8 @@ export default function Account() {
         ],
         nationality: true,
         gender: true,
-      },
-    }).build();
 
+<<<<<<< HEAD
     setSelfApp(app);
   }, [address, isConnected, ensName]);
 
@@ -112,6 +111,15 @@ export default function Account() {
         <p className="text-gray-600">Please connect your wallet to view your account.</p>
       </div>
     );
+=======
+        if(!isConnected || !address) {
+          return (
+            <div className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Account</h2>
+              <p className="text-gray-600">Please connect your wallet to view your account.</p>
+            </div>
+          );
+>>>>>>> 56443b93e5f2166e2a99d58f94535713daaf9b80
   }
 
   return (
