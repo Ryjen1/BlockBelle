@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@goodsdks/ui-components": "^1.0.7",
     "@heroicons/react": "^2.2.0",
     "@rainbow-me/rainbowkit": "^2.2.9",
     "@selfxyz/qrcode": "^1.0.17",
