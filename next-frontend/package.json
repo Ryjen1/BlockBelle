@@ -7,10 +7,16 @@
     "dev": "next dev",
     "build": "next build && node scripts/fix-vercel-build.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "e2e:install": "playwright install --with-deps",
+    "e2e:show-report": "playwright show-report"
   },
   "dependencies": {
-    "@goodsdks/ui-components": "^1.0.7",
+    "@ensdomains/ensjs": "^3.0.0",
+    "@ensdomains/ens-contracts": "^0.0.22",
     "@heroicons/react": "^2.2.0",
     "@rainbow-me/rainbowkit": "^2.2.9",
     "@selfxyz/qrcode": "^1.0.17",
@@ -20,6 +26,7 @@
     "ethers": "^6.15.0",
     "lucide-react": "^0.554.0",
     "next": "^16.0.3",
+    "next-intl": "^3.18.1",
     "postcss": "^8.5.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -28,6 +35,7 @@
     "wagmi": "^2.19.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
     "@types/node": "^24.10.1",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
