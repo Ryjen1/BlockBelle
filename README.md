@@ -115,6 +115,34 @@ cd contracts
 forge test
 ```
 
+### Security Auditing
+Run automated security scans using Slither:
+
+```bash
+# Install Slither (if not already installed)
+pip install slither-analyzer
+
+# Run security scan
+./scripts/run_security_scan.sh
+
+# Or run manually
+slither contracts/src/ --config-file slither.config.json --json slither-report.json
+```
+
+The security scan will:
+- Analyze all Solidity contracts for vulnerabilities
+- Generate a detailed JSON report (`slither-report.json`)
+- Fail with exit code 1 if critical/high severity issues are found
+- Pass with exit code 0 if no critical/high issues are found
+
+**Severity Levels:**
+- 🔴 Critical: Contract-breaking vulnerabilities
+- 🟡 High: Serious security issues
+- 🟠 Medium: Potential security concerns
+- 🟢 Low: Minor issues
+- 🔵 Informational: Best practice suggestions
+- ⚪ Optimization: Gas optimization opportunities
+
 ---
 
 ## 📦 Deployment

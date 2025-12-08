@@ -1,0 +1,17 @@
+{
+  "exclude_dependencies": true,
+  "exclude_informational": false,
+  "exclude_optimization": false,
+  "exclude_low": false,
+  "exclude_medium": false,
+  "exclude_high": false,
+  "exclude_critical": false,
+  "solc_remaps": [
+    "@selfxyz/contracts/=lib/self/contracts/",
+    "forge-std/=lib/forge-std/src/"
+  ],
+  "filter_paths": [
+    "lib/",
+    "node_modules/"
+  ]
+}
