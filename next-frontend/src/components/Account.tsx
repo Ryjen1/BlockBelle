@@ -8,6 +8,7 @@ import { useRegistration } from '@/hooks/useRegistration';
 import { useSelfVerification } from '@/hooks/useSelfVerification';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import Tier3Badge from '@/components/Tier3Badge';
+import GoodDollarClaim from '@/components/GoodDollarClaim';
 
 export default function Account() {
   const { address, isConnected } = useAccount();
@@ -259,6 +260,9 @@ export default function Account() {
           </div>
         )}
       </div>
+
+      {/* GoodDollar UBI Section - Visible for all users for testing */}
+      <GoodDollarClaim />
 
       {/* Additional Info */}
       <div className="bg-gradient-to-br from-blockbelle-purple/10 to-blockbelle-indigo/10 border border-blockbelle-purple/30 rounded-xl p-4">
