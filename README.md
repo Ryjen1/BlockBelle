@@ -130,7 +130,7 @@ forge script script/DeployProofOfHuman.s.sol --rpc-url celo --broadcast --verify
 2. Connect repository to Vercel
 3. Set root directory to `next-frontend`
 4. Add environment variables
-5. Deploy!
+5. Deploy
 
 ---
 
