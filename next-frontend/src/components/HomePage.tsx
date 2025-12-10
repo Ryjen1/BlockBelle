@@ -9,11 +9,12 @@ import UserProfile from '@/components/UserProfile';
 import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
+import GoodDollarClaim from '@/components/GoodDollarClaim';
 import Image from 'next/image';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<
-    'register' | 'group' | 'private' | 'main' | 'check' | 'account'
+    'register' | 'group' | 'private' | 'main' | 'check' | 'account' | 'gooddollar'
   >('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
@@ -153,53 +154,57 @@ export default function HomePage() {
                 console.log('Register tab clicked');
                 setActiveTab('register');
               }}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'register'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'register'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Register
             </button>
             <button
               onClick={() => setActiveTab('group')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'group'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'group'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Group Chat
             </button>
             <button
               onClick={() => setActiveTab('private')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'private'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'private'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Private Chat
             </button>
             <button
               onClick={() => setActiveTab('main')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'main'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'main'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Chat App
             </button>
             <button
               onClick={() => setActiveTab('account')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'account'
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'account'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+                }`}
             >
               Account
+            </button>
+            <button
+              onClick={() => setActiveTab('gooddollar')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'gooddollar'
+                  ? 'border-indigo-500 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+            >
+              GoodDollar UBI
             </button>
           </div>
         </div>
@@ -219,6 +224,7 @@ export default function HomePage() {
           />
         )}
         {activeTab === 'account' && <Account />}
+        {activeTab === 'gooddollar' && <GoodDollarClaim />}
       </main>
     </div>
   );

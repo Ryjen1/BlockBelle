@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
+import { useAccount, usePublicClient, useWalletClient, useReadContract, useWriteContract } from 'wagmi';
 import { useIdentitySDK } from '@goodsdks/identity-sdk';
 
 interface GoodDollarClaimProps {
@@ -55,18 +55,34 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     };
 
     const handleEnroll = async () => {
-        if (!identitySDK || !address) return;
+        console.log('handleEnroll called. SDK ready:', !!identitySDK, 'Address:', address);
+
+        if (!identitySDK) {
+            setErrorMessage('GoodDollar SDK is initializing. Please try again in a moment.');
+            return;
+        }
+
+        if (!address) {
+            setErrorMessage('Wallet not connected.');
+            return;
+        }
 
         setErrorMessage('');
+        setShowFVLink(true); // Show loading state
         try {
             // Generate Face Verification link
             const callbackUrl = typeof window !== 'undefined' ? window.location.href : '';
             const link = await identitySDK.generateFVLink(false, callbackUrl, 42220); // Celo mainnet chainId
             setFvLink(link);
-            setShowFVLink(true);
+
+            // Automatically open the link in a new window
+            if (link && typeof window !== 'undefined') {
+                window.open(link, '_blank', 'noopener,noreferrer');
+            }
         } catch (error: any) {
             console.error('Error generating FV link:', error);
             setErrorMessage('Failed to generate face verification link');
+            setShowFVLink(false);
         }
     };
 
@@ -162,9 +178,10 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                         </p>
                         <button
                             onClick={handleEnroll}
-                            className="gradient-blockbelle hover:opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
+                            disabled={showFVLink || !identitySDK}
+                            className="gradient-blockbelle hover:opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                         >
-                            Enroll for GoodDollar UBI
+                            {!identitySDK ? 'Initializing SDK...' : showFVLink ? 'Opening verification...' : 'Start Face Verification →'}
                         </button>
                     </div>
 
@@ -194,12 +211,12 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                         <p className="text-xs text-gray-500">
                             Don't have a GoodDollar account?{' '}
                             <a
-                                href="https://gooddollar.org?inviteCode=Ryjen1"
+                                href="https://wallet.gooddollar.org/open?inviteCode=UKRCQSNFQq&utm_campaign=celo-onlyurl"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blockbelle-purple hover:text-blockbelle-pink font-medium underline"
+                                className="text-blockbelle-purple hover:text-blockbelle-pink font-bold underline ml-1"
                             >
-                                Sign up here
+                                Sign up
                             </a>
                         </p>
                     </div>
@@ -211,9 +228,14 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                             <h3 className="text-lg font-semibold text-blockbelle-purple">
                                 ✅ Enrolled in GoodDollar UBI
                             </h3>
+                            <div className="bg-white/80 rounded-full px-3 py-1 shadow-sm border border-blockbelle-purple/10">
+                                <p className="text-xs font-medium text-blockbelle-purple">
+                                    Balance: {formatG$(balance as bigint)} G$
+                                </p>
+                            </div>
                         </div>
 
-                        {isCheckingEntitlement ? (
+                        {isLoadingEntitlement ? (
                             <div className="flex items-center justify-center py-4">
                                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blockbelle-purple"></div>
                                 <span className="ml-3 text-sm text-gray-600">Checking eligibility...</span>
@@ -223,7 +245,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                 <div className="bg-white/70 rounded-lg p-4">
                                     <p className="text-sm text-gray-600 mb-1">Claimable Amount</p>
                                     <p className="text-3xl font-bold text-gradient-blockbelle">
-                                        {claimableAmount} G$
+                                        {formatG$(entitlementAmount as bigint)} G$
                                     </p>
                                     {nextClaimTime && (
                                         <p className="text-xs text-gray-500 mt-2">
@@ -232,7 +254,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                     )}
                                 </div>
 
-                                {parseFloat(claimableAmount) > 0 ? (
+                                {entitlementAmount && (entitlementAmount as bigint) > 0n ? (
                                     <button
                                         onClick={handleClaim}
                                         disabled={isClaiming}
@@ -253,7 +275,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                             No G$ available to claim right now. Check back later!
                                         </p>
                                         <button
-                                            onClick={checkEntitlement}
+                                            onClick={() => { refetchEntitlement(); refetchBalance(); }}
                                             className="mt-3 text-blockbelle-purple hover:text-blockbelle-pink font-medium text-sm underline"
                                         >
                                             Refresh Status

@@ -261,9 +261,6 @@ export default function Account() {
         )}
       </div>
 
-      {/* GoodDollar UBI Section - Visible for all users for testing */}
-      <GoodDollarClaim />
-
       {/* Additional Info */}
       <div className="bg-gradient-to-br from-blockbelle-purple/10 to-blockbelle-indigo/10 border border-blockbelle-purple/30 rounded-xl p-4">
         <h3 className="text-sm font-semibold text-blockbelle-purple mb-2">About Self Protocol & Tier 3</h3>
