@@ -8,6 +8,7 @@ import { useRegistration } from '@/hooks/useRegistration';
 import { useSelfVerification } from '@/hooks/useSelfVerification';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import Tier3Badge from '@/components/Tier3Badge';
+import GoodDollarClaim from '@/components/GoodDollarClaim';
 
 export default function Account() {
   const { address, isConnected } = useAccount();
