@@ -108,7 +108,7 @@ export default function Account() {
 
   if (!isConnected || !address) {
     return (
-      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
+      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-4 sm:p-6 border border-blockbelle-purple/20">
         <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">Account</h2>
         <p className="text-gray-600">Please connect your wallet to view your account.</p>
       </div>
@@ -118,7 +118,7 @@ export default function Account() {
   return (
     <div className="space-y-6">
       {/* Account Info */}
-      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
+      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-4 sm:p-6 border border-blockbelle-purple/20">
         <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">Account Information</h2>
         <div className="space-y-3">
           <div>
@@ -162,7 +162,7 @@ export default function Account() {
       </div>
 
       {/* Self Verification Section */}
-      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
+      <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-4 sm:p-6 border border-blockbelle-purple/20">
         <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">Identity Verification</h2>
         <p className="text-sm text-gray-600 mb-6">
           Verify your identity using Self Protocol to unlock <span className="font-semibold text-blockbelle-purple">Tier 3 status</span> and build trust in the community.
