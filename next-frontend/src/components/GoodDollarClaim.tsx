@@ -199,9 +199,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         }
     };
 
-    import { formatUnits } from 'viem';
 
-    // ... (existing imports)
 
     const formatG$ = (value: bigint | undefined) => {
         if (value === undefined) return '0.00';
