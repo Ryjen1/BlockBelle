@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAccount, usePublicClient, useWalletClient, useReadContract, useWriteContract } from 'wagmi';
+import { formatUnits } from 'viem';
 import { useIdentitySDK } from '@goodsdks/identity-sdk';
 
 interface GoodDollarClaimProps {
@@ -198,10 +199,15 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         }
     };
 
+    import { formatUnits } from 'viem';
+
+    // ... (existing imports)
+
     const formatG$ = (value: bigint | undefined) => {
         if (value === undefined) return '0.00';
-        // G$ has 2 decimals
-        return (Number(value) / 100).toFixed(2);
+        // G$ on Celo has 18 decimals
+        const formatted = formatUnits(value, 18);
+        return Number(formatted).toFixed(2);
     };
 
     if (!isConnected || !address) {
