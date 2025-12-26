@@ -10,6 +10,7 @@ import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import GoodDollarClaim from '@/components/GoodDollarClaim';
+import Navbar from '@/components/Navbar';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -56,7 +57,7 @@ export default function HomePage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">BlockBelle</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">BlockBelle</h1>
             <div className="flex items-center space-x-4">
               <UserProfile />
               <SimpleOnboarding
@@ -146,69 +147,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8">
-            <button
-              onClick={() => {
-                console.log('Register tab clicked');
-                setActiveTab('register');
-              }}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'register'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-            >
-              Register
-            </button>
-            <button
-              onClick={() => setActiveTab('group')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'group'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-            >
-              Group Chat
-            </button>
-            <button
-              onClick={() => setActiveTab('private')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'private'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-            >
-              Private Chat
-            </button>
-            <button
-              onClick={() => setActiveTab('main')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'main'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-            >
-              Chat App
-            </button>
-            <button
-              onClick={() => setActiveTab('account')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'account'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-            >
-              Account
-            </button>
-            <button
-              onClick={() => setActiveTab('gooddollar')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'gooddollar'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-            >
-              GoodDollar UBI
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {activeTab === 'register' && (
