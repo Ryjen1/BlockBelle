@@ -21,7 +21,7 @@ export interface Quest {
     target: number;
     completed: boolean;
     claimed: boolean;
-    category: 'chat' | 'verification' | 'transfer' | 'ens' | 'streak' | 'referral';
+    category: 'chat' | 'verification' | 'transfer' | 'ens' | 'streak';
 }
 
 interface QuestProgress {
@@ -30,7 +30,6 @@ interface QuestProgress {
     hasTransferred: boolean;
     hasENS: boolean;
     claimStreak: number;
-    referralCount: number;
 }
 
 const QUEST_STORAGE_KEY = 'blockbelle_quest_progress';
@@ -45,7 +44,6 @@ export function useQuestTracking() {
         hasTransferred: false,
         hasENS: false,
         claimStreak: 0,
-        referralCount: 0,
     });
 
     const { writeContractAsync } = useWriteContract();
@@ -58,19 +56,6 @@ export function useQuestTracking() {
         if (stored) {
             try {
                 const parsed = JSON.parse(stored);
-
-                // Sync referral count from referral list
-                const referralListKey = `blockbelle_referrals_${address}`;
-                const referralList = localStorage.getItem(referralListKey);
-                if (referralList) {
-                    try {
-                        const list = JSON.parse(referralList);
-                        parsed.referralCount = list.length;
-                    } catch (e) {
-                        console.error('Failed to parse referral list:', e);
-                    }
-                }
-
                 setProgress(parsed);
             } catch (e) {
                 console.error('Failed to parse quest progress:', e);
@@ -91,55 +76,7 @@ export function useQuestTracking() {
         localStorage.setItem(`${QUEST_STORAGE_KEY}_${address}`, JSON.stringify(progress));
     }, [address, progress]);
 
-    // Track referrals from URL
-    useEffect(() => {
-        if (typeof window === 'undefined' || !address) return;
-
-        const params = new URLSearchParams(window.location.search);
-        const ref = params.get('ref');
-
-        if (ref && address && ref.toLowerCase() !== address.toLowerCase()) {
-            // Store referrer for this user (only once)
-            const referrerKey = `blockbelle_referrer_${address}`;
-            const existingReferrer = localStorage.getItem(referrerKey);
-
-            if (!existingReferrer) {
-                localStorage.setItem(referrerKey, ref);
-
-                // Increment referral count for referrer
-                // Use a separate tracking key that persists even if referrer hasn't visited
-                const referralListKey = `blockbelle_referrals_${ref}`;
-                const existingReferrals = localStorage.getItem(referralListKey);
-
-                let referralList: string[] = [];
-                if (existingReferrals) {
-                    try {
-                        referralList = JSON.parse(existingReferrals);
-                    } catch (e) {
-                        console.error('Failed to parse referral list:', e);
-                    }
-                }
-
-                // Add this user to referrer's list
-                if (!referralList.includes(address.toLowerCase())) {
-                    referralList.push(address.toLowerCase());
-                    localStorage.setItem(referralListKey, JSON.stringify(referralList));
-
-                    // Also update the referrer's progress if it exists
-                    const referrerProgress = localStorage.getItem(`${QUEST_STORAGE_KEY}_${ref}`);
-                    if (referrerProgress) {
-                        try {
-                            const parsed = JSON.parse(referrerProgress);
-                            parsed.referralCount = referralList.length;
-                            localStorage.setItem(`${QUEST_STORAGE_KEY}_${ref}`, JSON.stringify(parsed));
-                        } catch (e) {
-                            console.error('Failed to update referrer progress:', e);
-                        }
-                    }
-                }
-            }
-        }
-    }, [address]);
+    // Referral tracking removed - now handled by GoodDollar Engagement Rewards
 
     const incrementMessageCount = () => {
         setProgress(prev => ({ ...prev, messageCount: prev.messageCount + 1 }));
@@ -267,41 +204,18 @@ export function useQuestTracking() {
             claimed: false,
             category: 'streak',
         },
-        // Referrals
-        {
-            id: 'referral_1',
-            title: 'Invite a Friend',
-            description: 'Refer 1 new user to BlockBelle',
-            reward: BigInt(500) * BigInt(10 ** 18),
-            progress: Math.min(progress.referralCount, 1),
-            target: 1,
-            completed: progress.referralCount >= 1,
-            claimed: false,
-            category: 'referral',
-        },
-        {
-            id: 'referral_3',
-            title: 'Community Builder',
-            description: 'Refer 3 new users to BlockBelle',
-            reward: BigInt(1500) * BigInt(10 ** 18),
-            progress: Math.min(progress.referralCount, 3),
-            target: 3,
-            completed: progress.referralCount >= 3,
-            claimed: false,
-            category: 'referral',
-        },
-        {
-            id: 'referral_5',
-            title: 'Ambassador',
-            description: 'Refer 5 new users to BlockBelle',
-            reward: BigInt(3000) * BigInt(10 ** 18),
-            progress: Math.min(progress.referralCount, 5),
-            target: 5,
-            completed: progress.referralCount >= 5,
-            claimed: false,
-            category: 'referral',
-        },
+        // Note: Referral rewards now handled by GoodDollar Engagement Rewards integration
     ];
+
+    // Clean up old referral quest claims (migration from old version)
+    useEffect(() => {
+        if (!address) return;
+        const oldReferralQuestIds = ['referral_1', 'referral_3', 'referral_5'];
+        oldReferralQuestIds.forEach(questId => {
+            const claimedKey = `quest_claimed_${address}_${questId}`;
+            localStorage.removeItem(claimedKey);
+        });
+    }, [address]);
 
     // Load claimed status from localStorage
     const questsWithClaimedStatus = quests.map(quest => {
