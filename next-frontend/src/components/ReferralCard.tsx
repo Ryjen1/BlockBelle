@@ -41,26 +41,26 @@ export default function ReferralCard() {
 
             <div className="bg-white/70 rounded-lg p-4 mb-4">
                 <p className="text-sm text-gray-700 mb-3">
-                    Invite friends to join BlockBelle and earn G$ rewards! You'll receive:
+                    Invite friends to join BlockBelle and earn G$ rewards through GoodDollar Engagement Rewards!
                 </p>
                 <div className="space-y-2">
                     <div className="flex items-center space-x-2 text-sm">
                         <div className="bg-blockbelle-gold/20 rounded-full p-1">
                             <CheckCircleIcon className="h-4 w-4 text-blockbelle-gold" />
                         </div>
-                        <span className="text-gray-700"><strong>500 G$</strong> for your first referral</span>
+                        <span className="text-gray-700">Both you and your friend earn <strong>~27 G$</strong></span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm">
                         <div className="bg-blockbelle-gold/20 rounded-full p-1">
                             <CheckCircleIcon className="h-4 w-4 text-blockbelle-gold" />
                         </div>
-                        <span className="text-gray-700"><strong>1500 G$</strong> for 3 referrals</span>
+                        <span className="text-gray-700">Your friend gets <strong>~63 G$</strong> welcome bonus</span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm">
                         <div className="bg-blockbelle-gold/20 rounded-full p-1">
                             <CheckCircleIcon className="h-4 w-4 text-blockbelle-gold" />
                         </div>
-                        <span className="text-gray-700"><strong>3000 G$</strong> for 5 referrals</span>
+                        <span className="text-gray-700">One-time reward per referral</span>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ export default function ReferralCard() {
             </button>
 
             <p className="text-xs text-gray-500 text-center mt-3">
-                Your friends will also earn rewards when they join!
+                Powered by GoodDollar Engagement Rewards • User must be verified
             </p>
         </div>
     );
