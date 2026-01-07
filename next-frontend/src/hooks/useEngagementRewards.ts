@@ -36,12 +36,16 @@ export function useEngagementRewards() {
   });
 
   // Check if app is registered
-  const { data: isAppRegistered } = useReadContract({
+  // registeredApps returns the owner address (not a boolean)
+  const { data: appOwner } = useReadContract({
     address: ACTIVE_REWARDS_CONTRACT,
     abi: ENGAGEMENT_REWARDS_ABI,
-    functionName: 'isAppRegistered',
+    functionName: 'registeredApps',
     args: [CHATABELLA_APP_ADDRESS as Address],
   });
+
+  // App is registered if it has a non-zero owner address
+  const isAppRegistered = appOwner && appOwner !== '0x0000000000000000000000000000000000000000';
 
   // Check if user is already registered with the app
   const { data: isUserRegistered, refetch: refetchUserRegistration } = useReadContract({
@@ -104,19 +108,17 @@ export function useEngagementRewards() {
     setState(prev => ({ ...prev, isCheckingEligibility: true, claimError: null }));
 
     try {
-      const result = await publicClient.readContract({
+      const canClaim = await publicClient.readContract({
         address: ACTIVE_REWARDS_CONTRACT,
         abi: ENGAGEMENT_REWARDS_ABI,
         functionName: 'canClaim',
         args: [CHATABELLA_APP_ADDRESS as Address, address],
-      });
-
-      const [canClaim, reason] = result as [boolean, string];
+      }) as boolean;
       
       setState(prev => ({
         ...prev,
         canClaimReward: canClaim,
-        claimError: canClaim ? null : reason,
+        claimError: canClaim ? null : 'Not eligible to claim',
         isCheckingEligibility: false,
       }));
     } catch (error: any) {

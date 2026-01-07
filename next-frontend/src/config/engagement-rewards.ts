@@ -9,17 +9,14 @@ export const ENGAGEMENT_REWARDS_CONTRACT = {
   PROD: '0x25db74CF4E7BA120526fd87e159CF656d94bAE43',
 } as const;
 
-// Use DEV for testing, PROD for production
-export const ACTIVE_REWARDS_CONTRACT = 
-  process.env.NODE_ENV === 'production' 
-    ? ENGAGEMENT_REWARDS_CONTRACT.PROD 
-    : ENGAGEMENT_REWARDS_CONTRACT.DEV;
+// TODO: Switch to PROD once Good Labs approves the application
+// For now using DEV where we can self-approve for testing
+export const ACTIVE_REWARDS_CONTRACT = ENGAGEMENT_REWARDS_CONTRACT.DEV;
 
-// Your app's contract address (if using smart contract integration)
-// For client-side only integration, this would be your backend signing address
-export const CHATABELLA_APP_ADDRESS = '0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C'; // WhisprChat contract (core app contract)
+// Your app's contract address - WhisprChat contract approved on DEV
+export const CHATABELLA_APP_ADDRESS = '0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C'; // WhisprChat contract
 
-// Engagement Rewards ABI - minimal for client-side integration
+// Engagement Rewards ABI - correct based on actual contract
 export const ENGAGEMENT_REWARDS_ABI = [
   {
     inputs: [
@@ -35,6 +32,13 @@ export const ENGAGEMENT_REWARDS_ABI = [
     type: 'function'
   },
   {
+    inputs: [{ name: '', type: 'address' }],
+    name: 'registeredApps',
+    outputs: [{ name: '', type: 'address' }], // Returns owner address, not bool
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     inputs: [
       { name: 'app', type: 'address' },
       { name: 'user', type: 'address' }
@@ -46,23 +50,11 @@ export const ENGAGEMENT_REWARDS_ABI = [
   },
   {
     inputs: [
-      { name: 'app', type: 'address' }
-    ],
-    name: 'isAppRegistered',
-    outputs: [{ name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [
       { name: 'app', type: 'address' },
       { name: 'user', type: 'address' }
     ],
     name: 'canClaim',
-    outputs: [
-      { name: '', type: 'bool' },
-      { name: '', type: 'string' }
-    ],
+    outputs: [{ name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function'
   },
