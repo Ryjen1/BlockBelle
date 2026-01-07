@@ -9,6 +9,8 @@ import {
   ENGAGEMENT_REWARDS_ABI,
   STORAGE_KEYS,
 } from '@/config/engagement-rewards';
+// TODO: Import and use the official SDK helpers
+// import { useEngagementRewards as useEngagementRewardsSDK } from '@goodsdks/engagement-sdk';
 
 export interface EngagementRewardsState {
   inviterAddress: Address | null;
@@ -136,6 +138,7 @@ export function useEngagementRewards() {
   }, [address, isConnected, isAppRegistered, checkEligibility]);
 
   // Generate signature for claiming
+  // ⚠️ MESSAGE FORMAT MUST MATCH BACKEND SIGNATURE
   const generateClaimSignature = useCallback(async (
     inviter: Address,
     validUntilBlock: bigint
@@ -144,8 +147,9 @@ export function useEngagementRewards() {
       throw new Error('Wallet not connected');
     }
 
-    // Message format as per GoodDollar Engagement SDK
-    const message = `Claim engagement reward from app ${BLOCKBELLE_APP_ADDRESS} with inviter ${inviter} valid until block ${validUntilBlock}`;
+    // ⚠️ CRITICAL: This message format must exactly match the backend signature format
+    // Currently mismatched with backend - needs to include "for user {address}"
+    const message = `Claim engagement reward from app ${BLOCKBELLE_APP_ADDRESS} for user ${address} with inviter ${inviter} valid until block ${validUntilBlock}`;
 
     try {
       const signature = await walletClient.signMessage({
