@@ -9,9 +9,8 @@ export const ENGAGEMENT_REWARDS_CONTRACT = {
   PROD: '0x25db74CF4E7BA120526fd87e159CF656d94bAE43',
 } as const;
 
-// TODO: Switch to PROD once Good Labs approves the application
-// For now using DEV where we can self-approve for testing
-export const ACTIVE_REWARDS_CONTRACT = ENGAGEMENT_REWARDS_CONTRACT.DEV;
+// Using PROD contract - application submitted and pending approval
+export const ACTIVE_REWARDS_CONTRACT = ENGAGEMENT_REWARDS_CONTRACT.PROD;
 
 // Your app's contract address - WhisprChat contract approved on DEV
 export const CHATABELLA_APP_ADDRESS = '0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C'; // WhisprChat contract
