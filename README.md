@@ -31,6 +31,13 @@ BlockBelle is a decentralized chat application built on Celo that creates a safe
 - **Responsive**: Works seamlessly on desktop and mobile
 - **Dark Mode Ready**: Glassmorphism effects and modern aesthetics
 
+### 🎁 GoodDollar Engagement Rewards
+- **Welcome Bonus**: New users receive ~63 G$ when referred by existing users
+- **Referral Rewards**: Inviters earn ~27 G$ for each successful referral
+- **One-Time Claim**: Users can claim rewards once per app per 180 days
+- **Verified Users Only**: Only users verified on GoodDollar can claim rewards
+- **Seamless Integration**: Built with GoodDollar Engagement SDK
+
 ---
 
 ## 🚀 Tech Stack
@@ -84,6 +91,22 @@ forge install
 ```
 
 ### 4. Environment Setup
+
+Create `.env.local` in `next-frontend/`:
+```env
+# Self Protocol Verification
+NEXT_PUBLIC_SELF_ENDPOINT=0x0a0c863edd00af4e48ecbb6f0cd11fd42dee56c2
+NEXT_PUBLIC_SELF_APP_NAME=BlockBelle
+NEXT_PUBLIC_SELF_SCOPE=blockbelle-chat
+
+# GoodDollar Engagement Rewards - Backend Signing Key
+# Generate with: node scripts/generate-signing-key.js
+APP_SIGNING_KEY=your_private_key_here
+
+# Celo RPC
+NEXT_PUBLIC_CELO_RPC_URL=https://forno.celo.org
+NEXT_PUBLIC_APP_URL=https://chata-bella.vercel.app/
+```
 
 Create `.env.production` in `next-frontend/`:
 ```env
