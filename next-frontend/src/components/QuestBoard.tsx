@@ -20,7 +20,6 @@ const CATEGORY_ICONS = {
     transfer: BanknotesIcon,
     ens: IdentificationIcon,
     streak: FireIcon,
-    referral: UserPlusIcon,
 };
 
 const CATEGORY_COLORS = {
@@ -29,7 +28,6 @@ const CATEGORY_COLORS = {
     transfer: 'from-purple-500 to-pink-500',
     ens: 'from-orange-500 to-yellow-500',
     streak: 'from-red-500 to-orange-500',
-    referral: 'from-indigo-500 to-purple-500',
 };
 
 export default function QuestBoard() {
