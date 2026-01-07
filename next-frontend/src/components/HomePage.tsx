@@ -11,12 +11,11 @@ import Account from '@/components/Account';
 import GoodDollarClaim from '@/components/GoodDollarClaim';
 import EngagementRewardsClaim from '@/components/EngagementRewardsClaim';
 import QuestsPage from '@/components/QuestsPage';
-import Navbar from '@/components/Navbar';
+import Navbar, { type TabType } from '@/components/Navbar';
 import Image from 'next/image';
 import { useEngagementRewards } from '@/hooks/useEngagementRewards';
 
 export default function HomePage() {
-  type TabType = 'register' | 'group' | 'main' | 'check' | 'account' | 'gooddollar' | 'quests';
   const [activeTab, setActiveTab] = useState<TabType>('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
