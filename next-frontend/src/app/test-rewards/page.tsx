@@ -70,19 +70,18 @@ export default function TestRewardsPage() {
     // Test 3: Can Claim Check
     if (address && publicClient) {
       try {
-        const result = await publicClient.readContract({
+        const canClaim = await publicClient.readContract({
           address: ACTIVE_REWARDS_CONTRACT,
           abi: ENGAGEMENT_REWARDS_ABI,
           functionName: 'canClaim',
           args: [CHATABELLA_APP_ADDRESS as `0x${string}`, address],
-        });
-
-        const [canClaim, reason] = result as [boolean, string];
+        }) as boolean;
+        
         results.push({
           name: 'Eligibility Check',
           status: canClaim ? 'PASS' : 'INFO',
-          result: canClaim ? '✅ Can claim rewards!' : `ℹ️ Cannot claim: ${reason}`,
-          details: `Reason: ${reason}`,
+          result: canClaim ? '✅ Can claim rewards!' : `ℹ️ Not eligible to claim`,
+          details: canClaim ? 'All checks passed' : 'Check if user is whitelisted or already claimed',
         });
       } catch (error: any) {
         results.push({
