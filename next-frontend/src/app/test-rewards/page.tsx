@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to avoid Next.js 16 static generation issues
+export const dynamic = 'force-dynamic';
+
 import { useAccount, useReadContract, usePublicClient } from 'wagmi';
 import { useState, useEffect } from 'react';
 import { 
