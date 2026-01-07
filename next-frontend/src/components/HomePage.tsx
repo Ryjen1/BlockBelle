@@ -1,28 +1,43 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Register from '@/components/Register';
 import GroupChat from '@/components/GroupChat';
-import PrivateChat from '@/components/PrivateChat';
 import MainChat from '@/components/MainChat';
 import UserProfile from '@/components/UserProfile';
 import RegistrationCheck from '@/components/RegistrationCheck';
 import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import GoodDollarClaim from '@/components/GoodDollarClaim';
-import Navbar from '@/components/Navbar';
+import EngagementRewardsClaim from '@/components/EngagementRewardsClaim';
+import QuestsPage from '@/components/QuestsPage';
+import Navbar, { type TabType } from '@/components/Navbar';
 import Image from 'next/image';
+import { useEngagementRewards } from '@/hooks/useEngagementRewards';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<
-    'register' | 'group' | 'private' | 'main' | 'check' | 'account' | 'gooddollar'
-  >('register');
+  const [activeTab, setActiveTab] = useState<TabType>('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
+  
+  // Engagement rewards hook
+  const { inviterAddress, setInviterAddress } = useEngagementRewards();
+
+  // Extract ref parameter from URL on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const refParam = urlParams.get('ref');
+    
+    if (refParam && refParam.startsWith('0x')) {
+      setInviterAddress(refParam as `0x${string}`);
+    }
+  }, [setInviterAddress]);
 
   const handleRegistrationSuccess = useCallback(() => {
     _setHasRegistered(true);
-    setActiveTab('private');
+    setActiveTab('main');
   }, []);
 
   const handleStartChatting = useCallback(() => {
@@ -57,7 +72,7 @@ export default function HomePage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">BlockBelle</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Chata-Bella</h1>
             <div className="flex items-center space-x-4">
               <UserProfile />
               <SimpleOnboarding
@@ -73,7 +88,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/10"></div>
         <Image
           src="/hero-image.jpg"
-          alt="BlockBelle Hero"
+          alt="Chata-Bella Hero"
           fill
           className="object-cover opacity-10"
           priority
@@ -81,7 +96,7 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-pink-200 to-purple-200 bg-clip-text text-transparent">
-              BlockBelle
+              Chata-Bella
             </h1>
             <p className="text-sm mb-3 max-w-xl mx-auto leading-relaxed">
               The elegant web3 chat dApp where women in blockchain connect,
@@ -154,7 +169,7 @@ export default function HomePage() {
           <Register onRegistrationSuccess={handleRegistrationSuccess} />
         )}
         {activeTab === 'group' && <GroupChat />}
-        {activeTab === 'private' && <PrivateChat />}
+
         {activeTab === 'main' && <MainChat />}
         {activeTab === 'check' && (
           <RegistrationCheck
@@ -163,7 +178,14 @@ export default function HomePage() {
           />
         )}
         {activeTab === 'account' && <Account />}
-        {activeTab === 'gooddollar' && <GoodDollarClaim />}
+        {activeTab === 'gooddollar' && (
+          <div className="space-y-6">
+            {/* Show Engagement Rewards if user has inviter */}
+            {inviterAddress && <EngagementRewardsClaim />}
+            <GoodDollarClaim />
+          </div>
+        )}
+        {activeTab === 'quests' && <QuestsPage />}
       </main>
     </div>
   );

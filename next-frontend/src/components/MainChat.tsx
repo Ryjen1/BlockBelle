@@ -19,6 +19,7 @@ import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { getUserDetailsFromContract } from '@/utils/contractReads';
 import Tier3Badge from '@/components/Tier3Badge';
 import { useBulkSelfVerification } from '@/hooks/useBulkSelfVerification';
+import { useQuestTracking } from '@/hooks/useQuestTracking';
 
 const registryAbi = parseAbi([
   'function getAllUsers() external view returns (address[])',
@@ -64,6 +65,9 @@ export default function MainChat({ onClose }: MainChatProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [userNames, setUserNames] = useState<Map<string, string>>(new Map())
   const [isLoadingMessages, setIsLoadingMessages] = useState(false)
+
+  // Quest tracking
+  const { incrementMessageCount } = useQuestTracking()
 
   // Get on-chain verification status for selected chat user
   const recipientAddress = selectedChat?.id.replace('private_', '') as `0x${string}` | undefined
@@ -251,6 +255,9 @@ export default function MainChat({ onClose }: MainChatProps) {
       setMessages(prev => [...prev, message])
       setNewMessage('')
 
+      // Track message for quest system
+      incrementMessageCount()
+
       // Update last message in chats
       setChats(prev => prev.map(chat =>
         chat.id === selectedChat.id
@@ -324,7 +331,7 @@ export default function MainChat({ onClose }: MainChatProps) {
         {/* Header */}
         <div className="p-4 border-b border-gray-200 bg-white">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold text-gray-900">BlockBelle Chat</h1>
+            <h1 className="text-xl font-bold text-gray-900">Chata-Bella Chat</h1>
             <div className="flex space-x-2">
               <button
                 onClick={() => setShowMembersList(!showMembersList)}
@@ -538,7 +545,7 @@ export default function MainChat({ onClose }: MainChatProps) {
           <div className="flex-1 flex items-center justify-center bg-gray-50">
             <div className="text-center">
               <ChatBubbleLeftRightIcon className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-              <h2 className="text-2xl font-semibold text-gray-600 mb-2">Welcome to BlockBelle Chat</h2>
+              <h2 className="text-2xl font-semibold text-gray-600 mb-2">Welcome to Chata-Bella Chat</h2>
               <p className="text-gray-500 mb-6">You're registered and ready to start chatting!</p>
               <div className="space-y-3">
                 <p className="text-sm text-gray-400">Choose how to start:</p>

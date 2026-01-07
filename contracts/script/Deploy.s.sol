@@ -15,7 +15,7 @@ contract DeployScript is Script {
         address hubAddress = 0xe57F4773bd9c9d8b6Cd70431117d353298B9f5BF;
         
         // Scope seed
-        string memory scopeSeed = "blockbelle-chat";
+        string memory scopeSeed = "chatabella-chat";
         
         // Verification config: 18+ years old, no country restrictions
         SelfUtils.UnformattedVerificationConfigV2 memory config = SelfUtils.UnformattedVerificationConfigV2({

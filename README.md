@@ -1,8 +1,8 @@
-# 👑 BlockBelle
+# 💬 Chata-Bella
 
 **A Web3 Chat Platform Exclusively for Women in Blockchain**
 
-BlockBelle is a decentralized chat application built on Celo that creates a safe, verified space for women in the Web3 ecosystem to connect, collaborate, and thrive together.
+Chata-Bella is a decentralized chat application built on Celo that creates a safe, verified space for women in the Web3 ecosystem to connect, collaborate, and thrive together.
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://chata-bella.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -30,6 +30,13 @@ BlockBelle is a decentralized chat application built on Celo that creates a safe
 - **Gradient Design**: Beautiful pink-to-purple-to-indigo gradients
 - **Responsive**: Works seamlessly on desktop and mobile
 - **Dark Mode Ready**: Glassmorphism effects and modern aesthetics
+
+### 🎁 GoodDollar Engagement Rewards
+- **Welcome Bonus**: New users receive ~63 G$ when referred by existing users
+- **Referral Rewards**: Inviters earn ~27 G$ for each successful referral
+- **One-Time Claim**: Users can claim rewards once per app per 180 days
+- **Verified Users Only**: Only users verified on GoodDollar can claim rewards
+- **Seamless Integration**: Built with GoodDollar Engagement SDK
 
 ---
 
@@ -67,8 +74,8 @@ BlockBelle is a decentralized chat application built on Celo that creates a safe
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/BlockBelle.git
-cd BlockBelle
+git clone https://github.com/yourusername/Chata-Bella.git
+cd Chata-Bella
 ```
 
 ### 2. Install Frontend Dependencies
@@ -85,11 +92,27 @@ forge install
 
 ### 4. Environment Setup
 
+Create `.env.local` in `next-frontend/`:
+```env
+# Self Protocol Verification
+NEXT_PUBLIC_SELF_ENDPOINT=0x0a0c863edd00af4e48ecbb6f0cd11fd42dee56c2
+NEXT_PUBLIC_SELF_APP_NAME=Chata-Bella
+NEXT_PUBLIC_SELF_SCOPE=chatabella-chat
+
+# GoodDollar Engagement Rewards - Backend Signing Key
+# Generate with: node scripts/generate-signing-key.js
+APP_SIGNING_KEY=your_private_key_here
+
+# Celo RPC
+NEXT_PUBLIC_CELO_RPC_URL=https://forno.celo.org
+NEXT_PUBLIC_APP_URL=https://chata-bella.vercel.app/
+```
+
 Create `.env.production` in `next-frontend/`:
 ```env
 NEXT_PUBLIC_SELF_ENDPOINT=0x0a0c863edd00af4e48ecbb6f0cd11fd42dee56c2
-NEXT_PUBLIC_SELF_APP_NAME=BlockBelle
-NEXT_PUBLIC_SELF_SCOPE=blockbelle-chat
+NEXT_PUBLIC_SELF_APP_NAME=Chata-Bella
+NEXT_PUBLIC_SELF_SCOPE=chatabella-chat
 ```
 
 Create `.env` in `contracts/`:
@@ -137,7 +160,7 @@ forge script script/DeployProofOfHuman.s.sol --rpc-url celo --broadcast --verify
 ## 🏗️ Project Structure
 
 ```
-BlockBelle/
+Chata-Bella/
 ├── next-frontend/          # Next.js frontend application
 │   ├── src/
 │   │   ├── app/           # App router pages
@@ -182,7 +205,7 @@ All contracts are verified on CeloScan. View source code and interact directly o
 Users connect their Web3 wallet (MetaMask, WalletConnect, etc.) using RainbowKit.
 
 ### 2. Register
-Choose a unique ENS name and register on-chain. This creates your BlockBelle identity.
+Choose a unique ENS name and register on-chain. This creates your Chata-Bella identity.
 
 ### 3. Verify Identity
 Scan QR code with Self Protocol mobile app to verify:
@@ -281,8 +304,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact & Support
 
 - **Website**: [chata-bella.vercel.app](https://chata-bella.vercel.app)
-- **Twitter**: [@BlockBelle](https://twitter.com/BlockBelle) *(coming soon)*
-- **Discord**: [Join our community](https://discord.gg/blockbelle) *(coming soon)*
+- **Twitter**: [@ChataBella](https://twitter.com/ChataBella) *(coming soon)*
+- **Discord**: [Join our community](https://discord.gg/chatabella) *(coming soon)*
 
 ---
 
@@ -298,4 +321,4 @@ If you believe in creating safe spaces for women in Web3, consider:
 
 **Built with 💜 for Queens in Web3**
 
-*BlockBelle - Where Women in Blockchain Connect, Collaborate, and Thrive*
+*Chata-Bella - Where Women in Blockchain Connect, Collaborate, and Thrive*

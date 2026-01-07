@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@goodsdks/engagement-sdk": "^1.0.3",
     "@goodsdks/identity-sdk": "^1.0.5",
     "@heroicons/react": "^2.2.0",
     "@rainbow-me/rainbowkit": "^2.2.9",

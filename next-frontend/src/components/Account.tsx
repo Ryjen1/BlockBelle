@@ -29,14 +29,14 @@ export default function Account() {
     // Initialize Self App
     const app = new SelfAppBuilder({
       version: 2,
-      appName: process.env.NEXT_PUBLIC_SELF_APP_NAME || 'BlockBelle',
-      scope: process.env.NEXT_PUBLIC_SELF_SCOPE || 'blockbelle-chat',
+      appName: process.env.NEXT_PUBLIC_SELF_APP_NAME || 'Chata-Bella',
+      scope: process.env.NEXT_PUBLIC_SELF_SCOPE || 'chatabella-chat',
       endpoint: process.env.NEXT_PUBLIC_SELF_ENDPOINT || '0x72493afca2789da494dd3695d74b50de7774336a', // ProofOfHuman contract
       logoBase64: 'https://i.postimg.cc/mrmVf9hm/self.png',
       userId: address,
       endpointType: 'celo', // Celo Mainnet
       userIdType: 'hex',
-      userDefinedData: `BlockBelle verification for ${ensName || address}`,
+      userDefinedData: `Chata-Bella verification for ${ensName || address}`,
       disclosures: {
         minimumAge: 18,
         excludedCountries: [
@@ -272,6 +272,7 @@ export default function Account() {
           ✨ Tier 3 users display a crown badge next to their username, indicating verified identity status.
         </p>
       </div>
+
 
       {/* Gender-Specific Verification Modal */}
       {showVerificationModal && (

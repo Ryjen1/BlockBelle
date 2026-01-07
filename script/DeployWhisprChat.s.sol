@@ -8,7 +8,10 @@ contract DeployWhisprChat is Script {
     function run() public {
         vm.startBroadcast();
 
-        WhisprChat chat = new WhisprChat(3600); // 1 hour interval
+        // Celo Mainnet Engagement Rewards address
+        address engagementRewards = 0x25db74CF4E7BA120526fd87e159CF656d94bAE43;
+
+        WhisprChat chat = new WhisprChat(3600, engagementRewards); // 1 hour interval
 
         vm.stopBroadcast();
 
