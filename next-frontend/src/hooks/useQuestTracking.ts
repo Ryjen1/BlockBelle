@@ -37,7 +37,7 @@ const REWARDS_WALLET = '0x0000000000000000000000000000000000000000'; // TODO: Re
 
 export function useQuestTracking() {
     const { address } = useAccount();
-    const { isVerified } = useSelfVerification();
+    const { verificationData } = useSelfVerification();
     const [progress, setProgress] = useState<QuestProgress>({
         messageCount: 0,
         isVerified: false,
@@ -65,10 +65,10 @@ export function useQuestTracking() {
 
     // Update verification status
     useEffect(() => {
-        if (isVerified && !progress.isVerified) {
+        if (verificationData.selfVerified && !progress.isVerified) {
             setProgress(prev => ({ ...prev, isVerified: true }));
         }
-    }, [isVerified, progress.isVerified]);
+    }, [verificationData.selfVerified, progress.isVerified]);
 
     // Save progress to localStorage
     useEffect(() => {
