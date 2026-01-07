@@ -16,9 +16,8 @@ import Image from 'next/image';
 import { useEngagementRewards } from '@/hooks/useEngagementRewards';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<
-    'register' | 'group' | 'main' | 'check' | 'account' | 'gooddollar' | 'quests'
-  >('register');
+  type TabType = 'register' | 'group' | 'main' | 'check' | 'account' | 'gooddollar' | 'quests';
+  const [activeTab, setActiveTab] = useState<TabType>('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
   
