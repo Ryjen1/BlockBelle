@@ -14,12 +14,24 @@ export default function TestRewardsPage() {
   const [testResults, setTestResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Test 1: Check if app is registered
-  const { data: isAppRegistered, error: appRegError } = useReadContract({
+  // Test 1: Check if app is registered (registeredApps returns owner address, not bool)
+  const { data: appOwner, error: appRegError, isLoading: appLoading } = useReadContract({
     address: ACTIVE_REWARDS_CONTRACT,
     abi: ENGAGEMENT_REWARDS_ABI,
-    functionName: 'isAppRegistered',
+    functionName: 'registeredApps',
     args: [CHATABELLA_APP_ADDRESS as `0x${string}`],
+  });
+
+  const isAppRegistered = appOwner && appOwner !== '0x0000000000000000000000000000000000000000';
+
+  // Debug logging
+  console.log('🔍 App Registration Debug:', {
+    contract: ACTIVE_REWARDS_CONTRACT,
+    app: CHATABELLA_APP_ADDRESS,
+    owner: appOwner,
+    isRegistered: isAppRegistered,
+    error: appRegError?.message,
+    loading: appLoading
   });
 
   // Test 2: Check if current user is registered
@@ -160,7 +172,17 @@ export default function TestRewardsPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Chata-Bella App:</span>
-              <span className="font-mono text-xs">{CHATABELLA_APP_ADDRESS}</span>
+              <span className="font-mono text-xs break-all">{CHATABELLA_APP_ADDRESS}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Rewards Contract:</span>
+              <span className="font-mono text-xs break-all">{ACTIVE_REWARDS_CONTRACT}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">App Registered:</span>
+              <span className={`font-semibold ${isAppRegistered ? 'text-green-600' : 'text-red-600'}`}>
+                {appLoading ? 'Loading...' : isAppRegistered ? 'Yes ✅' : 'No ❌'}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Connected Wallet:</span>
