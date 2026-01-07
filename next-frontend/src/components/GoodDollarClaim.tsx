@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAccount, usePublicClient, useWalletClient, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { useIdentitySDK } from '@goodsdks/identity-sdk';
+import ReferralCard from '@/components/ReferralCard';
 
 interface GoodDollarClaimProps {
     className?: string;
@@ -318,7 +319,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                 <div className="bg-white/70 rounded-lg p-4">
                                     <p className="text-sm text-gray-600 mb-1">Claimable Amount</p>
                                     <p className="text-3xl font-bold text-gradient-blockbelle">
-                                        {formatG$(entitlementAmount as bigint)} G$
+                                        {claimSuccess ? "0.00" : formatG$(entitlementAmount as bigint)} G$
                                     </p>
                                     {nextClaimTime && (
                                         <p className="text-xs text-gray-500 mt-2">
@@ -327,7 +328,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                     )}
                                 </div>
 
-                                {entitlementAmount && (entitlementAmount as bigint) > 0n ? (
+                                {!claimSuccess && entitlementAmount && (entitlementAmount as bigint) > 0n ? (
                                     <button
                                         onClick={handleClaim}
                                         disabled={isClaiming}
@@ -344,27 +345,39 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                     </button>
                                 ) : (
                                     <div className="text-center py-4">
-                                        <p className="text-sm text-gray-600">
-                                            No G$ available to claim right now. Check back later!
-                                        </p>
-                                        <button
-                                            onClick={() => { refetchEntitlement(); refetchBalance(); }}
-                                            className="mt-3 text-blockbelle-purple hover:text-blockbelle-pink font-medium text-sm underline"
-                                        >
-                                            Refresh Status
-                                        </button>
+                                        {claimSuccess ? (
+                                            <p className="text-sm text-green-600 font-medium bg-green-50 px-3 py-2 rounded-lg inline-block">
+                                                🎉 You have claimed your daily G$!
+                                            </p>
+                                        ) : (
+                                            <p className="text-sm text-gray-600">
+                                                No G$ available to claim right now. Check back later!
+                                            </p>
+                                        )}
+
+                                        {!claimSuccess && (
+                                            <button
+                                                onClick={() => { refetchEntitlement(); refetchBalance(); }}
+                                                className="mt-3 text-blockbelle-purple hover:text-blockbelle-pink font-medium text-sm underline block mx-auto"
+                                            >
+                                                Refresh Status
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
                         )}
                     </div>
 
-                    <div className="bg-gradient-to-br from-blockbelle-purple/10 to-blockbelle-indigo/10 border border-blockbelle-purple/30 rounded-xl p-4">
+                    <div className="bg-gradient-to-br from-blockbelle-purple/10 to-blockbelle-indigo/10 border border-blockbelle-purple/30 rounded-xl p-4 mb-4">
                         <h3 className="text-sm font-semibold text-blockbelle-purple mb-2">About GoodDollar UBI</h3>
                         <p className="text-xs text-gray-700">
                             GoodDollar provides Universal Basic Income to anyone, anywhere. Your daily G$ claim helps create a more equitable financial system. Gas fees are minimal (~$0.01 on Celo).
                         </p>
                     </div>
+
+                    {/* Referral Card */}
+                    <ReferralCard />
                 </div>
             )}
         </div>

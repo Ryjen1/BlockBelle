@@ -72,7 +72,7 @@ export default function HomePage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">BlockBelle</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Chata-Bella</h1>
             <div className="flex items-center space-x-4">
               <UserProfile />
               <SimpleOnboarding
@@ -88,7 +88,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/10"></div>
         <Image
           src="/hero-image.jpg"
-          alt="BlockBelle Hero"
+          alt="Chata-Bella Hero"
           fill
           className="object-cover opacity-10"
           priority
@@ -96,7 +96,7 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-pink-200 to-purple-200 bg-clip-text text-transparent">
-              BlockBelle
+              Chata-Bella
             </h1>
             <p className="text-sm mb-3 max-w-xl mx-auto leading-relaxed">
               The elegant web3 chat dApp where women in blockchain connect,

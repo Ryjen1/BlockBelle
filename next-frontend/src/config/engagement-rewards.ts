@@ -17,7 +17,7 @@ export const ACTIVE_REWARDS_CONTRACT =
 
 // Your app's contract address (if using smart contract integration)
 // For client-side only integration, this would be your backend signing address
-export const BLOCKBELLE_APP_ADDRESS = '0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C'; // WhisprChat contract (core app contract)
+export const CHATABELLA_APP_ADDRESS = '0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C'; // WhisprChat contract (core app contract)
 
 // Engagement Rewards ABI - minimal for client-side integration
 export const ENGAGEMENT_REWARDS_ABI = [
@@ -85,7 +85,7 @@ export const DEFAULT_REWARD_PERCENTAGES = {
 
 // Storage keys for local state
 export const STORAGE_KEYS = {
-  INVITER_ADDRESS: 'blockbelle_inviter',
-  LAST_CLAIM_ATTEMPT: 'blockbelle_last_claim',
-  CLAIM_SUCCESS: 'blockbelle_claim_success',
+  INVITER_ADDRESS: 'chatabella_inviter',
+  LAST_CLAIM_ATTEMPT: 'chatabella_last_claim',
+  CLAIM_SUCCESS: 'chatabella_claim_success',
 } as const;

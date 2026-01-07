@@ -32,7 +32,7 @@ interface QuestProgress {
     claimStreak: number;
 }
 
-const QUEST_STORAGE_KEY = 'blockbelle_quest_progress';
+const QUEST_STORAGE_KEY = 'chatabella_quest_progress';
 const REWARDS_WALLET = '0x0000000000000000000000000000000000000000'; // TODO: Replace with actual rewards wallet
 
 export function useQuestTracking() {

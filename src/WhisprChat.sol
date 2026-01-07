@@ -59,11 +59,17 @@ contract WhisprChat is AutomationCompatibleInterface {
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
 
+import "../contracts/src/IEngagementRewards.sol";
+
+    // Engagement Rewards
+    IEngagementRewards public immutable engagementRewards;
+
     /**
-     * @dev Constructor to initialize Chainlink price feeds and automation interval
+     * @dev Constructor to initialize Chainlink price feeds, automation interval, and Engagement Rewards
      * @param _interval Automation interval in seconds
+     * @param _engagementRewards Address of the Engagement Rewards contract
      */
-    constructor(uint256 _interval) {
+    constructor(uint256 _interval, address _engagementRewards) {
         // Initialize Chainlink price feeds for Sepolia testnet
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
         ethUsdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
@@ -72,6 +78,8 @@ contract WhisprChat is AutomationCompatibleInterface {
         
         interval = _interval;
         lastTimeStamp = block.timestamp;
+
+        engagementRewards = IEngagementRewards(_engagementRewards);
     }
 
     /**
@@ -80,6 +88,59 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param content The message content
      */
     function sendMessage(address to, string memory content) external {
+        _sendMessage(to, content);
+    }
+
+    /**
+     * @dev Send a message and claim engagement reward
+     * @param to The address of the receiver
+     * @param content The message content
+     * @param inviter The address of the inviter (optional)
+     * @param validUntilBlock Block number until which the signature is valid
+     * @param signature The user's signature for registration (only needed for first claim)
+     */
+    function sendMessageWithReward(
+        address to, 
+        string memory content,
+        address inviter,
+        uint256 validUntilBlock,
+        bytes memory signature
+    ) external {
+        _sendMessage(to, content);
+
+        // Try to claim engagement reward
+        try engagementRewards.appClaim(
+            msg.sender,
+            inviter,
+            validUntilBlock,
+            signature
+        ) returns (bool success) {
+            // Reward claimed successfully or failed silently
+        } catch {
+            // Ignore errors to ensure message is sent even if reward fails
+        }
+    }
+
+    /**
+     * @dev Claim engagement reward standalone (without sending message)
+     * @param inviter The address of the inviter (optional)
+     * @param validUntilBlock Block number until which the signature is valid
+     * @param signature The user's signature for registration (only needed for first claim)
+     */
+    function claimEngagementReward(
+        address inviter,
+        uint256 validUntilBlock,
+        bytes memory signature
+    ) external {
+        engagementRewards.appClaim(
+            msg.sender,
+            inviter,
+            validUntilBlock,
+            signature
+        );
+    }
+
+    function _sendMessage(address to, string memory content) internal {
         require(to != address(0), "Invalid receiver address");
         require(bytes(content).length > 0, "Message content cannot be empty");
         require(to != msg.sender, "Cannot send message to yourself");

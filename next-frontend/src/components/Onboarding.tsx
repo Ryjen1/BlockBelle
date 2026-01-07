@@ -90,7 +90,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <SparklesIcon className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-4">Welcome to BlockBelle</h1>
+            <h1 className="text-3xl font-bold text-white mb-4">Welcome to Chata-Bella</h1>
             <p className="text-pink-100 text-lg mb-8">
               Connect with amazing women in Web3 through verified ENS conversations
             </p>
@@ -216,7 +216,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 </>
               ) : (
                 <>
-                  <span>Join BlockBelle Community</span>
+                  <span>Join Chata-Bella Community</span>
                   <ArrowRightIcon className="h-5 w-5" />
                 </>
               )}
@@ -235,7 +235,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircleIcon className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-4">Welcome to BlockBelle!</h1>
+            <h1 className="text-3xl font-bold text-white mb-4">Welcome to Chata-Bella!</h1>
             <p className="text-green-100 text-lg">
               You're now part of the community and ready to start chatting
             </p>

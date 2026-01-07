@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { GiftIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { useEngagementRewards } from '@/hooks/useEngagementRewards';
-import { ACTIVE_REWARDS_CONTRACT, ENGAGEMENT_REWARDS_ABI, BLOCKBELLE_APP_ADDRESS } from '@/config/engagement-rewards';
+import { ACTIVE_REWARDS_CONTRACT, ENGAGEMENT_REWARDS_ABI, CHATABELLA_APP_ADDRESS } from '@/config/engagement-rewards';
 import { type Address } from 'viem';
 
 interface EngagementRewardsClaimProps {
@@ -92,7 +92,7 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
         abi: ENGAGEMENT_REWARDS_ABI,
         functionName: 'nonContractAppClaim',
         args: [
-          BLOCKBELLE_APP_ADDRESS as Address,
+          CHATABELLA_APP_ADDRESS as Address,
           inviterAddress,
           validUntilBlock,
           userSignature,
@@ -128,7 +128,7 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
     return (
       <div className={`bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 ${className}`}>
         <p className="text-sm text-yellow-800">
-          ⚠️ BlockBelle is not yet registered for engagement rewards. Check back soon!
+          ⚠️ Chata-Bella is not yet registered for engagement rewards. Check back soon!
         </p>
       </div>
     );
@@ -195,7 +195,7 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
 
       <div className="bg-white/70 rounded-lg p-4 mb-4">
         <p className="text-sm text-gray-700 mb-3">
-          You were invited to BlockBelle! Claim your welcome bonus in GoodDollar (G$). Both you and your inviter will receive rewards.
+          You were invited to Chata-Bella! Claim your welcome bonus in GoodDollar (G$). Both you and your inviter will receive rewards.
         </p>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">

@@ -5,7 +5,7 @@ import { useAccount, usePublicClient, useWalletClient, useReadContract } from 'w
 import { isAddress, type Address } from 'viem';
 import {
   ACTIVE_REWARDS_CONTRACT,
-  BLOCKBELLE_APP_ADDRESS,
+  CHATABELLA_APP_ADDRESS,
   ENGAGEMENT_REWARDS_ABI,
   STORAGE_KEYS,
 } from '@/config/engagement-rewards';
@@ -40,7 +40,7 @@ export function useEngagementRewards() {
     address: ACTIVE_REWARDS_CONTRACT,
     abi: ENGAGEMENT_REWARDS_ABI,
     functionName: 'isAppRegistered',
-    args: [BLOCKBELLE_APP_ADDRESS as Address],
+    args: [CHATABELLA_APP_ADDRESS as Address],
   });
 
   // Check if user is already registered with the app
@@ -48,7 +48,7 @@ export function useEngagementRewards() {
     address: ACTIVE_REWARDS_CONTRACT,
     abi: ENGAGEMENT_REWARDS_ABI,
     functionName: 'isUserRegistered',
-    args: address ? [BLOCKBELLE_APP_ADDRESS as Address, address] : undefined,
+    args: address ? [CHATABELLA_APP_ADDRESS as Address, address] : undefined,
     query: {
       enabled: !!address && !!isAppRegistered,
     }
@@ -108,7 +108,7 @@ export function useEngagementRewards() {
         address: ACTIVE_REWARDS_CONTRACT,
         abi: ENGAGEMENT_REWARDS_ABI,
         functionName: 'canClaim',
-        args: [BLOCKBELLE_APP_ADDRESS as Address, address],
+        args: [CHATABELLA_APP_ADDRESS as Address, address],
       });
 
       const [canClaim, reason] = result as [boolean, string];
@@ -149,7 +149,7 @@ export function useEngagementRewards() {
 
     // ⚠️ CRITICAL: This message format must exactly match the backend signature format
     // Currently mismatched with backend - needs to include "for user {address}"
-    const message = `Claim engagement reward from app ${BLOCKBELLE_APP_ADDRESS} for user ${address} with inviter ${inviter} valid until block ${validUntilBlock}`;
+    const message = `Claim engagement reward from app ${CHATABELLA_APP_ADDRESS} for user ${address} with inviter ${inviter} valid until block ${validUntilBlock}`;
 
     try {
       const signature = await walletClient.signMessage({

@@ -9,7 +9,7 @@ import { IIdentityVerificationHubV2 } from "@selfxyz/contracts/contracts/interfa
 
 /**
  * @title ProofOfHuman
- * @notice BlockBelle on-chain verification contract - Age 18+ verification
+ * @notice Chata-Bella on-chain verification contract - Age 18+ verification
  * @dev Extends Self Protocol's SelfVerificationRoot for on-chain attestations
  */
 contract ProofOfHuman is SelfVerificationRoot {
@@ -33,7 +33,7 @@ contract ProofOfHuman is SelfVerificationRoot {
     event VerificationCompleted(ISelfVerificationRoot.GenericDiscloseOutputV2 output, bytes userData);
 
     /**
-     * @notice Constructor for BlockBelle verification
+     * @notice Constructor for Chata-Bella verification
      * @param identityVerificationHubV2Address The address of the Identity Verification Hub V2
      * @param scopeSeed The scope seed for this contract
      * @param _verificationConfig The verification configuration (age 18+)
@@ -77,6 +77,7 @@ contract ProofOfHuman is SelfVerificationRoot {
 
         emit VerificationCompleted(output, userData);
     }
+
 
     /**
      * @notice Implementation of getConfigId from SelfVerificationRoot

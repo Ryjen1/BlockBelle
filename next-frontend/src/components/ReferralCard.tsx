@@ -35,13 +35,13 @@ export default function ReferralCard() {
                 </div>
                 <div>
                     <h3 className="text-xl font-bold text-gradient-blockbelle">Invite & Earn</h3>
-                    <p className="text-sm text-gray-600">Share BlockBelle with friends</p>
+                    <p className="text-sm text-gray-600">Share Chata-Bella with friends</p>
                 </div>
             </div>
 
             <div className="bg-white/70 rounded-lg p-4 mb-4">
                 <p className="text-sm text-gray-700 mb-3">
-                    Invite friends to join BlockBelle and earn G$ rewards through GoodDollar Engagement Rewards!
+                    Invite friends to join Chata-Bella and earn G$ rewards through GoodDollar Engagement Rewards!
                 </p>
                 <div className="space-y-2">
                     <div className="flex items-center space-x-2 text-sm">
