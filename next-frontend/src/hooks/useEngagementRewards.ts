@@ -118,15 +118,28 @@ export function useEngagementRewards() {
       setState(prev => ({
         ...prev,
         canClaimReward: canClaim,
-        claimError: canClaim ? null : 'Not eligible to claim',
+        claimError: canClaim ? null : 'Not eligible to claim rewards yet',
         isCheckingEligibility: false,
       }));
     } catch (error: any) {
       console.error('Error checking eligibility:', error);
+      
+      // Detect common error types
+      const errorMessage = error.message || error.toString() || '';
+      let userFriendlyError = 'Failed to check eligibility';
+      
+      if (errorMessage.toLowerCase().includes('not whitelisted') || 
+          errorMessage.toLowerCase().includes('user not whitelisted')) {
+        userFriendlyError = 'You need to verify with GoodDollar first to be eligible for rewards';
+      } else if (errorMessage.toLowerCase().includes('already claimed') || 
+                 errorMessage.toLowerCase().includes('cooldown')) {
+        userFriendlyError = 'You have already claimed rewards recently. Check back in 180 days.';
+      }
+      
       setState(prev => ({
         ...prev,
         canClaimReward: false,
-        claimError: error.message || 'Failed to check eligibility',
+        claimError: userFriendlyError,
         isCheckingEligibility: false,
       }));
     }
