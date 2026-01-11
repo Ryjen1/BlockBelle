@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { GiftIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { GiftIcon, CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useEngagementRewards } from '@/hooks/useEngagementRewards';
 import { ACTIVE_REWARDS_CONTRACT, ENGAGEMENT_REWARDS_ABI, CHATABELLA_APP_ADDRESS } from '@/config/engagement-rewards';
 import { type Address } from 'viem';
+import GoodDollarVerificationGuide from './GoodDollarVerificationGuide';
 
 interface EngagementRewardsClaimProps {
   className?: string;
@@ -33,6 +34,8 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
   const [claimSuccess, setClaimSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
+  const [showVerificationGuide, setShowVerificationGuide] = useState(false);
+  const [isWhitelistError, setIsWhitelistError] = useState(false);
 
   const { writeContractAsync } = useWriteContract();
 
@@ -105,7 +108,22 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
 
     } catch (error: any) {
       console.error('Error claiming reward:', error);
-      setErrorMsg(error.message || 'Failed to claim reward');
+      
+      // Detect whitelisting errors
+      const errorMessage = error.message || error.toString() || '';
+      const isWhitelisted = errorMessage.toLowerCase().includes('not whitelisted') || 
+                           errorMessage.toLowerCase().includes('user not whitelisted') ||
+                           errorMessage.toLowerCase().includes('whitelisted');
+      
+      setIsWhitelistError(isWhitelisted);
+      
+      if (isWhitelisted) {
+        setErrorMsg('You need to verify with GoodDollar first');
+        setShowVerificationGuide(true);
+      } else {
+        setErrorMsg(error.message || 'Failed to claim reward');
+      }
+      
       setIsClaiming(false);
     }
   };
@@ -153,6 +171,27 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
     return null;
   }
 
+  // Show verification guide if whitelisting error occurred
+  if (showVerificationGuide && isWhitelistError) {
+    return (
+      <div className={`space-y-4 ${className}`}>
+        <GoodDollarVerificationGuide onClose={() => setShowVerificationGuide(false)} />
+        
+        {/* Option to try again */}
+        <button
+          onClick={() => {
+            setShowVerificationGuide(false);
+            setIsWhitelistError(false);
+            setErrorMsg(null);
+          }}
+          className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+        >
+          ← Back to Claim
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className={`bg-gradient-to-br from-blockbelle-gold/20 via-blockbelle-pink/10 to-blockbelle-purple/10 border-2 border-blockbelle-gold/40 rounded-xl p-6 shadow-xl ${className}`}>
       <div className="flex items-center space-x-3 mb-4">
@@ -166,9 +205,22 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
       </div>
 
       {errorMsg && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-2">
-          <XCircleIcon className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-600">{errorMsg}</p>
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-start space-x-2 mb-2">
+            <XCircleIcon className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm text-red-600 font-medium">{errorMsg}</p>
+              {isWhitelistError && (
+                <button
+                  onClick={() => setShowVerificationGuide(true)}
+                  className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium underline flex items-center"
+                >
+                  <InformationCircleIcon className="h-4 w-4 mr-1" />
+                  How to get verified
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -214,16 +266,31 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blockbelle-purple"></div>
           <span className="ml-3 text-sm text-gray-600">Checking eligibility...</span>
         </div>
-      ) : claimError ? (
+      ) : claimError && claimError.toLowerCase().includes('not eligible') ? (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-          <p className="text-sm text-yellow-800">
-            ⚠️ {claimError}
-          </p>
+          <div className="flex items-start space-x-2">
+            <XCircleIcon className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm text-yellow-800 mb-2">
+                ⚠️ {claimError}
+              </p>
+              <p className="text-xs text-yellow-700 mb-2">
+                This usually means you're not verified with GoodDollar yet. Complete verification to claim rewards.
+              </p>
+              <button
+                onClick={() => setShowVerificationGuide(true)}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium underline flex items-center"
+              >
+                <InformationCircleIcon className="h-4 w-4 mr-1" />
+                How to get verified
+              </button>
+            </div>
+          </div>
           <button
             onClick={checkEligibility}
-            className="mt-2 text-sm text-blockbelle-purple hover:text-blockbelle-pink font-medium underline"
+            className="mt-3 w-full text-sm text-blockbelle-purple hover:text-blockbelle-pink font-medium underline"
           >
-            Check again
+            Check eligibility again
           </button>
         </div>
       ) : (
