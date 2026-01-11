@@ -7,7 +7,7 @@ import { celo } from 'viem/chains';
 // In production, use environment variables and never commit this
 const APP_PRIVATE_KEY = process.env.APP_SIGNING_KEY as `0x${string}`;
 
-// Chata-Bella app address - WhisprChat contract (core app)
+// Chata-Bella app address - WhisprChat contract approved on DEV
 const CHATABELLA_APP_ADDRESS = '0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C';
 
 export async function POST(request: NextRequest) {
