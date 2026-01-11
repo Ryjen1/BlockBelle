@@ -190,12 +190,15 @@ export default function EngagementRewardsTest() {
           });
         } else {
           const error = await response.json();
+          const errorDetail = error.error || 'Unknown error';
           results.push({
             name: 'Backend Signature API',
             status: 'fail',
             message: '❌ Backend API failed',
-            details: error.error || 'Unknown error',
-            action: 'Check APP_SIGNING_KEY in .env.local',
+            details: errorDetail,
+            action: errorDetail.includes('configuration') 
+              ? 'Check APP_SIGNING_KEY in .env.local' 
+              : 'Check server logs for details',
           });
         }
       } catch (error: any) {
@@ -271,7 +274,15 @@ export default function EngagementRewardsTest() {
 
     } catch (error: any) {
       console.error('Error testing claim:', error);
-      alert(`Claim failed: ${error.message}`);
+      
+      // Detect whitelisting errors
+      const errorMessage = error.message || '';
+      if (errorMessage.toLowerCase().includes('not whitelisted') || 
+          errorMessage.toLowerCase().includes('whitelisted')) {
+        alert(`⚠️ User Not Whitelisted\n\nThis address needs to verify with GoodDollar first:\n\n1. Download GoodDollar app\n2. Complete face verification\n3. Wait for confirmation\n4. Try claiming again\n\nError: ${error.message}`);
+      } else {
+        alert(`Claim failed: ${error.message}`);
+      }
     } finally {
       setIsRunning(false);
     }
