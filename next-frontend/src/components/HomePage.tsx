@@ -10,6 +10,7 @@ import SimpleOnboarding from '@/components/SimpleOnboarding';
 import Account from '@/components/Account';
 import GoodDollarClaim from '@/components/GoodDollarClaim';
 import EngagementRewardsClaim from '@/components/EngagementRewardsClaim';
+import GoodDollarInfoBanner from '@/components/GoodDollarInfoBanner';
 import QuestsPage from '@/components/QuestsPage';
 import Navbar, { type TabType } from '@/components/Navbar';
 import Image from 'next/image';
@@ -19,6 +20,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabType>('register');
   const [_hasRegistered, _setHasRegistered] = useState(false);
   const [_showRegistrationCheck, _setShowRegistrationCheck] = useState(false);
+  const [showInfoBanner, setShowInfoBanner] = useState(false);
   
   // Engagement rewards hook
   const { inviterAddress, setInviterAddress } = useEngagementRewards();
@@ -32,6 +34,8 @@ export default function HomePage() {
     
     if (refParam && refParam.startsWith('0x')) {
       setInviterAddress(refParam as `0x${string}`);
+      // Show info banner when user arrives with referral link
+      setShowInfoBanner(true);
     }
   }, [setInviterAddress]);
 
@@ -180,6 +184,10 @@ export default function HomePage() {
         {activeTab === 'account' && <Account />}
         {activeTab === 'gooddollar' && (
           <div className="space-y-6">
+            {/* Info banner explaining verification */}
+            {showInfoBanner && inviterAddress && (
+              <GoodDollarInfoBanner showByDefault={false} />
+            )}
             {/* Show Engagement Rewards if user has inviter */}
             {inviterAddress && <EngagementRewardsClaim />}
             <GoodDollarClaim />
