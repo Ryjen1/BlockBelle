@@ -3,16 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useWriteContract, useReadContract, useWatchContractEvent, usePublicClient } from 'wagmi';
 import { parseAbi } from 'viem';
-import MembersList from './MembersList';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 
 const chatAbi = parseAbi([
-  'function createGroup(string _name) external returns (uint256)',
-  'function addMember(uint256 _groupId, address _member) external',
+  'function createGroup(string _name, string _avatarHash, address[] _members) external returns (uint256)',
   'function sendGroupMessage(uint256 _groupId, string _content) external',
-  'function getGroupMessages(uint256 _groupId, uint256 _start, uint256 _count) external view returns ((address sender, string content, uint256 timestamp)[])',
-  'function getGroupMembers(uint256 _groupId) external view returns (address[])',
-  'function groupCount() external view returns (uint256)',
+  'function getGroupConversation(uint256 _groupId) external view returns ((address sender, address receiver, string content, uint256 timestamp)[])',
+  'function getGroupDetails(uint256 _groupId) external view returns (string memory name, string memory avatarHash, address[] memory members)',
+  'function getTotalGroups() external view returns (uint256)',
 ])
 
 const registryAbi = parseAbi([
@@ -31,7 +29,6 @@ export default function GroupChat() {
    const [messages, setMessages] = useState<Message[]>([])
    const [newMessage, setNewMessage] = useState('')
    const [newGroupName, setNewGroupName] = useState('')
-   const [newMember, setNewMember] = useState('')
    const [userNames, setUserNames] = useState<Record<string, string>>({})
 
    const { writeContract } = useWriteContract()
@@ -46,8 +43,8 @@ export default function GroupChat() {
    const { data: groupMessages } = useReadContract({
      address: CONTRACT_ADDRESSES.chat,
      abi: chatAbi,
-     functionName: 'getGroupMessages',
-     args: selectedGroup ? [BigInt(selectedGroup), 0n, 100n] : undefined,
+     functionName: 'getGroupConversation',
+     args: selectedGroup ? [BigInt(selectedGroup)] : undefined,
    })
 
    useEffect(() => {
@@ -93,21 +90,11 @@ export default function GroupChat() {
       address: CONTRACT_ADDRESSES.chat,
       abi: chatAbi,
       functionName: 'createGroup',
-      args: [newGroupName],
+      args: [newGroupName, "", []], // name, avatarHash, members (empty array, creator added automatically)
     })
     setNewGroupName('')
   }
 
-  const handleAddMember = () => {
-    if (!selectedGroup || !newMember) return
-    writeContract({
-      address: CONTRACT_ADDRESSES.chat,
-      abi: chatAbi,
-      functionName: 'addMember',
-      args: [BigInt(selectedGroup), newMember as `0x${string}`],
-    })
-    setNewMember('')
-  }
 
   const handleSendMessage = () => {
     if (!selectedGroup || !newMessage) return
@@ -120,20 +107,13 @@ export default function GroupChat() {
     setNewMessage('')
   }
 
-  const handleMemberSelect = (member: { address: string; ensName: string }) => {
-    setNewMember(member.address)
-  }
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Members List */}
-        <div className="lg:col-span-1">
-          <MembersList onSelectUser={handleMemberSelect} showChatButton={false} />
-        </div>
+      <div className="grid grid-cols-1 gap-6">
 
         {/* Main Chat Area */}
-        <div className="lg:col-span-3 bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-4">Group Chat</h2>
 
           <div className="mb-4">
@@ -166,21 +146,6 @@ export default function GroupChat() {
             <div className="md:col-span-2">
               {selectedGroup && (
                 <>
-                  <div className="mb-4">
-                    <input
-                      type="text"
-                      value={newMember}
-                      onChange={(e) => setNewMember(e.target.value)}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
-                      placeholder="Member address"
-                    />
-                    <button
-                      onClick={handleAddMember}
-                      className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
-                      Add Member
-                    </button>
-                  </div>
 
                   <div className="border rounded p-4 h-64 overflow-y-auto mb-4">
                     {messages.length === 0 ? (
