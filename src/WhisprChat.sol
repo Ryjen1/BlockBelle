@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
+import "../contracts/src/IEngagementRewards.sol";
 
 /**
  * @title ChatApp
@@ -59,10 +60,17 @@ contract WhisprChat is AutomationCompatibleInterface {
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
 
-import "../contracts/src/IEngagementRewards.sol";
+    // Modifiers
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
 
     // Engagement Rewards
     IEngagementRewards public immutable engagementRewards;
+
+    // Owner of the contract
+    address public owner;
 
     /**
      * @dev Constructor to initialize Chainlink price feeds, automation interval, and Engagement Rewards
@@ -70,6 +78,7 @@ import "../contracts/src/IEngagementRewards.sol";
      * @param _engagementRewards Address of the Engagement Rewards contract
      */
     constructor(uint256 _interval, address _engagementRewards) {
+        owner = msg.sender;
         // Initialize Chainlink price feeds for Sepolia testnet
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
         ethUsdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
@@ -339,12 +348,12 @@ import "../contracts/src/IEngagementRewards.sol";
         int btcEthPrice = getLatestPrice(address(btcEthPriceFeed));
         int bnbEthPrice = getLatestPrice(address(bnbEthPriceFeed));
 
-        // Format prices and create messages
+        // Format prices and create messages (BTC/USD and ETH/USD have 8 decimals, BTC/ETH and BNB/ETH have 18 decimals)
         string[4] memory priceMessages = [
             string(abi.encodePacked("BTC/USD = ", _intToString(btcUsdPrice / 1e8))),
             string(abi.encodePacked("ETH/USD = ", _intToString(ethUsdPrice / 1e8))),
-            string(abi.encodePacked("BTC/ETH = ", _intToString(btcEthPrice / 1e8))),
-            string(abi.encodePacked("BNB/ETH = ", _intToString(bnbEthPrice / 1e8)))
+            string(abi.encodePacked("BTC/ETH = ", _intToString(btcEthPrice / 1e18))),
+            string(abi.encodePacked("BNB/ETH = ", _intToString(bnbEthPrice / 1e18)))
         ];
 
         // Post each price as a separate oracle message
@@ -387,7 +396,7 @@ import "../contracts/src/IEngagementRewards.sol";
      * @dev Update the automation interval (only callable by contract owner)
      * @param _newInterval New interval in seconds
      */
-    function updateInterval(uint256 _newInterval) external {
+    function updateInterval(uint256 _newInterval) external onlyOwner {
         interval = _newInterval;
     }
 
@@ -395,7 +404,7 @@ import "../contracts/src/IEngagementRewards.sol";
      * @dev Update the default group ID for oracle messages
      * @param _newDefaultGroupId New default group ID
      */
-    function updateDefaultGroupId(uint256 _newDefaultGroupId) external {
+    function updateDefaultGroupId(uint256 _newDefaultGroupId) external onlyOwner {
         require(_newDefaultGroupId > 0 && _newDefaultGroupId <= groupCounter, "Invalid group ID");
         defaultGroupId = _newDefaultGroupId;
     }
