@@ -247,6 +247,7 @@ Currently enforced at the frontend level. Future updates will include smart cont
 - [x] Self Protocol verification
 - [x] Group chat
 - [x] Private messaging
+- [x] Group invites
 - [x] Gender-specific verification messages
 
 ### Phase 2: Enhanced Security 🚧
