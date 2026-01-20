@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
+import "../contracts/src/IEngagementRewards.sol";
 
 /**
  * @title ChatApp
@@ -24,6 +25,13 @@ contract WhisprChat is AutomationCompatibleInterface {
         address[] members;
     }
 
+    // Group Invite struct
+    struct GroupInvite {
+        address invitee;
+        address inviter;
+        uint256 timestamp;
+    }
+
     // Mapping from conversation ID to array of messages
     mapping(bytes32 => Message[]) private conversations;
 
@@ -32,6 +40,9 @@ contract WhisprChat is AutomationCompatibleInterface {
 
     // Mapping from group ID to array of messages
     mapping(uint256 => Message[]) private groupConversations;
+
+    // Mapping from group ID to pending invites
+    mapping(uint256 => GroupInvite[]) public groupInvites;
 
     // Counter for group IDs
     uint256 public groupCounter;
@@ -58,11 +69,21 @@ contract WhisprChat is AutomationCompatibleInterface {
     event GroupCreated(uint256 indexed groupId, string name, address indexed creator);
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
+    event GroupInviteSent(uint256 indexed groupId, address indexed invitee, address indexed inviter);
+    event GroupInviteAccepted(uint256 indexed groupId, address indexed invitee);
+    event GroupInviteDeclined(uint256 indexed groupId, address indexed invitee);
 
-import "../contracts/src/IEngagementRewards.sol";
+    // Modifiers
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
 
     // Engagement Rewards
     IEngagementRewards public immutable engagementRewards;
+
+    // Owner of the contract
+    address public owner;
 
     /**
      * @dev Constructor to initialize Chainlink price feeds, automation interval, and Engagement Rewards
@@ -70,6 +91,7 @@ import "../contracts/src/IEngagementRewards.sol";
      * @param _engagementRewards Address of the Engagement Rewards contract
      */
     constructor(uint256 _interval, address _engagementRewards) {
+        owner = msg.sender;
         // Initialize Chainlink price feeds for Sepolia testnet
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
         ethUsdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
@@ -223,6 +245,124 @@ import "../contracts/src/IEngagementRewards.sol";
     }
 
     /**
+     * @dev Invite a user to join a group
+     * @param groupId The ID of the group
+     * @param invitee The address of the user to invite
+     */
+    function inviteToGroup(uint256 groupId, address invitee) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(invitee != address(0), "Invalid invitee address");
+        require(isGroupMember(groupId, msg.sender), "Only group members can invite");
+        require(!isGroupMember(groupId, invitee), "User is already a member");
+        require(invitee != msg.sender, "Cannot invite yourself");
+
+        // Check if already invited
+        GroupInvite[] storage invites = groupInvites[groupId];
+        for (uint256 i = 0; i < invites.length; i++) {
+            require(invites[i].invitee != invitee, "User already invited");
+        }
+
+        // Add invite
+        invites.push(GroupInvite({
+            invitee: invitee,
+            inviter: msg.sender,
+            timestamp: block.timestamp
+        }));
+
+        emit GroupInviteSent(groupId, invitee, msg.sender);
+    }
+
+    /**
+     * @dev Accept an invite to join a group
+     * @param groupId The ID of the group
+     */
+    function acceptInvite(uint256 groupId) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+
+        GroupInvite[] storage invites = groupInvites[groupId];
+        bool found = false;
+        uint256 index;
+        for (uint256 i = 0; i < invites.length; i++) {
+            if (invites[i].invitee == msg.sender) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        require(found, "No pending invite found");
+
+        // Add to members
+        groups[groupId].members.push(msg.sender);
+
+        // Remove invite
+        invites[index] = invites[invites.length - 1];
+        invites.pop();
+
+        emit GroupInviteAccepted(groupId, msg.sender);
+    }
+
+    /**
+     * @dev Decline an invite to join a group
+     * @param groupId The ID of the group
+     */
+    function declineInvite(uint256 groupId) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+
+        GroupInvite[] storage invites = groupInvites[groupId];
+        bool found = false;
+        uint256 index;
+        for (uint256 i = 0; i < invites.length; i++) {
+            if (invites[i].invitee == msg.sender) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        require(found, "No pending invite found");
+
+        // Remove invite
+        invites[index] = invites[invites.length - 1];
+        invites.pop();
+
+        emit GroupInviteDeclined(groupId, msg.sender);
+    }
+
+    /**
+     * @dev Get pending invites for the caller
+     * @return groupIds Array of group IDs with pending invites
+     * @return inviters Array of inviters corresponding to the group IDs
+     * @return timestamps Array of invite timestamps
+     */
+    function getMyInvites() external view returns (uint256[] memory groupIds, address[] memory inviters, uint256[] memory timestamps) {
+        uint256 totalInvites = 0;
+        for (uint256 groupId = 1; groupId <= groupCounter; groupId++) {
+            GroupInvite[] memory invites = groupInvites[groupId];
+            for (uint256 i = 0; i < invites.length; i++) {
+                if (invites[i].invitee == msg.sender) {
+                    totalInvites++;
+                }
+            }
+        }
+
+        groupIds = new uint256[](totalInvites);
+        inviters = new address[](totalInvites);
+        timestamps = new uint256[](totalInvites);
+
+        uint256 index = 0;
+        for (uint256 groupId = 1; groupId <= groupCounter; groupId++) {
+            GroupInvite[] memory invites = groupInvites[groupId];
+            for (uint256 i = 0; i < invites.length; i++) {
+                if (invites[i].invitee == msg.sender) {
+                    groupIds[index] = groupId;
+                    inviters[index] = invites[i].inviter;
+                    timestamps[index] = invites[i].timestamp;
+                    index++;
+                }
+            }
+        }
+    }
+
+    /**
      * @dev Send a message to a group
      * @param groupId The ID of the group
      * @param content The message content
@@ -339,12 +479,12 @@ import "../contracts/src/IEngagementRewards.sol";
         int btcEthPrice = getLatestPrice(address(btcEthPriceFeed));
         int bnbEthPrice = getLatestPrice(address(bnbEthPriceFeed));
 
-        // Format prices and create messages
+        // Format prices and create messages (BTC/USD and ETH/USD have 8 decimals, BTC/ETH and BNB/ETH have 18 decimals)
         string[4] memory priceMessages = [
             string(abi.encodePacked("BTC/USD = ", _intToString(btcUsdPrice / 1e8))),
             string(abi.encodePacked("ETH/USD = ", _intToString(ethUsdPrice / 1e8))),
-            string(abi.encodePacked("BTC/ETH = ", _intToString(btcEthPrice / 1e8))),
-            string(abi.encodePacked("BNB/ETH = ", _intToString(bnbEthPrice / 1e8)))
+            string(abi.encodePacked("BTC/ETH = ", _intToString(btcEthPrice / 1e18))),
+            string(abi.encodePacked("BNB/ETH = ", _intToString(bnbEthPrice / 1e18)))
         ];
 
         // Post each price as a separate oracle message
@@ -387,7 +527,7 @@ import "../contracts/src/IEngagementRewards.sol";
      * @dev Update the automation interval (only callable by contract owner)
      * @param _newInterval New interval in seconds
      */
-    function updateInterval(uint256 _newInterval) external {
+    function updateInterval(uint256 _newInterval) external onlyOwner {
         interval = _newInterval;
     }
 
@@ -395,7 +535,7 @@ import "../contracts/src/IEngagementRewards.sol";
      * @dev Update the default group ID for oracle messages
      * @param _newDefaultGroupId New default group ID
      */
-    function updateDefaultGroupId(uint256 _newDefaultGroupId) external {
+    function updateDefaultGroupId(uint256 _newDefaultGroupId) external onlyOwner {
         require(_newDefaultGroupId > 0 && _newDefaultGroupId <= groupCounter, "Invalid group ID");
         defaultGroupId = _newDefaultGroupId;
     }
