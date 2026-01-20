@@ -20,6 +20,7 @@ Chata-Bella is a decentralized chat application built on Celo that creates a saf
 ### 💬 Decentralized Chat
 - **ENS-Based Registration**: Users register with custom ENS names
 - **Group & Private Messaging**: Chat with the entire community or individual members
+- **Group Invites**: Invite members to groups with accept/decline functionality
 - **On-Chain Messages**: All messages stored on Celo for transparency and permanence
 
 ### 👑 Tier System
