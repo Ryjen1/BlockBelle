@@ -25,6 +25,13 @@ contract WhisprChat is AutomationCompatibleInterface {
         address[] members;
     }
 
+    // Group Invite struct
+    struct GroupInvite {
+        address invitee;
+        address inviter;
+        uint256 timestamp;
+    }
+
     // Mapping from conversation ID to array of messages
     mapping(bytes32 => Message[]) private conversations;
 
@@ -33,6 +40,9 @@ contract WhisprChat is AutomationCompatibleInterface {
 
     // Mapping from group ID to array of messages
     mapping(uint256 => Message[]) private groupConversations;
+
+    // Mapping from group ID to pending invites
+    mapping(uint256 => GroupInvite[]) public groupInvites;
 
     // Counter for group IDs
     uint256 public groupCounter;
@@ -59,6 +69,9 @@ contract WhisprChat is AutomationCompatibleInterface {
     event GroupCreated(uint256 indexed groupId, string name, address indexed creator);
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
+    event GroupInviteSent(uint256 indexed groupId, address indexed invitee, address indexed inviter);
+    event GroupInviteAccepted(uint256 indexed groupId, address indexed invitee);
+    event GroupInviteDeclined(uint256 indexed groupId, address indexed invitee);
 
     // Modifiers
     modifier onlyOwner() {
@@ -229,6 +242,124 @@ contract WhisprChat is AutomationCompatibleInterface {
         emit GroupCreated(groupId, name, msg.sender);
 
         return groupId;
+    }
+
+    /**
+     * @dev Invite a user to join a group
+     * @param groupId The ID of the group
+     * @param invitee The address of the user to invite
+     */
+    function inviteToGroup(uint256 groupId, address invitee) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(invitee != address(0), "Invalid invitee address");
+        require(isGroupMember(groupId, msg.sender), "Only group members can invite");
+        require(!isGroupMember(groupId, invitee), "User is already a member");
+        require(invitee != msg.sender, "Cannot invite yourself");
+
+        // Check if already invited
+        GroupInvite[] storage invites = groupInvites[groupId];
+        for (uint256 i = 0; i < invites.length; i++) {
+            require(invites[i].invitee != invitee, "User already invited");
+        }
+
+        // Add invite
+        invites.push(GroupInvite({
+            invitee: invitee,
+            inviter: msg.sender,
+            timestamp: block.timestamp
+        }));
+
+        emit GroupInviteSent(groupId, invitee, msg.sender);
+    }
+
+    /**
+     * @dev Accept an invite to join a group
+     * @param groupId The ID of the group
+     */
+    function acceptInvite(uint256 groupId) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+
+        GroupInvite[] storage invites = groupInvites[groupId];
+        bool found = false;
+        uint256 index;
+        for (uint256 i = 0; i < invites.length; i++) {
+            if (invites[i].invitee == msg.sender) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        require(found, "No pending invite found");
+
+        // Add to members
+        groups[groupId].members.push(msg.sender);
+
+        // Remove invite
+        invites[index] = invites[invites.length - 1];
+        invites.pop();
+
+        emit GroupInviteAccepted(groupId, msg.sender);
+    }
+
+    /**
+     * @dev Decline an invite to join a group
+     * @param groupId The ID of the group
+     */
+    function declineInvite(uint256 groupId) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+
+        GroupInvite[] storage invites = groupInvites[groupId];
+        bool found = false;
+        uint256 index;
+        for (uint256 i = 0; i < invites.length; i++) {
+            if (invites[i].invitee == msg.sender) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        require(found, "No pending invite found");
+
+        // Remove invite
+        invites[index] = invites[invites.length - 1];
+        invites.pop();
+
+        emit GroupInviteDeclined(groupId, msg.sender);
+    }
+
+    /**
+     * @dev Get pending invites for the caller
+     * @return groupIds Array of group IDs with pending invites
+     * @return inviters Array of inviters corresponding to the group IDs
+     * @return timestamps Array of invite timestamps
+     */
+    function getMyInvites() external view returns (uint256[] memory groupIds, address[] memory inviters, uint256[] memory timestamps) {
+        uint256 totalInvites = 0;
+        for (uint256 groupId = 1; groupId <= groupCounter; groupId++) {
+            GroupInvite[] memory invites = groupInvites[groupId];
+            for (uint256 i = 0; i < invites.length; i++) {
+                if (invites[i].invitee == msg.sender) {
+                    totalInvites++;
+                }
+            }
+        }
+
+        groupIds = new uint256[](totalInvites);
+        inviters = new address[](totalInvites);
+        timestamps = new uint256[](totalInvites);
+
+        uint256 index = 0;
+        for (uint256 groupId = 1; groupId <= groupCounter; groupId++) {
+            GroupInvite[] memory invites = groupInvites[groupId];
+            for (uint256 i = 0; i < invites.length; i++) {
+                if (invites[i].invitee == msg.sender) {
+                    groupIds[index] = groupId;
+                    inviters[index] = invites[i].inviter;
+                    timestamps[index] = invites[i].timestamp;
+                    index++;
+                }
+            }
+        }
     }
 
     /**
