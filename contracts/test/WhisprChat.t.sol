@@ -207,4 +207,166 @@ contract WhisprChatTest is Test {
         chat.performUpkeep("");
         // Should not revert, but also not do anything if conditions not met
     }
+
+    // Tests for user roles and permissions
+    function testCreatorIsAdmin() public {
+        address[] memory members = new address[](1);
+        members[0] = user2;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        assertEq(uint256(chat.getUserRole(groupId, user1)), uint256(WhisprChat.Role.Admin));
+        assertEq(uint256(chat.getUserRole(groupId, user2)), uint256(WhisprChat.Role.Member));
+    }
+
+    function testAssignRole() public {
+        address[] memory members = new address[](1);
+        members[0] = user2;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.assignRole(groupId, user2, WhisprChat.Role.Moderator);
+
+        assertEq(uint256(chat.getUserRole(groupId, user2)), uint256(WhisprChat.Role.Moderator));
+    }
+
+    function testAssignRoleNonAdminFails() public {
+        address[] memory members = new address[](2);
+        members[0] = user2;
+        members[1] = user3;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user2);
+        vm.expectRevert("Only admins can assign roles");
+        chat.assignRole(groupId, user3, WhisprChat.Role.Moderator);
+    }
+
+    function testRemoveParticipant() public {
+        address[] memory members = new address[](1);
+        members[0] = user2;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.removeParticipant(groupId, user2);
+
+        assertFalse(chat.isGroupMember(groupId, user2));
+    }
+
+    function testRemoveParticipantNonAdminFails() public {
+        address[] memory members = new address[](2);
+        members[0] = user2;
+        members[1] = user3;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user2);
+        vm.expectRevert("Insufficient permissions");
+        chat.removeParticipant(groupId, user3);
+    }
+
+    function testMuteUser() public {
+        address[] memory members = new address[](1);
+        members[0] = user2;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.muteUser(groupId, user2);
+
+        assertTrue(chat.mutedUsers(groupId, user2));
+    }
+
+    function testMutedUserCannotSendMessage() public {
+        address[] memory members = new address[](1);
+        members[0] = user2;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.muteUser(groupId, user2);
+
+        vm.prank(user2);
+        vm.expectRevert("You are muted in this group");
+        chat.sendGroupMessage(groupId, "Message");
+    }
+
+    function testUnmuteUser() public {
+        address[] memory members = new address[](1);
+        members[0] = user2;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.muteUser(groupId, user2);
+
+        vm.prank(user1);
+        chat.unmuteUser(groupId, user2);
+
+        assertFalse(chat.mutedUsers(groupId, user2));
+    }
+
+    function testPinMessage() public {
+        address[] memory members = new address[](1);
+        members[0] = user1;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.sendGroupMessage(groupId, "Message");
+
+        vm.prank(user1);
+        chat.pinMessage(groupId, 0);
+
+        uint256[] memory pinned = chat.pinnedMessages(groupId);
+        assertEq(pinned.length, 1);
+        assertEq(pinned[0], 0);
+    }
+
+    function testUnpinMessage() public {
+        address[] memory members = new address[](1);
+        members[0] = user1;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.sendGroupMessage(groupId, "Message");
+
+        vm.prank(user1);
+        chat.pinMessage(groupId, 0);
+
+        vm.prank(user1);
+        chat.unpinMessage(groupId, 0);
+
+        uint256[] memory pinned = chat.pinnedMessages(groupId);
+        assertEq(pinned.length, 0);
+    }
+
+    function testPinMessageNonAdminFails() public {
+        address[] memory members = new address[](2);
+        members[0] = user2;
+        members[1] = user3;
+
+        vm.prank(user1);
+        uint256 groupId = chat.createGroup("Test Group", "avatarHash", members);
+
+        vm.prank(user1);
+        chat.sendGroupMessage(groupId, "Message");
+
+        vm.prank(user2);
+        vm.expectRevert("Insufficient permissions");
+        chat.pinMessage(groupId, 0);
+    }
 }
