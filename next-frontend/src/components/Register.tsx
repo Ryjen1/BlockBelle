@@ -24,6 +24,7 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
     const [isVerifyingEns, setIsVerifyingEns] = useState(false)
     const [ensVerified, setEnsVerified] = useState<boolean | null>(null)
     const [verificationError, setVerificationError] = useState('')
+    const [registrationError, setRegistrationError] = useState('')
     const { writeContract } = useWriteContract()
 
    const { data: userDetails } = useReadContract({
@@ -71,6 +72,8 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
    const handleRegister = async () => {
      if (!ensName.trim() || !ensVerified) return
 
+     setRegistrationError('')
+
      try {
        const fullEnsName = ensName.endsWith('.eth') ? ensName : `${ensName}.eth`
        await writeContract({
@@ -83,17 +86,17 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
      } catch (error: any) {
        console.error('Registration failed:', error)
 
-       // Show user-friendly error message
+       // Set inline error message
        if (error.message?.includes('insufficient funds')) {
-         alert('❌ Transaction failed: Insufficient funds for gas. Please get some Base Sepolia ETH from a faucet.')
+         setRegistrationError('Transaction failed: Insufficient funds for gas. Please get some ETH from a faucet.')
        } else if (error.message?.includes('User rejected')) {
-         alert('❌ Transaction cancelled: You rejected the transaction in your wallet.')
+         setRegistrationError('Transaction cancelled: You rejected the transaction in your wallet.')
        } else if (error.message?.includes('already registered')) {
-         alert('❌ Registration failed: You are already registered with a name.')
+         setRegistrationError('Registration failed: You are already registered with a name.')
        } else if (error.message?.includes('Name is already taken')) {
-         alert('❌ Registration failed: This name is already taken. Please choose a different name.')
+         setRegistrationError('Registration failed: This name is already taken. Please choose a different name.')
        } else {
-         alert('❌ Registration failed: ' + (error.message || 'Unknown error. Please try again.'))
+         setRegistrationError('Registration failed: ' + (error.message || 'Unknown error. Please try again.'))
        }
      }
    }
@@ -116,6 +119,8 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
        setEnsVerified(null)
        setVerificationError('')
      }
+     // Clear registration error when name changes
+     setRegistrationError('')
    }, [ensName, address])
 
   // Auto-navigate when registration is successful
@@ -252,6 +257,15 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
                 Get Celo from faucet →
               </a>
             </div>
+
+            {registrationError && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center">
+                  <ExclamationTriangleIcon className="h-5 w-5 text-red-500 mr-3" />
+                  <p className="text-red-700 text-sm">{registrationError}</p>
+                </div>
+              </div>
+            )}
 
             <button
               onClick={handleRegister}
