@@ -264,7 +264,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param groupId The ID of the group
      * @param invitee The address of the user to invite
      */
-    function inviteToGroup(uint256 groupId, address invitee) external {
+    function inviteToGroup(uint256 groupId, address invitee) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(invitee != address(0), "Invalid invitee address");
         require(isGroupMember(groupId, msg.sender), "Only group members can invite");
@@ -291,7 +291,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @dev Accept an invite to join a group
      * @param groupId The ID of the group
      */
-    function acceptInvite(uint256 groupId) external {
+    function acceptInvite(uint256 groupId) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
 
         GroupInvite[] storage invites = groupInvites[groupId];
@@ -320,7 +320,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @dev Decline an invite to join a group
      * @param groupId The ID of the group
      */
-    function declineInvite(uint256 groupId) external {
+    function declineInvite(uint256 groupId) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
 
         GroupInvite[] storage invites = groupInvites[groupId];
