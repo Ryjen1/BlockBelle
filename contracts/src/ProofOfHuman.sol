@@ -21,7 +21,10 @@ contract ProofOfHuman is SelfVerificationRoot {
     
     // Mapping to store verification status for all users
     mapping(address => bool) public isVerified;
-    
+
+    // Mapping to store gender verification status (female only)
+    mapping(address => bool) public isFemaleVerified;
+
     // Mapping to store verification timestamps
     mapping(address => uint256) public verificationTimestamp;
 
@@ -65,14 +68,22 @@ contract ProofOfHuman is SelfVerificationRoot {
     {
         address userAddress = address(uint160(output.userIdentifier));
 
+        // Check gender - only females allowed
+        require(
+            keccak256(abi.encodePacked(output.gender)) == keccak256(abi.encodePacked("F")) ||
+            keccak256(abi.encodePacked(output.gender)) == keccak256(abi.encodePacked("Female")),
+            "Only females are allowed to verify"
+        );
+
         // Store verification results
         verificationSuccessful = true;
         lastOutput = output;
         lastUserData = userData;
         lastUserAddress = userAddress;
-        
-        // Mark user as verified in mapping
+
+        // Mark user as verified in mappings
         isVerified[userAddress] = true;
+        isFemaleVerified[userAddress] = true;
         verificationTimestamp[userAddress] = block.timestamp;
 
         emit VerificationCompleted(output, userData);

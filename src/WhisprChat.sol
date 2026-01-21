@@ -5,6 +5,11 @@ import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.so
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 import "../contracts/src/IEngagementRewards.sol";
 
+// Interface for ProofOfHuman contract
+interface IProofOfHuman {
+    function isFemaleVerified(address user) external view returns (bool);
+}
+
 /**
  * @title ChatApp
  * @dev A smart contract for peer-to-peer and group messaging with Chainlink oracle integration
@@ -79,18 +84,27 @@ contract WhisprChat is AutomationCompatibleInterface {
         _;
     }
 
+    modifier onlyVerifiedFemale() {
+        require(proofOfHuman.isFemaleVerified(msg.sender), "Only verified females can perform this action");
+        _;
+    }
+
     // Engagement Rewards
     IEngagementRewards public immutable engagementRewards;
+
+    // Proof of Human contract for gender verification
+    IProofOfHuman public immutable proofOfHuman;
 
     // Owner of the contract
     address public owner;
 
     /**
-     * @dev Constructor to initialize Chainlink price feeds, automation interval, and Engagement Rewards
+     * @dev Constructor to initialize Chainlink price feeds, automation interval, Engagement Rewards, and Proof of Human
      * @param _interval Automation interval in seconds
      * @param _engagementRewards Address of the Engagement Rewards contract
+     * @param _proofOfHuman Address of the Proof of Human contract
      */
-    constructor(uint256 _interval, address _engagementRewards) {
+    constructor(uint256 _interval, address _engagementRewards, address _proofOfHuman) {
         owner = msg.sender;
         // Initialize Chainlink price feeds for Sepolia testnet
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
@@ -102,6 +116,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         lastTimeStamp = block.timestamp;
 
         engagementRewards = IEngagementRewards(_engagementRewards);
+        proofOfHuman = IProofOfHuman(_proofOfHuman);
     }
 
     /**
@@ -109,7 +124,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param to The address of the receiver
      * @param content The message content
      */
-    function sendMessage(address to, string memory content) external {
+    function sendMessage(address to, string memory content) external onlyVerifiedFemale {
         _sendMessage(to, content);
     }
 
@@ -122,12 +137,12 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param signature The user's signature for registration (only needed for first claim)
      */
     function sendMessageWithReward(
-        address to, 
+        address to,
         string memory content,
         address inviter,
         uint256 validUntilBlock,
         bytes memory signature
-    ) external {
+    ) external onlyVerifiedFemale {
         _sendMessage(to, content);
 
         // Try to claim engagement reward
@@ -153,7 +168,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         address inviter,
         uint256 validUntilBlock,
         bytes memory signature
-    ) external {
+    ) external onlyVerifiedFemale {
         engagementRewards.appClaim(
             msg.sender,
             inviter,
@@ -202,7 +217,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param members Array of member addresses
      * @return groupId The ID of the created group
      */
-    function createGroup(string memory name, string memory avatarHash, address[] memory members) external returns (uint256) {
+    function createGroup(string memory name, string memory avatarHash, address[] memory members) external onlyVerifiedFemale returns (uint256) {
         require(bytes(name).length > 0, "Group name cannot be empty");
         require(members.length > 0, "Group must have at least one member");
 
@@ -249,7 +264,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param groupId The ID of the group
      * @param invitee The address of the user to invite
      */
-    function inviteToGroup(uint256 groupId, address invitee) external {
+    function inviteToGroup(uint256 groupId, address invitee) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(invitee != address(0), "Invalid invitee address");
         require(isGroupMember(groupId, msg.sender), "Only group members can invite");
@@ -276,7 +291,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @dev Accept an invite to join a group
      * @param groupId The ID of the group
      */
-    function acceptInvite(uint256 groupId) external {
+    function acceptInvite(uint256 groupId) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
 
         GroupInvite[] storage invites = groupInvites[groupId];
@@ -305,7 +320,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @dev Decline an invite to join a group
      * @param groupId The ID of the group
      */
-    function declineInvite(uint256 groupId) external {
+    function declineInvite(uint256 groupId) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
 
         GroupInvite[] storage invites = groupInvites[groupId];
@@ -367,7 +382,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param groupId The ID of the group
      * @param content The message content
      */
-    function sendGroupMessage(uint256 groupId, string memory content) external {
+    function sendGroupMessage(uint256 groupId, string memory content) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(bytes(content).length > 0, "Message content cannot be empty");
         require(isGroupMember(groupId, msg.sender), "Not a member of this group");
