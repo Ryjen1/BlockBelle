@@ -124,7 +124,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param to The address of the receiver
      * @param content The message content
      */
-    function sendMessage(address to, string memory content) external {
+    function sendMessage(address to, string memory content) external onlyVerifiedFemale {
         _sendMessage(to, content);
     }
 
@@ -137,12 +137,12 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param signature The user's signature for registration (only needed for first claim)
      */
     function sendMessageWithReward(
-        address to, 
+        address to,
         string memory content,
         address inviter,
         uint256 validUntilBlock,
         bytes memory signature
-    ) external {
+    ) external onlyVerifiedFemale {
         _sendMessage(to, content);
 
         // Try to claim engagement reward
@@ -168,7 +168,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         address inviter,
         uint256 validUntilBlock,
         bytes memory signature
-    ) external {
+    ) external onlyVerifiedFemale {
         engagementRewards.appClaim(
             msg.sender,
             inviter,
