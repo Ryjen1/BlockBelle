@@ -46,14 +46,35 @@ export const useChat = () => {
   useEffect(() => {
     if (!contract) return;
 
-    const onMessageSent = (from: string, to: string, message: string, timestamp: number) => {
-      console.log('New message sent:', { from, to, message, timestamp });
-      // TODO: Update local state or trigger refetch
+    const onMessageSent = (from: string, to: string, message: string, timestamp: any) => {
+      const conversationId = getConversationId(from, to);
+      const newMessage: Message = {
+        sender: from,
+        receiver: to,
+        content: message,
+        timestamp: timestamp.toNumber ? timestamp.toNumber() : Number(timestamp)
+      };
+      setConversations(prev => {
+        const newMap = new Map(prev);
+        const msgs = newMap.get(conversationId) || [];
+        newMap.set(conversationId, [...msgs, newMessage]);
+        return newMap;
+      });
     };
 
-    const onGroupMessageSent = (groupId: number, sender: string, message: string, timestamp: number) => {
-      console.log('New group message:', { groupId, sender, message, timestamp });
-      // TODO: Update local state or trigger refetch
+    const onGroupMessageSent = (groupId: number, sender: string, message: string, timestamp: any) => {
+      const newMessage: Message = {
+        sender: sender,
+        receiver: '',
+        content: message,
+        timestamp: timestamp.toNumber ? timestamp.toNumber() : Number(timestamp)
+      };
+      setGroupConversations(prev => {
+        const newMap = new Map(prev);
+        const msgs = newMap.get(groupId) || [];
+        newMap.set(groupId, [...msgs, newMessage]);
+        return newMap;
+      });
     };
 
     contract.on('MessageSent', onMessageSent);
@@ -73,7 +94,12 @@ export const useChat = () => {
 
   const getConversation = async (user1: string, user2: string): Promise<Message[]> => {
     if (!contract) return [];
-    return await contract.getConversation(user1, user2);
+    const conversationId = getConversationId(user1, user2);
+    const cached = conversations.get(conversationId);
+    if (cached) return cached;
+    const msgs = await contract.getConversation(user1, user2);
+    setConversations(prev => new Map(prev).set(conversationId, msgs));
+    return msgs;
   };
 
   const createGroup = async (name: string, avatarHash: string, members: string[]): Promise<number> => {
@@ -93,7 +119,11 @@ export const useChat = () => {
 
   const getGroupConversation = async (groupId: number): Promise<Message[]> => {
     if (!contract) return [];
-    return await contract.getGroupConversation(groupId);
+    const cached = groupConversations.get(groupId);
+    if (cached) return cached;
+    const msgs = await contract.getGroupConversation(groupId);
+    setGroupConversations(prev => new Map(prev).set(groupId, msgs));
+    return msgs;
   };
 
   const getGroupDetails = async (groupId: number): Promise<Group> => {
@@ -154,6 +184,8 @@ export const useChat = () => {
 
   return {
     account,
+    conversations,
+    groupConversations,
     sendMessage,
     getConversation,
     createGroup,
