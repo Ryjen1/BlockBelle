@@ -1,27 +1,38 @@
 {
-  "name": "next-frontend",
+  "name": "blockbelle-nextjs",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/fix-vercel-build.js",
     "start": "next start",
-    "lint": "next lint",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.0.0",
-    "react": "^18",
-    "react-dom": "^18"
+    "@goodsdks/engagement-sdk": "^1.0.3",
+    "@goodsdks/identity-sdk": "^1.0.5",
+    "@heroicons/react": "^2.2.0",
+    "@rainbow-me/rainbowkit": "^2.2.9",
+    "@selfxyz/qrcode": "^1.0.17",
+    "@tailwindcss/postcss": "^4.1.17",
+    "@tanstack/react-query": "^5.90.10",
+    "autoprefixer": "^10.4.22",
+    "ethers": "^6.15.0",
+    "lucide-react": "^0.554.0",
+    "next": "^16.0.8",
+    "postcss": "^8.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.17",
+    "viem": "^2.39.3",
+    "wagmi": "^2.19.4"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/jest": "^29.5.8",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "typescript": "^5"
+    "@types/node": "^24.10.1",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "ignore-loader": "^0.1.2",
+    "typescript": "^5.9.3"
   }
 }

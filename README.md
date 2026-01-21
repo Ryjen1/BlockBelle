@@ -1,91 +1,327 @@
-# BlockBelle
+# 💬 Chata-Bella
 
-A decentralized chat application built with Solidity and Foundry, featuring peer-to-peer messaging, group chats with user roles and permissions, and user registration with display names
+**A Web3 Chat Platform Exclusively for Women in Blockchain**
 
-## Contracts
+Chata-Bella is a decentralized chat application built on Celo that creates a safe, verified space for women in the Web3 ecosystem to connect, collaborate, and thrive together.
 
-- **WhisprChat**: Handles messaging, group creation with user roles (Admin, Moderator, Member), permissions for managing participants, pinning messages, muting users, and Chainlink automation for posting price updates.
-- **WhisprRegistry**: Manages user registration with ENS names and avatars
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://chata-bella.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Built on Celo](https://img.shields.io/badge/Built%20on-Celo-green)](https://celo.org)
 
-## Deployed Contracts
+---
 
-- **WhisprChat**: [0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C](https://celoscan.io/address/0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C) (Celo Mainnet)
-- **WhisprRegistry**: [0xA72B585c6b2293177dd485Ec0A607A471976771B](https://celoscan.io/address/0xA72B585c6b2293177dd485Ec0A607A471976771B) (Celo Mainnet)
+## ✨ Features
 
-## Foundry
+### 🔐 Identity Verification
+- **Self Protocol Integration**: Privacy-preserving age (18+) and gender verification using zero-knowledge proofs
+- **Queens-Only Access**: Gender-based verification ensures the platform remains a women-only space
+- **Contract-Level Enforcement**: Smart contract-level gender verification prevents unauthorized access
+- **On-Chain Attestation**: Verification status stored permanently on Celo blockchain
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+### 💬 Decentralized Chat
+- **ENS-Based Registration**: Users register with custom ENS names
+- **Group & Private Messaging**: Chat with the entire community or individual members
+- **Group Invites**: Invite members to groups with accept/decline functionality
+- **On-Chain Messages**: All messages stored on Celo for transparency and permanence
 
-Foundry consists of:
+### 👑 Tier System
+- **Tier 3 Badge**: Verified users receive a crown badge indicating trusted identity
+- **Visual Recognition**: Badges displayed next to usernames throughout the app
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### 🎨 Modern UI/UX
+- **Gradient Design**: Beautiful pink-to-purple-to-indigo gradients
+- **Responsive**: Works seamlessly on desktop and mobile
+- **Dark Mode Ready**: Glassmorphism effects and modern aesthetics
 
-## Documentation
+### 🎁 GoodDollar Engagement Rewards
+- **Welcome Bonus**: New users receive ~63 G$ when referred by existing users
+- **Referral Rewards**: Inviters earn ~27 G$ for each successful referral
+- **One-Time Claim**: Users can claim rewards once per app per 180 days
+- **Verified Users Only**: Only users verified on GoodDollar can claim rewards
+- **Seamless Integration**: Built with GoodDollar Engagement SDK
 
-https://book.getfoundry.sh/
+---
 
-## Usage
+## 🚀 Tech Stack
 
-### Build
+### Frontend
+- **Next.js 16** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first styling
+- **Wagmi** - React hooks for Ethereum
+- **RainbowKit** - Wallet connection UI
+- **Self Protocol** - Identity verification
 
-```shell
-$ forge build
+### Smart Contracts
+- **Solidity 0.8.28** - Smart contract language
+- **Foundry** - Development framework
+- **OpenZeppelin** - Security-audited contract libraries
+
+### Blockchain
+- **Celo Mainnet** - Layer-1 blockchain
+- **IPFS** - Decentralized storage (planned)
+
+---
+
+## 📋 Prerequisites
+
+- Node.js 18+ (Note: Self Protocol requires Node 22-23)
+- npm or yarn
+- MetaMask or compatible Web3 wallet
+- Celo tokens for gas fees
+
+---
+
+## 🛠️ Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/Chata-Bella.git
+cd Chata-Bella
 ```
 
-### Test
-
-```shell
-$ forge test
+### 2. Install Frontend Dependencies
+```bash
+cd next-frontend
+npm install
 ```
 
-### Format
-
-```shell
-$ forge fmt
+### 3. Install Contract Dependencies
+```bash
+cd ../contracts
+forge install
 ```
 
-### Gas Snapshots
+### 4. Environment Setup
 
-```shell
-$ forge snapshot
+Create `.env.local` in `next-frontend/`:
+```env
+# Self Protocol Verification
+NEXT_PUBLIC_SELF_ENDPOINT=0x0a0c863edd00af4e48ecbb6f0cd11fd42dee56c2
+NEXT_PUBLIC_SELF_APP_NAME=Chata-Bella
+NEXT_PUBLIC_SELF_SCOPE=chatabella-chat
+
+# GoodDollar Engagement Rewards - Backend Signing Key
+# Generate with: node scripts/generate-signing-key.js
+APP_SIGNING_KEY=your_private_key_here
+
+# Celo RPC
+NEXT_PUBLIC_CELO_RPC_URL=https://forno.celo.org
+NEXT_PUBLIC_APP_URL=https://chata-bella.vercel.app/
 ```
 
-### Anvil
-
-```shell
-$ anvil
+Create `.env.production` in `next-frontend/`:
+```env
+NEXT_PUBLIC_SELF_ENDPOINT=0x0a0c863edd00af4e48ecbb6f0cd11fd42dee56c2
+NEXT_PUBLIC_SELF_APP_NAME=Chata-Bella
+NEXT_PUBLIC_SELF_SCOPE=chatabella-chat
 ```
 
-### Deploy
-
-Deploy WhisprChat:
-
-```shell
-$ forge script script/DeployWhisprChat.s.sol --rpc-url <your_rpc_url> --private-key <your_private_key>
+Create `.env` in `contracts/`:
+```env
+PRIVATE_KEY=your_private_key_here
+CELOSCAN_API_KEY=your_celoscan_api_key
 ```
 
-Deploy WhisprRegistry:
+---
 
-```shell
-$ forge script script/DeployWhisprRegistry.s.sol --rpc-url <your_rpc_url> --private-key <your_private_key>
+## 🏃 Running Locally
+
+### Frontend Development Server
+```bash
+cd next-frontend
+npm run dev
+```
+Visit `http://localhost:3000`
+
+### Smart Contract Testing
+```bash
+cd contracts
+forge test
 ```
 
-### Cast
+---
 
-```shell
-$ cast <subcommand>
+## 📦 Deployment
+
+### Deploy Smart Contracts
+```bash
+cd contracts
+forge script script/DeployProofOfHuman.s.sol --rpc-url celo --broadcast --verify
 ```
 
-### Help
+### Deploy Frontend to Vercel
+1. Push to GitHub
+2. Connect repository to Vercel
+3. Set root directory to `next-frontend`
+4. Add environment variables
+5. Deploy
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+---
 
+## 🏗️ Project Structure
 
-### License
-MIT
+```
+Chata-Bella/
+├── next-frontend/          # Next.js frontend application
+│   ├── src/
+│   │   ├── app/           # App router pages
+│   │   ├── components/    # React components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── config/        # Wagmi & Web3 config
+│   │   └── lib/           # Utility functions
+│   ├── public/            # Static assets
+│   └── package.json
+│
+├── contracts/             # Solidity smart contracts
+│   ├── src/
+│   │   ├── ProofOfHuman.sol    # Verification contract
+│   │   ├── WhisprRegistry.sol  # User registration
+│   │   └── WhisprChat.sol      # Chat functionality
+│   ├── script/            # Deployment scripts
+│   └── test/              # Contract tests
+│
+└── README.md
+```
+
+---
+
+## 📝 Smart Contracts
+
+### Deployed Contracts (Celo Mainnet)
+
+| Contract | Address | Purpose |
+|----------|---------|---------|
+| ProofOfHuman | `0x0a0c863edd00af4e48ecbb6f0cd11fd42dee56c2` | Identity verification |
+| WhisprRegistry | `0xA72B585c6b2293177dd485Ec0A607A471976771B` | User registration |
+| WhisprChat | `0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C` | Chat messages |
+
+### Contract Verification
+All contracts are verified on CeloScan. View source code and interact directly on the blockchain explorer.
+
+---
+
+## 🎯 How It Works
+
+### 1. Connect Wallet
+Users connect their Web3 wallet (MetaMask, WalletConnect, etc.) using RainbowKit.
+
+### 2. Register
+Choose a unique ENS name and register on-chain. This creates your Chata-Bella identity.
+
+### 3. Verify Identity
+Scan QR code with Self Protocol mobile app to verify:
+- Age (18+)
+- Gender (Female only)
+- Nationality (optional)
+
+### 4. Get Verified
+- **Females**: Receive "Congratulations, Queen!" message and Tier 3 badge
+- **Males**: Receive respectful redirect message and cannot access chat
+
+### 5. Start Chatting
+Join the community chat or send private messages to other verified queens!
+
+---
+
+## 🔒 Security & Privacy
+
+### Zero-Knowledge Proofs
+Self Protocol uses ZK proofs to verify identity without revealing personal information. Your passport data never leaves your device.
+
+### On-Chain Verification
+Verification status is stored on Celo blockchain, ensuring:
+- Transparency
+- Immutability
+- Decentralization
+
+### Gender Verification
+Enforced at both frontend and smart contract levels for maximum security. Only verified females can participate in chat functions.
+
+---
+
+## 🛣️ Roadmap
+
+### Phase 1: Core Features ✅
+- [x] Wallet connection
+- [x] ENS registration
+- [x] Self Protocol verification
+- [x] Group chat
+- [x] Private messaging
+- [x] Group invites
+- [x] Gender-specific verification messages
+
+### Phase 2: Enhanced Security ✅
+- [x] Contract-level gender enforcement
+- [ ] Multi-signature admin controls
+- [ ] Rate limiting for spam prevention
+
+### Phase 3: Community Features 🔮
+- [ ] Mentorship matching
+- [ ] Event calendar
+- [ ] Resource library
+- [ ] Reputation system
+- [ ] NFT badges for achievements
+
+### Phase 4: Scalability 🌟
+- [ ] IPFS integration for media
+- [ ] Layer-2 scaling solutions
+- [ ] Mobile app (React Native)
+- [ ] Multi-chain support
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from women developers! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow existing code style
+- Write tests for new features
+- Update documentation
+- Be respectful and inclusive
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Celo Foundation** - For the amazing blockchain infrastructure
+- **Self Protocol** - For privacy-preserving identity verification
+- **RainbowKit** - For beautiful wallet connection UX
+- **All the Queens** - Who inspire and support this project
+
+---
+
+## 📞 Contact & Support
+
+- **Website**: [chata-bella.vercel.app](https://chata-bella.vercel.app)
+- **Twitter**: [@ChataBella](https://twitter.com/ChataBella) *(coming soon)*
+- **Discord**: [Join our community](https://discord.gg/chatabella) *(coming soon)*
+
+---
+
+## 💖 Support the Project
+
+If you believe in creating safe spaces for women in Web3, consider:
+- ⭐ Starring this repository
+- 🐦 Sharing on social media
+- 👩‍💻 Contributing code or documentation
+- 💬 Spreading the word to women builders
+
+---
+
+**Built with 💜 for Queens in Web3**
+
+*Chata-Bella - Where Women in Blockchain Connect, Collaborate, and Thrive*

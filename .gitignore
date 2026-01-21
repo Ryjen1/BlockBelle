@@ -6,5 +6,5 @@ broadcast/
 cache/
 node_modules/
 dist/
-lib/
+/lib/
 artifacts
