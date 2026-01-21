@@ -3,7 +3,12 @@ pragma solidity ^0.8.20;
 
 import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../contracts/src/IEngagementRewards.sol";
+
+// Interface for ProofOfHuman contract
+interface IProofOfHuman {
+    function isFemaleVerified(address user) external view returns (bool);
+}
 
 /**
  * @title ChatApp
@@ -34,6 +39,13 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
         mapping(address => Role) roles;
     }
 
+    // Group Invite struct
+    struct GroupInvite {
+        address invitee;
+        address inviter;
+        uint256 timestamp;
+    }
+
     // Mapping from conversation ID to array of messages
     mapping(bytes32 => Message[]) private conversations;
 
@@ -43,8 +55,8 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
     // Mapping from group ID to array of messages
     mapping(uint256 => Message[]) private groupConversations;
 
-    // Mapping for efficient group membership checks (groupId => member => isMember)
-    mapping(uint256 => mapping(address => bool)) public groupMembers;
+    // Mapping from group ID to pending invites
+    mapping(uint256 => GroupInvite[]) public groupInvites;
 
     // Mapping for muted users in groups (groupId => user => isMuted)
     mapping(uint256 => mapping(address => bool)) public mutedUsers;
@@ -77,18 +89,38 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
     event GroupCreated(uint256 indexed groupId, string name, address indexed creator);
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
-    event RoleAssigned(uint256 indexed groupId, address indexed user, Role role);
-    event ParticipantRemoved(uint256 indexed groupId, address indexed participant);
-    event MessagePinned(uint256 indexed groupId, uint256 messageIndex);
-    event MessageUnpinned(uint256 indexed groupId, uint256 messageIndex);
-    event UserMuted(uint256 indexed groupId, address indexed user);
-    event UserUnmuted(uint256 indexed groupId, address indexed user);
+    event GroupInviteSent(uint256 indexed groupId, address indexed invitee, address indexed inviter);
+    event GroupInviteAccepted(uint256 indexed groupId, address indexed invitee);
+    event GroupInviteDeclined(uint256 indexed groupId, address indexed invitee);
+
+    // Modifiers
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
+
+    modifier onlyVerifiedFemale() {
+        require(proofOfHuman.isFemaleVerified(msg.sender), "Only verified females can perform this action");
+        _;
+    }
+
+    // Engagement Rewards
+    IEngagementRewards public immutable engagementRewards;
+
+    // Proof of Human contract for gender verification
+    IProofOfHuman public immutable proofOfHuman;
+
+    // Owner of the contract
+    address public owner;
 
     /**
-     * @dev Constructor to initialize Chainlink price feeds and automation interval
-     * @param _interval Automation interval in seconds for posting price updates
+     * @dev Constructor to initialize Chainlink price feeds, automation interval, Engagement Rewards, and Proof of Human
+     * @param _interval Automation interval in seconds
+     * @param _engagementRewards Address of the Engagement Rewards contract
+     * @param _proofOfHuman Address of the Proof of Human contract
      */
-    constructor(uint256 _interval) {
+    constructor(uint256 _interval, address _engagementRewards, address _proofOfHuman) {
+        owner = msg.sender;
         // Initialize Chainlink price feeds for Sepolia testnet
         // Note: Update these addresses for mainnet deployment
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
@@ -98,6 +130,9 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
 
         interval = _interval;
         lastTimeStamp = block.timestamp;
+
+        engagementRewards = IEngagementRewards(_engagementRewards);
+        proofOfHuman = IProofOfHuman(_proofOfHuman);
     }
 
     /**
@@ -105,7 +140,60 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
      * @param to The address of the receiver
      * @param content The message content
      */
-    function sendMessage(address to, string memory content) external {
+    function sendMessage(address to, string memory content) external onlyVerifiedFemale {
+        _sendMessage(to, content);
+    }
+
+    /**
+     * @dev Send a message and claim engagement reward
+     * @param to The address of the receiver
+     * @param content The message content
+     * @param inviter The address of the inviter (optional)
+     * @param validUntilBlock Block number until which the signature is valid
+     * @param signature The user's signature for registration (only needed for first claim)
+     */
+    function sendMessageWithReward(
+        address to,
+        string memory content,
+        address inviter,
+        uint256 validUntilBlock,
+        bytes memory signature
+    ) external onlyVerifiedFemale {
+        _sendMessage(to, content);
+
+        // Try to claim engagement reward
+        try engagementRewards.appClaim(
+            msg.sender,
+            inviter,
+            validUntilBlock,
+            signature
+        ) returns (bool success) {
+            // Reward claimed successfully or failed silently
+        } catch {
+            // Ignore errors to ensure message is sent even if reward fails
+        }
+    }
+
+    /**
+     * @dev Claim engagement reward standalone (without sending message)
+     * @param inviter The address of the inviter (optional)
+     * @param validUntilBlock Block number until which the signature is valid
+     * @param signature The user's signature for registration (only needed for first claim)
+     */
+    function claimEngagementReward(
+        address inviter,
+        uint256 validUntilBlock,
+        bytes memory signature
+    ) external onlyVerifiedFemale {
+        engagementRewards.appClaim(
+            msg.sender,
+            inviter,
+            validUntilBlock,
+            signature
+        );
+    }
+
+    function _sendMessage(address to, string memory content) internal {
         require(to != address(0), "Invalid receiver address");
         require(bytes(content).length > 0, "Message content cannot be empty");
         require(bytes(content).length <= MAX_MESSAGE_LENGTH, "Message content too long");
@@ -146,7 +234,7 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
      * @param members Array of member addresses
      * @return groupId The ID of the created group
      */
-    function createGroup(string memory name, string memory avatarHash, address[] memory members) external returns (uint256) {
+    function createGroup(string memory name, string memory avatarHash, address[] memory members) external onlyVerifiedFemale returns (uint256) {
         require(bytes(name).length > 0, "Group name cannot be empty");
         require(members.length > 0, "Group must have at least one member");
         require(members.length <= MAX_GROUP_SIZE, "Group size exceeds maximum allowed");
@@ -199,11 +287,129 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
     }
 
     /**
+     * @dev Invite a user to join a group
+     * @param groupId The ID of the group
+     * @param invitee The address of the user to invite
+     */
+    function inviteToGroup(uint256 groupId, address invitee) external onlyVerifiedFemale {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(invitee != address(0), "Invalid invitee address");
+        require(isGroupMember(groupId, msg.sender), "Only group members can invite");
+        require(!isGroupMember(groupId, invitee), "User is already a member");
+        require(invitee != msg.sender, "Cannot invite yourself");
+
+        // Check if already invited
+        GroupInvite[] storage invites = groupInvites[groupId];
+        for (uint256 i = 0; i < invites.length; i++) {
+            require(invites[i].invitee != invitee, "User already invited");
+        }
+
+        // Add invite
+        invites.push(GroupInvite({
+            invitee: invitee,
+            inviter: msg.sender,
+            timestamp: block.timestamp
+        }));
+
+        emit GroupInviteSent(groupId, invitee, msg.sender);
+    }
+
+    /**
+     * @dev Accept an invite to join a group
+     * @param groupId The ID of the group
+     */
+    function acceptInvite(uint256 groupId) external onlyVerifiedFemale {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+
+        GroupInvite[] storage invites = groupInvites[groupId];
+        bool found = false;
+        uint256 index;
+        for (uint256 i = 0; i < invites.length; i++) {
+            if (invites[i].invitee == msg.sender) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        require(found, "No pending invite found");
+
+        // Add to members
+        groups[groupId].members.push(msg.sender);
+
+        // Remove invite
+        invites[index] = invites[invites.length - 1];
+        invites.pop();
+
+        emit GroupInviteAccepted(groupId, msg.sender);
+    }
+
+    /**
+     * @dev Decline an invite to join a group
+     * @param groupId The ID of the group
+     */
+    function declineInvite(uint256 groupId) external onlyVerifiedFemale {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+
+        GroupInvite[] storage invites = groupInvites[groupId];
+        bool found = false;
+        uint256 index;
+        for (uint256 i = 0; i < invites.length; i++) {
+            if (invites[i].invitee == msg.sender) {
+                found = true;
+                index = i;
+                break;
+            }
+        }
+        require(found, "No pending invite found");
+
+        // Remove invite
+        invites[index] = invites[invites.length - 1];
+        invites.pop();
+
+        emit GroupInviteDeclined(groupId, msg.sender);
+    }
+
+    /**
+     * @dev Get pending invites for the caller
+     * @return groupIds Array of group IDs with pending invites
+     * @return inviters Array of inviters corresponding to the group IDs
+     * @return timestamps Array of invite timestamps
+     */
+    function getMyInvites() external view returns (uint256[] memory groupIds, address[] memory inviters, uint256[] memory timestamps) {
+        uint256 totalInvites = 0;
+        for (uint256 groupId = 1; groupId <= groupCounter; groupId++) {
+            GroupInvite[] memory invites = groupInvites[groupId];
+            for (uint256 i = 0; i < invites.length; i++) {
+                if (invites[i].invitee == msg.sender) {
+                    totalInvites++;
+                }
+            }
+        }
+
+        groupIds = new uint256[](totalInvites);
+        inviters = new address[](totalInvites);
+        timestamps = new uint256[](totalInvites);
+
+        uint256 index = 0;
+        for (uint256 groupId = 1; groupId <= groupCounter; groupId++) {
+            GroupInvite[] memory invites = groupInvites[groupId];
+            for (uint256 i = 0; i < invites.length; i++) {
+                if (invites[i].invitee == msg.sender) {
+                    groupIds[index] = groupId;
+                    inviters[index] = invites[i].inviter;
+                    timestamps[index] = invites[i].timestamp;
+                    index++;
+                }
+            }
+        }
+    }
+
+    /**
      * @dev Send a message to a group
      * @param groupId The ID of the group
      * @param content The message content
      */
-    function sendGroupMessage(uint256 groupId, string memory content) external {
+    function sendGroupMessage(uint256 groupId, string memory content) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(bytes(content).length > 0, "Message content cannot be empty");
         require(bytes(content).length <= MAX_MESSAGE_LENGTH, "Message content too long");
@@ -459,13 +665,12 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
         int btcEthPrice = getLatestPrice(address(btcEthPriceFeed));
         int bnbEthPrice = getLatestPrice(address(bnbEthPriceFeed));
 
-        // Format prices and create messages
-        // Chainlink prices are returned with 8 decimals, so divide by 1e8 for human-readable format
+        // Format prices and create messages (BTC/USD and ETH/USD have 8 decimals, BTC/ETH and BNB/ETH have 18 decimals)
         string[4] memory priceMessages = [
             string(abi.encodePacked("BTC/USD = ", _intToString(btcUsdPrice / 1e8))),
             string(abi.encodePacked("ETH/USD = ", _intToString(ethUsdPrice / 1e8))),
-            string(abi.encodePacked("BTC/ETH = ", _intToString(btcEthPrice / 1e8))),
-            string(abi.encodePacked("BNB/ETH = ", _intToString(bnbEthPrice / 1e8)))
+            string(abi.encodePacked("BTC/ETH = ", _intToString(btcEthPrice / 1e18))),
+            string(abi.encodePacked("BNB/ETH = ", _intToString(bnbEthPrice / 1e18)))
         ];
 
         // Post each price as a separate oracle message
