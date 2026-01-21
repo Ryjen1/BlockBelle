@@ -217,7 +217,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param members Array of member addresses
      * @return groupId The ID of the created group
      */
-    function createGroup(string memory name, string memory avatarHash, address[] memory members) external returns (uint256) {
+    function createGroup(string memory name, string memory avatarHash, address[] memory members) external onlyVerifiedFemale returns (uint256) {
         require(bytes(name).length > 0, "Group name cannot be empty");
         require(members.length > 0, "Group must have at least one member");
 
@@ -382,7 +382,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @param groupId The ID of the group
      * @param content The message content
      */
-    function sendGroupMessage(uint256 groupId, string memory content) external {
+    function sendGroupMessage(uint256 groupId, string memory content) external onlyVerifiedFemale {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(bytes(content).length > 0, "Message content cannot be empty");
         require(isGroupMember(groupId, msg.sender), "Not a member of this group");
