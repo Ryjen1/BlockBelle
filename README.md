@@ -1,10 +1,10 @@
 # BlockBelle
 
-A decentralized chat application built with Solidity and Foundry, featuring peer-to-peer messaging, group chats, and user registration with display names
+A decentralized chat application built with Solidity and Foundry, featuring peer-to-peer messaging, group chats with user roles and permissions, and user registration with display names
 
 ## Contracts
 
-- **WhisprChat**: Handles messaging, group creation, and Chainlink automation for posting price updates.
+- **WhisprChat**: Handles messaging, group creation with user roles (Admin, Moderator, Member), permissions for managing participants, pinning messages, muting users, and Chainlink automation for posting price updates.
 - **WhisprRegistry**: Manages user registration with ENS names and avatars
 
 ## Deployed Contracts
