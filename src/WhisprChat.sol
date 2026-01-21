@@ -15,6 +15,9 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
     uint256 public constant MAX_GROUP_SIZE = 100;
     uint256 public constant MAX_MESSAGE_LENGTH = 1000;
 
+    // Role enum for group permissions
+    enum Role { Member, Moderator, Admin }
+
     // Message struct for individual conversations
     struct Message {
         address sender;
@@ -28,6 +31,7 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
         string name;
         string avatarHash;
         address[] members;
+        mapping(address => Role) roles;
     }
 
     // Mapping from conversation ID to array of messages
@@ -41,6 +45,12 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
 
     // Mapping for efficient group membership checks (groupId => member => isMember)
     mapping(uint256 => mapping(address => bool)) public groupMembers;
+
+    // Mapping for muted users in groups (groupId => user => isMuted)
+    mapping(uint256 => mapping(address => bool)) public mutedUsers;
+
+    // Mapping for pinned message indices in groups (groupId => array of message indices)
+    mapping(uint256 => uint256[]) public pinnedMessages;
 
     // Counter for group IDs
     uint256 public groupCounter;
@@ -67,6 +77,12 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
     event GroupCreated(uint256 indexed groupId, string name, address indexed creator);
     event GroupMessageSent(uint256 indexed groupId, address indexed sender, string message, uint256 timestamp);
     event OraclePricesPosted(uint256 indexed groupId, uint256 timestamp);
+    event RoleAssigned(uint256 indexed groupId, address indexed user, Role role);
+    event ParticipantRemoved(uint256 indexed groupId, address indexed participant);
+    event MessagePinned(uint256 indexed groupId, uint256 messageIndex);
+    event MessageUnpinned(uint256 indexed groupId, uint256 messageIndex);
+    event UserMuted(uint256 indexed groupId, address indexed user);
+    event UserUnmuted(uint256 indexed groupId, address indexed user);
 
     /**
      * @dev Constructor to initialize Chainlink price feeds and automation interval
@@ -170,6 +186,10 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
         // Set membership mappings for efficient lookups
         for (uint256 i = 0; i < finalMembers.length; i++) {
             groupMembers[groupId][finalMembers[i]] = true;
+            // Default role is Member (0), set creator as Admin
+            if (finalMembers[i] == msg.sender) {
+                groups[groupId].roles[msg.sender] = Role.Admin;
+            }
         }
 
         // Emit event
@@ -188,6 +208,7 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
         require(bytes(content).length > 0, "Message content cannot be empty");
         require(bytes(content).length <= MAX_MESSAGE_LENGTH, "Message content too long");
         require(isGroupMember(groupId, msg.sender), "Not a member of this group");
+        require(!mutedUsers[groupId][msg.sender], "You are muted in this group");
 
         // Create and store message
         Message memory newMessage = Message({
@@ -240,6 +261,155 @@ contract WhisprChat is AutomationCompatibleInterface, Ownable {
             return false;
         }
         return groupMembers[groupId][user];
+    }
+
+    /**
+     * @dev Get the role of a user in a group
+     * @param groupId The ID of the group
+     * @param user The address to check
+     * @return The role of the user
+     */
+    function getUserRole(uint256 groupId, address user) public view returns (Role) {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, user), "Not a member of this group");
+        return groups[groupId].roles[user];
+    }
+
+    /**
+     * @dev Check if a user has admin or moderator permissions
+     * @param groupId The ID of the group
+     * @param user The address to check
+     * @return True if the user has management permissions
+     */
+    function hasManagementPermissions(uint256 groupId, address user) public view returns (bool) {
+        Role role = getUserRole(groupId, user);
+        return role == Role.Admin || role == Role.Moderator;
+    }
+
+    /**
+     * @dev Check if a user has admin permissions
+     * @param groupId The ID of the group
+     * @param user The address to check
+     * @return True if the user is admin
+     */
+    function hasAdminPermissions(uint256 groupId, address user) public view returns (bool) {
+        return getUserRole(groupId, user) == Role.Admin;
+    }
+
+    /**
+     * @dev Assign a role to a user in a group (only admins can do this)
+     * @param groupId The ID of the group
+     * @param user The address of the user
+     * @param role The role to assign
+     */
+    function assignRole(uint256 groupId, address user, Role role) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, user), "User is not a member of this group");
+        require(hasAdminPermissions(groupId, msg.sender), "Only admins can assign roles");
+        require(role <= Role.Admin, "Invalid role");
+
+        groups[groupId].roles[user] = role;
+        emit RoleAssigned(groupId, user, role);
+    }
+
+    /**
+     * @dev Remove a participant from a group (admins and moderators can do this)
+     * @param groupId The ID of the group
+     * @param participant The address of the participant to remove
+     */
+    function removeParticipant(uint256 groupId, address participant) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, participant), "User is not a member of this group");
+        require(hasManagementPermissions(groupId, msg.sender), "Insufficient permissions");
+        require(participant != msg.sender || hasAdminPermissions(groupId, msg.sender), "Cannot remove yourself unless you are admin");
+        require(getUserRole(groupId, participant) != Role.Admin || hasAdminPermissions(groupId, msg.sender), "Only admins can remove other admins");
+
+        // Remove from members array
+        address[] storage members = groups[groupId].members;
+        for (uint256 i = 0; i < members.length; i++) {
+            if (members[i] == participant) {
+                members[i] = members[members.length - 1];
+                members.pop();
+                break;
+            }
+        }
+
+        // Remove from mappings
+        groupMembers[groupId][participant] = false;
+        delete groups[groupId].roles[participant];
+        delete mutedUsers[groupId][participant];
+
+        emit ParticipantRemoved(groupId, participant);
+    }
+
+    /**
+     * @dev Mute a user in a group (admins and moderators can do this)
+     * @param groupId The ID of the group
+     * @param user The address of the user to mute
+     */
+    function muteUser(uint256 groupId, address user) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, user), "User is not a member of this group");
+        require(hasManagementPermissions(groupId, msg.sender), "Insufficient permissions");
+
+        mutedUsers[groupId][user] = true;
+        emit UserMuted(groupId, user);
+    }
+
+    /**
+     * @dev Unmute a user in a group (admins and moderators can do this)
+     * @param groupId The ID of the group
+     * @param user The address of the user to unmute
+     */
+    function unmuteUser(uint256 groupId, address user) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(isGroupMember(groupId, user), "User is not a member of this group");
+        require(hasManagementPermissions(groupId, msg.sender), "Insufficient permissions");
+
+        mutedUsers[groupId][user] = false;
+        emit UserUnmuted(groupId, user);
+    }
+
+    /**
+     * @dev Pin a message in a group (admins and moderators can do this)
+     * @param groupId The ID of the group
+     * @param messageIndex The index of the message to pin
+     */
+    function pinMessage(uint256 groupId, uint256 messageIndex) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(hasManagementPermissions(groupId, msg.sender), "Insufficient permissions");
+        require(messageIndex < groupConversations[groupId].length, "Invalid message index");
+
+        uint256[] storage pinned = pinnedMessages[groupId];
+        // Check if already pinned
+        for (uint256 i = 0; i < pinned.length; i++) {
+            if (pinned[i] == messageIndex) {
+                return; // Already pinned
+            }
+        }
+        pinned.push(messageIndex);
+        emit MessagePinned(groupId, messageIndex);
+    }
+
+    /**
+     * @dev Unpin a message in a group (admins and moderators can do this)
+     * @param groupId The ID of the group
+     * @param messageIndex The index of the message to unpin
+     */
+    function unpinMessage(uint256 groupId, uint256 messageIndex) external {
+        require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
+        require(hasManagementPermissions(groupId, msg.sender), "Insufficient permissions");
+
+        uint256[] storage pinned = pinnedMessages[groupId];
+        for (uint256 i = 0; i < pinned.length; i++) {
+            if (pinned[i] == messageIndex) {
+                pinned[i] = pinned[pinned.length - 1];
+                pinned.pop();
+                emit MessageUnpinned(groupId, messageIndex);
+                return;
+            }
+        }
+        revert("Message not pinned");
     }
 
     /**
