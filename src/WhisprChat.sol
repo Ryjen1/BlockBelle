@@ -3,12 +3,18 @@ pragma solidity ^0.8.20;
 
 import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title ChatApp
  * @dev A smart contract for peer-to-peer and group messaging with Chainlink oracle integration
+ * @notice This contract allows users to send messages, create groups, and receive automated price feeds
  */
-contract WhisprChat is AutomationCompatibleInterface {
+contract WhisprChat is AutomationCompatibleInterface, Ownable {
+    // Constants for gas optimization and security
+    uint256 public constant MAX_GROUP_SIZE = 100;
+    uint256 public constant MAX_MESSAGE_LENGTH = 1000;
+
     // Message struct for individual conversations
     struct Message {
         address sender;
@@ -32,6 +38,9 @@ contract WhisprChat is AutomationCompatibleInterface {
 
     // Mapping from group ID to array of messages
     mapping(uint256 => Message[]) private groupConversations;
+
+    // Mapping for efficient group membership checks (groupId => member => isMember)
+    mapping(uint256 => mapping(address => bool)) public groupMembers;
 
     // Counter for group IDs
     uint256 public groupCounter;
@@ -61,15 +70,16 @@ contract WhisprChat is AutomationCompatibleInterface {
 
     /**
      * @dev Constructor to initialize Chainlink price feeds and automation interval
-     * @param _interval Automation interval in seconds
+     * @param _interval Automation interval in seconds for posting price updates
      */
     constructor(uint256 _interval) {
         // Initialize Chainlink price feeds for Sepolia testnet
+        // Note: Update these addresses for mainnet deployment
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
         ethUsdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         btcEthPriceFeed = AggregatorV3Interface(0xCfe54B5c468301f0C6AE4a63F9b6C1d28932D7dc);
         bnbEthPriceFeed = AggregatorV3Interface(0x9Ae3a6b1E5F0c5C60b675ECa8d7edD0Eed417F07);
-        
+
         interval = _interval;
         lastTimeStamp = block.timestamp;
     }
@@ -82,6 +92,7 @@ contract WhisprChat is AutomationCompatibleInterface {
     function sendMessage(address to, string memory content) external {
         require(to != address(0), "Invalid receiver address");
         require(bytes(content).length > 0, "Message content cannot be empty");
+        require(bytes(content).length <= MAX_MESSAGE_LENGTH, "Message content too long");
         require(to != msg.sender, "Cannot send message to yourself");
 
         // Generate conversation ID
@@ -122,6 +133,7 @@ contract WhisprChat is AutomationCompatibleInterface {
     function createGroup(string memory name, string memory avatarHash, address[] memory members) external returns (uint256) {
         require(bytes(name).length > 0, "Group name cannot be empty");
         require(members.length > 0, "Group must have at least one member");
+        require(members.length <= MAX_GROUP_SIZE, "Group size exceeds maximum allowed");
 
         // Increment group counter
         groupCounter++;
@@ -155,6 +167,11 @@ contract WhisprChat is AutomationCompatibleInterface {
             members: finalMembers
         });
 
+        // Set membership mappings for efficient lookups
+        for (uint256 i = 0; i < finalMembers.length; i++) {
+            groupMembers[groupId][finalMembers[i]] = true;
+        }
+
         // Emit event
         emit GroupCreated(groupId, name, msg.sender);
 
@@ -169,6 +186,7 @@ contract WhisprChat is AutomationCompatibleInterface {
     function sendGroupMessage(uint256 groupId, string memory content) external {
         require(groupId > 0 && groupId <= groupCounter, "Invalid group ID");
         require(bytes(content).length > 0, "Message content cannot be empty");
+        require(bytes(content).length <= MAX_MESSAGE_LENGTH, "Message content too long");
         require(isGroupMember(groupId, msg.sender), "Not a member of this group");
 
         // Create and store message
@@ -221,14 +239,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         if (groupId == 0 || groupId > groupCounter) {
             return false;
         }
-
-        address[] memory members = groups[groupId].members;
-        for (uint256 i = 0; i < members.length; i++) {
-            if (members[i] == user) {
-                return true;
-            }
-        }
-        return false;
+        return groupMembers[groupId][user];
     }
 
     /**
@@ -279,6 +290,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         int bnbEthPrice = getLatestPrice(address(bnbEthPriceFeed));
 
         // Format prices and create messages
+        // Chainlink prices are returned with 8 decimals, so divide by 1e8 for human-readable format
         string[4] memory priceMessages = [
             string(abi.encodePacked("BTC/USD = ", _intToString(btcUsdPrice / 1e8))),
             string(abi.encodePacked("ETH/USD = ", _intToString(ethUsdPrice / 1e8))),
@@ -326,7 +338,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @dev Update the automation interval (only callable by contract owner)
      * @param _newInterval New interval in seconds
      */
-    function updateInterval(uint256 _newInterval) external {
+    function updateInterval(uint256 _newInterval) external onlyOwner {
         interval = _newInterval;
     }
 
@@ -334,7 +346,7 @@ contract WhisprChat is AutomationCompatibleInterface {
      * @dev Update the default group ID for oracle messages
      * @param _newDefaultGroupId New default group ID
      */
-    function updateDefaultGroupId(uint256 _newDefaultGroupId) external {
+    function updateDefaultGroupId(uint256 _newDefaultGroupId) external onlyOwner {
         require(_newDefaultGroupId > 0 && _newDefaultGroupId <= groupCounter, "Invalid group ID");
         defaultGroupId = _newDefaultGroupId;
     }
