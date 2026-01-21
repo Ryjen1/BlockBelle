@@ -72,6 +72,16 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
    const handleRegister = async () => {
      if (!ensName.trim() || !ensVerified) return
 
+     // Additional validation
+     if (ensName.length < 3) {
+       setRegistrationError('ENS name must be at least 3 characters long.')
+       return
+     }
+     if (ensName.length > 50) {
+       setRegistrationError('ENS name must be less than 50 characters long.')
+       return
+     }
+
      setRegistrationError('')
 
      try {
@@ -182,16 +192,20 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
                 <input
                   type="text"
                   value={ensName}
-                  onChange={(e) => setEnsName(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '')
+                    setEnsName(value)
+                  }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-lg pr-12"
                   placeholder="yourname"
+                  maxLength={50}
                 />
                 <div className="absolute right-3 top-3 text-gray-400 font-medium">
                   .eth
                 </div>
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                Enter your ENS name without .eth - we'll add it automatically
+                Enter your ENS name without .eth (lowercase letters, numbers, and hyphens only)
               </p>
 
               {/* ENS Verification Status */}
@@ -208,9 +222,17 @@ export default function Register({ onRegistrationSuccess }: RegisterProps) {
                       <span className="text-sm">✓ ENS ownership verified</span>
                     </div>
                   ) : ensVerified === false ? (
-                    <div className="flex items-center space-x-2 text-red-600">
-                      <ExclamationTriangleIcon className="h-4 w-4" />
-                      <span className="text-sm">{verificationError || 'ENS ownership not verified'}</span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 text-red-600">
+                        <ExclamationTriangleIcon className="h-4 w-4" />
+                        <span className="text-sm">{verificationError || 'ENS ownership not verified'}</span>
+                      </div>
+                      <button
+                        onClick={() => verifyEnsOwnership(ensName)}
+                        className="text-xs text-blue-600 hover:text-blue-800 underline"
+                      >
+                        Retry
+                      </button>
                     </div>
                   ) : null}
                 </div>
