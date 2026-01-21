@@ -5,6 +5,11 @@ import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.so
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 import "../contracts/src/IEngagementRewards.sol";
 
+// Interface for ProofOfHuman contract
+interface IProofOfHuman {
+    function isFemaleVerified(address user) external view returns (bool);
+}
+
 /**
  * @title ChatApp
  * @dev A smart contract for peer-to-peer and group messaging with Chainlink oracle integration
@@ -79,18 +84,27 @@ contract WhisprChat is AutomationCompatibleInterface {
         _;
     }
 
+    modifier onlyVerifiedFemale() {
+        require(proofOfHuman.isFemaleVerified(msg.sender), "Only verified females can perform this action");
+        _;
+    }
+
     // Engagement Rewards
     IEngagementRewards public immutable engagementRewards;
+
+    // Proof of Human contract for gender verification
+    IProofOfHuman public immutable proofOfHuman;
 
     // Owner of the contract
     address public owner;
 
     /**
-     * @dev Constructor to initialize Chainlink price feeds, automation interval, and Engagement Rewards
+     * @dev Constructor to initialize Chainlink price feeds, automation interval, Engagement Rewards, and Proof of Human
      * @param _interval Automation interval in seconds
      * @param _engagementRewards Address of the Engagement Rewards contract
+     * @param _proofOfHuman Address of the Proof of Human contract
      */
-    constructor(uint256 _interval, address _engagementRewards) {
+    constructor(uint256 _interval, address _engagementRewards, address _proofOfHuman) {
         owner = msg.sender;
         // Initialize Chainlink price feeds for Sepolia testnet
         btcUsdPriceFeed = AggregatorV3Interface(0x007a22900c13C281aF5a49D9fd2C5d849BaEa0c1);
@@ -102,6 +116,7 @@ contract WhisprChat is AutomationCompatibleInterface {
         lastTimeStamp = block.timestamp;
 
         engagementRewards = IEngagementRewards(_engagementRewards);
+        proofOfHuman = IProofOfHuman(_proofOfHuman);
     }
 
     /**
