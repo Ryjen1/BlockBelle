@@ -26,12 +26,14 @@ export interface Group {
 export const useChat = () => {
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [account, setAccount] = useState<string>('');
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
 
   useEffect(() => {
     const init = async () => {
       if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
+        const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+        setProvider(web3Provider);
+        const signer = web3Provider.getSigner();
         const address = await signer.getAddress();
         setAccount(address);
         const chatContract = new ethers.Contract(CONTRACT_ADDRESS, WhisprChatABI, signer);
@@ -40,6 +42,28 @@ export const useChat = () => {
     };
     init();
   }, []);
+
+  useEffect(() => {
+    if (!contract) return;
+
+    const onMessageSent = (from: string, to: string, message: string, timestamp: number) => {
+      console.log('New message sent:', { from, to, message, timestamp });
+      // TODO: Update local state or trigger refetch
+    };
+
+    const onGroupMessageSent = (groupId: number, sender: string, message: string, timestamp: number) => {
+      console.log('New group message:', { groupId, sender, message, timestamp });
+      // TODO: Update local state or trigger refetch
+    };
+
+    contract.on('MessageSent', onMessageSent);
+    contract.on('GroupMessageSent', onGroupMessageSent);
+
+    return () => {
+      contract.off('MessageSent', onMessageSent);
+      contract.off('GroupMessageSent', onGroupMessageSent);
+    };
+  }, [contract]);
 
   const sendMessage = async (to: string, content: string) => {
     if (!contract) return;
