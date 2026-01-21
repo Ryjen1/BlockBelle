@@ -122,7 +122,7 @@ export default function HomePage() {
               <h2 className="text-lg font-bold mb-2">Built for Web3 Women</h2>
               <p className="text-sm mb-3">
                 Connect with verified ENS identities, create private groups, and
-                build meaningful relationships in the web3 space.
+                build meaningful relationships in the web3 space. ENS ownership required.
               </p>
               <div className="grid md:grid-cols-3 gap-3">
                 <div className="text-center">
