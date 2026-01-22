@@ -1,40 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 /**
  * @title UserRegistry
  * @dev A smart contract for registering users with ENS names and avatar hashes
+ * @notice This contract manages user registrations with ENS names and avatar hashes for the Whispr platform
  */
-contract WhisprRegistry {
-    // Visibility enum for privacy settings
-    enum Visibility {
-        Public,      // Visible to everyone
-        Contacts,    // Visible to contacts/friends
-        Private      // Not visible to others
-    }
-
-    // PrivacySettings struct
-    struct PrivacySettings {
-        Visibility ensNameVisibility;
-        Visibility displayNameVisibility;
-        Visibility avatarVisibility;
-        Visibility profilePictureVisibility;
-        Visibility bioVisibility;
-        Visibility statusMessageVisibility;
-        Visibility publicKeyVisibility;
-    }
-
-    // VisibleProfile struct for filtered profile data
-    struct VisibleProfile {
-        string ensName;
-        string displayName;
-        string avatarHash;
-        string profilePictureHash;
-        string bio;
-        string statusMessage;
-        string publicKey;
-    }
-
+contract WhisprRegistry is Ownable {
     // User struct to store user information
     struct User {
         string ensName;
@@ -352,10 +326,10 @@ contract WhisprRegistry {
     }
 
     /**
-     * @dev Delete another user (admin function - for now anyone can delete others)
+     * @dev Delete another user (admin function - only callable by contract owner)
      * @param userAddress The address of the user to delete
      */
-    function deleteOtherUser(address userAddress) external {
+    function deleteOtherUser(address userAddress) external onlyOwner {
         require(users[userAddress].registered, "User is not registered");
 
         // Mark user as not registered and clear all fields
@@ -363,12 +337,6 @@ contract WhisprRegistry {
         users[userAddress].ensName = "";
         users[userAddress].displayName = "";
         users[userAddress].avatarHash = "";
-        users[userAddress].profilePictureHash = "";
-        users[userAddress].bio = "";
-        users[userAddress].statusMessage = "";
-        users[userAddress].publicKey = "";
-        // privacy remains
-        users[userAddress].lastUpdated = 0;
 
         // Remove from allUsers array
         for (uint256 i = 0; i < allUsers.length; i++) {

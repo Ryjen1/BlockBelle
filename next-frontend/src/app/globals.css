@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* BlockBelle Brand Colors */
+@theme inline {
+  --color-blockbelle-pink: #ec4899;
+  --color-blockbelle-purple: #9333ea;
+  --color-blockbelle-indigo: #4f46e5;
+  --color-blockbelle-pink-light: #fbcfe8;
+  --color-blockbelle-purple-light: #e9d5ff;
+  --color-blockbelle-gold: #fbbf24;
+}
+
+/* Custom Utilities */
+@utility tier-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--color-blockbelle-gold), #f59e0b);
+  color: white;
+  box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+}
+
+@utility gradient-blockbelle {
+  background: linear-gradient(135deg, var(--color-blockbelle-pink), var(--color-blockbelle-purple), var(--color-blockbelle-indigo));
+}
+
+@utility text-gradient-blockbelle {
+  background: linear-gradient(135deg, var(--color-blockbelle-pink), var(--color-blockbelle-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
