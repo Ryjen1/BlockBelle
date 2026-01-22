@@ -33,6 +33,9 @@ contract WhisprChat is AutomationCompatibleInterface {
     // Mapping from group ID to array of messages
     mapping(uint256 => Message[]) private groupConversations;
 
+    // Mapping from group ID to banned users
+    mapping(uint256 => mapping(address => bool)) public bannedUsers;
+
     // Counter for group IDs
     uint256 public groupCounter;
 
