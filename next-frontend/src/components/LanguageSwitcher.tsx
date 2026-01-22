@@ -7,6 +7,7 @@ export default function LanguageSwitcher() {
     <select value={language} onChange={(e) => setLanguage(e.target.value)}>
       <option value="en">English</option>
       <option value="es">Español</option>
+      <option value="fr">Français</option>
     </select>
   );
 }

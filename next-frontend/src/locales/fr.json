@@ -1,0 +1,25 @@
+{
+  "common": {
+    "welcome": "Bienvenue",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "home": "Accueil",
+    "chat": "Chat",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "profile": "Profil"
+  },
+  "home": {
+    "title": "Bienvenue sur BlockBelle",
+    "description": "Une plateforme sociale décentralisée",
+    "subtitle": "Connectez-vous avec des amis en toute sécurité"
+  },
+  "register": {
+    "title": "S'inscrire",
+    "description": "Créez votre compte",
+    "submit": "S'inscrire",
+    "username": "Nom d'utilisateur",
+    "email": "Email",
+    "password": "Mot de passe"
+  }
+}
