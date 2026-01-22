@@ -1,0 +1,12 @@
+vite-frontend
+/src
+/test
+/script
+foundry.toml
+.git
+.gitmodules
+node_modules
+# Exclude root config files that might confuse Vercel
+/next.config.cjs
+/package.json
+/package-lock.json
