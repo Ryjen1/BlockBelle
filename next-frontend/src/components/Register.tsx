@@ -11,6 +11,10 @@ export default function Register() {
 
   const [ensName, setEnsName] = useState('');
   const [avatarHash, setAvatarHash] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [bio, setBio] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [profilePictureHash, setProfilePictureHash] = useState('');
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [secretKey, setSecretKey] = useState<string | null>(null);
 
@@ -31,7 +35,7 @@ export default function Register() {
         address: '0x...', // TODO: registry contract address
         abi: WhisprRegistryABI,
         functionName: 'registerUser',
-        args: [ensName, avatarHash, publicKey],
+        args: [ensName, avatarHash, publicKey, displayName, bio, statusMessage, profilePictureHash],
       });
     } catch (error) {
       console.error('Registration failed:', error);
@@ -54,6 +58,29 @@ export default function Register() {
           placeholder="Avatar IPFS Hash"
           value={avatarHash}
           onChange={(e) => setAvatarHash(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Display Name"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+        />
+        <textarea
+          placeholder="Bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Status Message"
+          value={statusMessage}
+          onChange={(e) => setStatusMessage(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Profile Picture IPFS Hash"
+          value={profilePictureHash}
+          onChange={(e) => setProfilePictureHash(e.target.value)}
         />
         <button onClick={handleRegister} disabled={!publicKey}>
           {t('register.submit')}
