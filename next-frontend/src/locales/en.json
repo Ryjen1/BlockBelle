@@ -1,0 +1,19 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "register": "Register",
+    "home": "Home",
+    "chat": "Chat",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Welcome to BlockBelle",
+    "description": "A decentralized social platform"
+  },
+  "register": {
+    "title": "Register",
+    "description": "Create your account",
+    "submit": "Register"
+  }
+}
