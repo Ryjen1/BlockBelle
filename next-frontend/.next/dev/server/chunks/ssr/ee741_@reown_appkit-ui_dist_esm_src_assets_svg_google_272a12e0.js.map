@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"file":"turbopack:///[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/@reown/appkit-ui/dist/esm/src/assets/svg/google.js","sources":["file:///C:/Users/HP/Desktop/Folder/BlockBelle/next-frontend/node_modules/%40reown/appkit-ui/src/assets/svg/google.ts"],"sourcesContent":["unable to read source [project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/@reown/appkit-ui/src/assets/svg/google.ts"],"names":[],"mappings":";;;;;AAAA,OAAO,EAAE,GAAG,EAAE,MAAM,KAAK,CAAA;;AAElB,MAAM,SAAS,GAAG,+NAAG,CAAA;;;;;;;;;;;;;;;;;OAiBrB,CAAA"}}]
+}

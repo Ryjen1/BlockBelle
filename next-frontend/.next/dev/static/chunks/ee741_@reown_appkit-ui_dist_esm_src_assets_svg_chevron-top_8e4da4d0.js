@@ -1,0 +1,23 @@
+(globalThis.TURBOPACK || (globalThis.TURBOPACK = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/@reown/appkit-ui/dist/esm/src/assets/svg/chevron-top.js [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "chevronTopSvg",
+    ()=>chevronTopSvg
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Folder$2f$BlockBelle$2f$next$2d$frontend$2f$node_modules$2f$lit$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/lit/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Folder$2f$BlockBelle$2f$next$2d$frontend$2f$node_modules$2f$lit$2d$html$2f$development$2f$lit$2d$html$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/lit-html/development/lit-html.js [app-client] (ecmascript)");
+;
+const chevronTopSvg = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Folder$2f$BlockBelle$2f$next$2d$frontend$2f$node_modules$2f$lit$2d$html$2f$development$2f$lit$2d$html$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["svg"]`<svg fill="none" viewBox="0 0 16 16">
+  <path
+    fill="currentColor"
+    fill-rule="evenodd"
+    d="M14.54 11.04a1 1 0 0 1-1.41 0L8 5.92l-5.13 5.12a1 1 0 1 1-1.41-1.41l5.83-5.84a1 1 0 0 1 1.42 0l5.83 5.84a1 1 0 0 1 0 1.41Z"
+    clip-rule="evenodd"
+  />
+</svg>`; //# sourceMappingURL=chevron-top.js.map
+}),
+]);
+
+//# sourceMappingURL=ee741_%40reown_appkit-ui_dist_esm_src_assets_svg_chevron-top_8e4da4d0.js.map
