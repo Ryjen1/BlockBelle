@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import en from '../locales/en.json';
 import es from '../locales/es.json';
 
@@ -18,7 +18,21 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguageState] = useState('en');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('language');
+    if (savedLang && translations[savedLang]) {
+      setLanguageState(savedLang);
+    }
+  }, []);
+
+  const setLanguage = (lang: string) => {
+    if (translations[lang]) {
+      setLanguageState(lang);
+      localStorage.setItem('language', lang);
+    }
+  };
 
   const t = (key: string): string => {
     const keys = key.split('.');
