@@ -5,15 +5,21 @@
     "register": "Register",
     "home": "Home",
     "chat": "Chat",
-    "settings": "Settings"
+    "settings": "Settings",
+    "logout": "Logout",
+    "profile": "Profile"
   },
   "home": {
     "title": "Welcome to BlockBelle",
-    "description": "A decentralized social platform"
+    "description": "A decentralized social platform",
+    "subtitle": "Connect with friends securely"
   },
   "register": {
     "title": "Register",
     "description": "Create your account",
-    "submit": "Register"
+    "submit": "Register",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password"
   }
 }
