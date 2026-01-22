@@ -1,0 +1,3 @@
+module.exports=[598006,a=>{"use strict";var b=a.i(324949),c=a.i(210936);function d({error:a,reset:d}){return(0,c.useEffect)(()=>{console.error(a)},[a]),(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center bg-gray-50",children:(0,b.jsxs)("div",{className:"text-center",children:[(0,b.jsx)("h2",{className:"text-2xl font-bold text-gray-900 mb-4",children:"Something went wrong!"}),(0,b.jsx)("button",{onClick:()=>d(),className:"px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700",children:"Try again"})]})})}a.s(["default",()=>d])}];
+
+//# sourceMappingURL=Desktop_Folder_BlockBelle_next-frontend_src_app_error_tsx_733fdfe7._.js.map

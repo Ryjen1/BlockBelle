@@ -1,0 +1,3 @@
+module.exports=[378677,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(640862);a.n(d("[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},841801,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(640862);a.n(d("[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/next/dist/client/components/builtin/global-error.js"))},893119,a=>{"use strict";a.i(378677);var b=a.i(841801);a.n(b)}];
+
+//# sourceMappingURL=ee741_next_dist_client_components_builtin_global-error_0ff461de.js.map

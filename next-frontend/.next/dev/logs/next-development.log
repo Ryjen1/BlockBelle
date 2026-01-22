@@ -1,0 +1,963 @@
+[00:00:06.350] Server  LOG     ✓ Ready in 4.6s
+[00:02:17.425] Server  LOG     ○ Compiling /test-rewards ...
+[00:02:33.264] Server  WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:02:39.307] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:44.505] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[00:02:47.525] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:03:07.493] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:05:34.492] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:17:17.812] Server  LOG     ✓ Compiled in 8.3s
+[00:17:26.023] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 2 times.
+[00:17:26.034] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 2 times.
+[00:17:26.286] Server  WARN    Multiple versions of Lit loaded. Loading multiple versions is not recommended. See https://lit.dev/msg/multiple-versions for more information.
+[00:17:31.574] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:17:34.370] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:17:38.350] Server  WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. TypeError: fetch failed
+[00:17:53.163] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:18:55.673] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:19:07.505] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:21:59.493] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:22:16.615] Server  LOG     ✓ Compiled in 821ms
+[00:25:38.563] Server  LOG     ✓ Compiled in 600ms
+[00:32:51.188] Server  LOG     ✓ Compiled in 1810ms
+[00:33:36.746] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 3 times.
+[00:33:36.893] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 3 times.
+[00:33:43.840] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:33:49.848] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:34:04.601] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 4 times.
+[00:34:04.688] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 4 times.
+[00:34:06.418] Server  LOG     ✓ Compiled in 9.3s
+[00:34:06.425] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:34:14.784] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:38:10.049] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:38:11.830] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[00:38:14.479] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:38:28.861] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:38:36.516] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:39:26.505] Server  LOG     ✓ Finished filesystem cache database compaction in 65s
+[00:39:55.584] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:39:56.716] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[00:40:00.983] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:40:15.683] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:40:30.498] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:40:43.518] Server  LOG     ✓ Compiled in 2.4s
+[00:40:45.504] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:40:45.504] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:40:45.504] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":false}
+[00:40:45.504] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":false}
+[00:41:00.492] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":false}
+[00:41:00.492] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":false}
+[00:45:27.375] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:45:27.381] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:45:48.978] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","error":"The contract function \"isAppRegistered\" reverted.\n\nContract Call:\n  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  isAppRegistered(address app)\n  args:                     (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C)\n\nDocs: https://viem.sh/docs/contract/readContract\nVersion: viem@2.39.3","loading":false}
+[00:45:48.980] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","error":"The contract function \"isAppRegistered\" reverted.\n\nContract Call:\n  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  isAppRegistered(address app)\n  args:                     (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C)\n\nDocs: https://viem.sh/docs/contract/readContract\nVersion: viem@2.39.3","loading":false}
+[00:47:04.620] Server  LOG     ✓ Finished filesystem cache database compaction in 29.5s
+[00:47:50.694] Server  LOG     ✓ Compiled in 1106ms
+[00:47:51.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","error":"The contract function \"isAppRegistered\" reverted.\n\nContract Call:\n  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  isAppRegistered(address app)\n  args:                     (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C)\n\nDocs: https://viem.sh/docs/contract/readContract\nVersion: viem@2.39.3","loading":false}
+[00:47:51.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","error":"The contract function \"isAppRegistered\" reverted.\n\nContract Call:\n  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  isAppRegistered(address app)\n  args:                     (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C)\n\nDocs: https://viem.sh/docs/contract/readContract\nVersion: viem@2.39.3","loading":false}
+[00:47:51.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:47:51.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:47:54.933] Server  LOG     ✓ Compiled in 898ms
+[00:47:56.540] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:47:56.543] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:47:56.543] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:47:56.548] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[00:48:00.785] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:00.786] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:00.786] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:00.786] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:01.660] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:01.660] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:04.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:04.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:36.493] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[00:48:49.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:48:49.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:49:40.728] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:49:40.728] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:50:14.540] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:50:14.540] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:50:25.519] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:50:25.519] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:51:12.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:51:12.496] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:51:29.061] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:51:29.061] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:52:48.355] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[00:52:48.356] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:07:34.808] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:07:34.822] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:07:56.138] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:07:56.138] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:08:05.985] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:08:05.985] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:08:11.593] Server  LOG     ○ Compiling /test-claim ...
+[01:08:34.388] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:08:34.388] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:09:16.111] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:09:16.111] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:09:16.441] Server  LOG     ✓ Finished writing to filesystem cache in 15.3s
+[01:09:24.429] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:09:25.735] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollAndFocusHandler segmentPath={[...]}>
+        <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="test-claim/" loading={null}>
+              <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/test-claim" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                      <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                        <SegmentTrieNode>
+                        <ClientPageRoot Component={function TestClaimPage} serverProvidedParams={{...}}>
+                          <TestClaimPage params={Promise} searchParams={Promise}>
+                            <div className="min-h-scre...">
+                              <div
++                               className="max-w-4xl mx-auto space-y-6"
+-                               className="max-w-4xl mx-auto"
+                              >
+                                <div
++                                 className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white"
+-                                 className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                                >
+                                  <h1
++                                   className="text-3xl font-bold mb-2"
+-                                   className="text-2xl font-bold text-yellow-800 mb-2"
+                                  >
++                                   🧪 Test Engagement Rewards Claim
+-                                   Connect Wallet to Test Claim
+                                  ...
+                                ...
+                      ...
+                    ...
+          ...
+
+[01:09:30.450] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:09:45.732] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:11:11.945] Server  LOG     🔍 App Registration Debug: {}
+[01:11:12.012] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 5 times.
+[01:11:12.031] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 5 times.
+[01:11:19.079] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:11:21.413] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[01:11:21.413] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[01:11:21.413] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[01:11:21.413] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[01:11:21.413] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[01:11:21.413] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[01:11:21.413] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[01:11:22.615] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:11:29.606] Server  LOG     🔍 App Registration Debug: {}
+[01:11:30.498] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:30.498] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:30.498] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:30.498] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:31.492] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:31.492] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:31.492] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:31.492] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[01:11:35.594] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:12:06.074] Server  LOG     [WebSocket] Initializing websocket module.
+[01:12:16.679] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:12:34.878] Browser LOG     [WebSocket] Initializing websocket module.
+[01:12:43.906] Browser LOG     Registration status changed: false -> true
+[01:12:43.907] Browser LOG     Registration status changed: false -> true
+[01:12:43.907] Browser LOG     Registration status changed: false -> true
+[01:12:43.907] Browser LOG     Registration status changed: false -> true
+[01:12:47.558] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:13:31.073] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:13:45.429] Server  LOG     ✓ Finished filesystem cache database compaction in 62s
+[01:13:45.737] Server  LOG     ✓ Finished writing to filesystem cache in 55s
+[01:14:31.740] Server  LOG     ○ Compiling /_not-found/page ...
+[01:14:40.203] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:14:51.493] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:15:12.841] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:15:22.127] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:15:25.675] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:15:26.890] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollAndFocusHandler segmentPath={[...]}>
+        <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="test-claim/" loading={null}>
+              <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/test-claim" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                      <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                        <SegmentTrieNode>
+                        <ClientPageRoot Component={function TestClaimPage} serverProvidedParams={{...}}>
+                          <TestClaimPage params={Promise} searchParams={Promise}>
+                            <div className="min-h-scre...">
+                              <div
++                               className="max-w-4xl mx-auto space-y-6"
+-                               className="max-w-4xl mx-auto"
+                              >
+                                <div
++                                 className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white"
+-                                 className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                                >
+                                  <h1
++                                   className="text-3xl font-bold mb-2"
+-                                   className="text-2xl font-bold text-yellow-800 mb-2"
+                                  >
++                                   🧪 Test Engagement Rewards Claim
+-                                   Connect Wallet to Test Claim
+                                  ...
+                                ...
+                      ...
+                    ...
+          ...
+
+[01:15:30.672] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:15:57.843] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:16:07.795] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:17:19.358] Server  LOG     ✓ Finished writing to filesystem cache in 57s
+[01:41:04.409] Server  LOG     ✓ Finished filesystem cache database compaction in 30.8s
+[01:45:47.278] Server  LOG     ○ Compiling /test-integration ...
+[01:46:20.220] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 6 times.
+[01:46:20.240] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 6 times.
+[01:46:28.149] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:46:30.691] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:46:53.919] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:46:54.064] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"name":"PositionOutOfBoundsError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"}
+[01:47:05.050] Server  LOG     ○ Compiling /api/engagement-rewards/sign ...
+[01:47:28.255] Server  LOG     ✓ Finished filesystem cache database compaction in 30.4s
+[01:47:29.586] Server  LOG     ✓ Finished writing to filesystem cache in 14.3s
+[01:47:31.363] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:47:41.362] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:49:15.493] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:53:16.458] Server  LOG     ✓ Compiled in 1729ms
+[01:53:26.723] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"name":"PositionOutOfBoundsError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"}
+[01:54:34.155] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 7 times.
+[01:54:34.190] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 7 times.
+[01:54:43.646] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:54:44.520] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollAndFocusHandler segmentPath={[...]}>
+        <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="test-integ..." loading={null}>
+              <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/test-inte..." tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                      <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                        <SegmentTrieNode>
+                        <TestIntegrationPage>
+                          <div className="min-h-scre...">
+                            <header>
+                            <main className="max-w-7xl ...">
+                              <EngagementRewardsTest>
+                                <div
++                                 className="space-y-6"
+-                                 className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6"
+                                >
++                                 <div
++                                   className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white"
++                                 >
+-                                 <h3 className="text-lg font-bold text-yellow-900 mb-2">
+                                  ...
+                      ...
+                    ...
+          ...
+
+[01:54:47.925] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:54:53.654] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"name":"PositionOutOfBoundsError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"}
+[01:55:04.415] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:55:16.725] Server  LOG     ✓ Compiled in 3.4s
+[01:55:21.103] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"name":"PositionOutOfBoundsError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"}
+[01:55:23.503] Server  LOG     ✓ Finished filesystem cache database compaction in 57s
+[01:55:24.367] Server  LOG     ✓ Finished writing to filesystem cache in 32.7s
+[01:55:26.152] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:55:36.136] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:55:44.567] Server  LOG     ✓ Finished filesystem cache database compaction in 20.3s
+[01:55:45.363] Server  LOG     ✓ Finished writing to filesystem cache in 17.0s
+[01:56:15.494] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:56:51.980] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 8 times.
+[01:56:51.989] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 8 times.
+[01:56:55.057] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:56:56.174] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollAndFocusHandler segmentPath={[...]}>
+        <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="test-integ..." loading={null}>
+              <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+                <RedirectBoundary>
+                  <RedirectErrorBoundary router={{...}}>
+                    <InnerLayoutRouter url="/test-inte..." tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                      <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                        <SegmentTrieNode>
+                        <TestIntegrationPage>
+                          <div className="min-h-scre...">
+                            <header>
+                            <main className="max-w-7xl ...">
+                              <EngagementRewardsTest>
+                                <div
++                                 className="space-y-6"
+-                                 className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6"
+                                >
++                                 <div
++                                   className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white"
++                                 >
+-                                 <h3 className="text-lg font-bold text-yellow-900 mb-2">
+                                  ...
+                      ...
+                    ...
+          ...
+
+[01:56:57.339] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[01:57:17.814] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"name":"PositionOutOfBoundsError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"Position `32` is out of bounds (`0 < position < 32`).","version":"2.39.3"}
+[01:57:20.019] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:57:30.004] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:58:12.382] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:58:56.492] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[01:59:56.170] Server  LOG     ✓ Compiled in 879ms
+[02:00:01.199] Server  LOG     ✓ Compiled in 438ms
+[02:00:02.872] Browser ERROR   Error checking eligibility: {}
+[02:00:54.103] Server  LOG     ✓ Finished filesystem cache database compaction in 42s
+[02:00:54.255] Server  LOG     ✓ Finished writing to filesystem cache in 38.6s
+[02:01:21.497] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[02:03:01.840] Server  LOG     🔍 App Registration Debug: {}
+[02:03:02.456] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 9 times.
+[02:03:02.481] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 9 times.
+[02:03:07.409] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 expirer_expired listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+[02:03:07.415] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 expirer_expired listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:03:19.278] Server  LOG     [WebSocket] Initializing websocket module.
+[02:03:19.513] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 10 times.
+[02:03:19.531] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 10 times.
+[02:03:21.960] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 relayer_message listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:03:21.961] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 relayer_message listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:03:25.329] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:03:27.101] Browser LOG     [WebSocket] Initializing websocket module.
+[02:03:27.102] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+      <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+        <RedirectBoundary>
+          <RedirectErrorBoundary router={{...}}>
+            <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+              <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                <SegmentTrieNode>
+                <Page>
+                  <HomePage>
+                    <div className="min-h-scre...">
+                      <header className="bg-white s...">
+                        <div className="max-w-7xl ...">
+                          <div className="flex justi...">
+                            <h1>
+                            <div className="flex items...">
+                              <UserProfile>
+                                <div
++                                 className="flex items-center space-x-3"
+-                                 className="flex items-center space-x-4"
+                                >
++                                 <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse">
+-                                 <button
+-                                   className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:..."
+-                                 >
+                                  ...
+                              ...
+                      ...
+              ...
+            ...
+
+[02:03:29.118] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[02:03:32.200] Browser LOG     Registration status changed: false -> true
+[02:03:32.200] Browser LOG     Registration status changed: false -> true
+[02:03:32.200] Browser LOG     Registration status changed: false -> true
+[02:03:32.200] Browser LOG     Registration status changed: false -> true
+[02:03:33.546] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:03:35.033] Server  LOG     ✓ Compiled in 8.3s
+[02:03:45.488] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[02:03:54.749] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[02:03:54.749] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[02:03:54.749] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[02:03:54.749] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[02:03:54.749] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[02:03:54.749] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[02:03:54.749] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","loading":true}
+[02:03:55.375] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[02:03:57.494] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:03:57.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:03:57.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:03:57.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:04:01.493] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[02:04:01.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:04:01.493] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:04:03.514] Server  LOG     🔍 App Registration Debug: {}
+[02:04:04.503] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:04:04.503] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:04:14.492] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[02:04:53.703] Browser LOG     Claim transaction sent: 0x51bbf2881248ab4dbb9d4f09a9230015b67c054f5785551ebdd4322c83697e84
+[02:05:26.888] Browser LOG     Registration status changed: false -> true
+[02:05:26.888] Browser LOG     Registration status changed: false -> true
+[02:06:00.658] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[02:07:32.499] Browser ERROR   Error testing claim: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x85A4b09fb0788f1C549a68dC2EdAe3F97aeb5Dd7",55922377,"0x87b69e59c568bc2a9a0b4b2e6b1ba7a6cbcbec4fe6be26bafe560aed989f5b9d25735e5d6783eec46194811bd33f8240b26187b6731e8400665eb2f06c30ca1f1c","0xd6893295a161293ac6ca6f8479288abe7fe8f8c16cf70a744e1937ffc01ea2571593589a45531f7297a3539ac088ff6778dc304b673afe64cfa5b0a324bbeeef1b"],"cause":{"cause":{"code":4001,"details":"Request Signature: User denied request signature.","name":"UserRejectedRequestError","shortMessage":"User rejected the request.","version":"2.39.3"},"details":"Request Signature: User denied request signature.","metaMessages":["Request Arguments:","  from:  0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c\n  to:    0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  data:  0xabe3bfef000000000000000000000000562456dbf6f21d40c96d392ef6ed1de2e921bf2c00000000000000000000000085a4b09fb0788f1c549a68dc2edae3f97aeb5dd70000000000000000000000000000000000000000000000000000000003554ec900000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000004187b69e59c568bc2a9a0b4b2e6b1ba7a6cbcbec4fe6be26bafe560aed989f5b9d25735e5d6783eec46194811bd33f8240b26187b6731e8400665eb2f06c30ca1f1c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041d6893295a161293ac6ca6f8479288abe7fe8f8c16cf70a744e1937ffc01ea2571593589a45531f7297a3539ac088ff6778dc304b673afe64cfa5b0a324bbeeef1b00000000000000000000000000000000000000000000000000000000000000"],"name":"TransactionExecutionError","shortMessage":"User rejected the request.","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","details":"Request Signature: User denied request signature.","docsPath":"/docs/contract/writeContract","functionName":"nonContractAppClaim","metaMessages":["Request Arguments:","  from:  0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c\n  to:    0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  data:  0xabe3bfef000000000000000000000000562456dbf6f21d40c96d392ef6ed1de2e921bf2c00000000000000000000000085a4b09fb0788f1c549a68dc2edae3f97aeb5dd70000000000000000000000000000000000000000000000000000000003554ec900000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000004187b69e59c568bc2a9a0b4b2e6b1ba7a6cbcbec4fe6be26bafe560aed989f5b9d25735e5d6783eec46194811bd33f8240b26187b6731e8400665eb2f06c30ca1f1c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041d6893295a161293ac6ca6f8479288abe7fe8f8c16cf70a744e1937ffc01ea2571593589a45531f7297a3539ac088ff6778dc304b673afe64cfa5b0a324bbeeef1b00000000000000000000000000000000000000000000000000000000000000"," ","Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  nonContractAppClaim(address app, address inviter, uint256 validUntilBlock, bytes userSignature, bytes appSignature)\n  args:                         (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x85A4b09fb0788f1C549a68dC2EdAe3F97aeb5Dd7, 55922377, 0x87b69e59c568bc2a9a0b4b2e6b1ba7a6cbcbec4fe6be26bafe560aed989f5b9d25735e5d6783eec46194811bd33f8240b26187b6731e8400665eb2f06c30ca1f1c, 0xd6893295a161293ac6ca6f8479288abe7fe8f8c16cf70a744e1937ffc01ea2571593589a45531f7297a3539ac088ff6778dc304b673afe64cfa5b0a324bbeeef1b)\n  sender:    0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"name":"ContractFunctionExecutionError","sender":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c","shortMessage":"User rejected the request.","version":"2.39.3"}
+[02:07:57.910] Browser ERROR   Error claiming reward: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x85A4b09fb0788f1C549a68dC2EdAe3F97aeb5Dd7",55922428,"0x127eb2b7a27fc42560e8ef0c37832e2dbf7dc1980e0256576ab0735373e28adb6e345ff22633a5aef07adbaac5b89a7ead4af6d62b6b75f7ef5c4c3cd3a5139c1b","0x134206fc54bdca3d0ae5c2a90fc742a862b4c819b71ee09ec57ef6f72c25da6b462e7f862d81cbb1e3dad690e7211ec05964944a59fdae3fb353287e082db1021b"],"cause":{"cause":{"code":4001,"details":"Request Signature: User denied request signature.","name":"UserRejectedRequestError","shortMessage":"User rejected the request.","version":"2.39.3"},"details":"Request Signature: User denied request signature.","metaMessages":["Request Arguments:","  from:  0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c\n  to:    0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  data:  0xabe3bfef000000000000000000000000562456dbf6f21d40c96d392ef6ed1de2e921bf2c00000000000000000000000085a4b09fb0788f1c549a68dc2edae3f97aeb5dd70000000000000000000000000000000000000000000000000000000003554efc00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000041127eb2b7a27fc42560e8ef0c37832e2dbf7dc1980e0256576ab0735373e28adb6e345ff22633a5aef07adbaac5b89a7ead4af6d62b6b75f7ef5c4c3cd3a5139c1b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041134206fc54bdca3d0ae5c2a90fc742a862b4c819b71ee09ec57ef6f72c25da6b462e7f862d81cbb1e3dad690e7211ec05964944a59fdae3fb353287e082db1021b00000000000000000000000000000000000000000000000000000000000000"],"name":"TransactionExecutionError","shortMessage":"User rejected the request.","version":"2.39.3"},"contractAddress":"0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465","details":"Request Signature: User denied request signature.","docsPath":"/docs/contract/writeContract","functionName":"nonContractAppClaim","metaMessages":["Request Arguments:","  from:  0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c\n  to:    0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  data:  0xabe3bfef000000000000000000000000562456dbf6f21d40c96d392ef6ed1de2e921bf2c00000000000000000000000085a4b09fb0788f1c549a68dc2edae3f97aeb5dd70000000000000000000000000000000000000000000000000000000003554efc00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000041127eb2b7a27fc42560e8ef0c37832e2dbf7dc1980e0256576ab0735373e28adb6e345ff22633a5aef07adbaac5b89a7ead4af6d62b6b75f7ef5c4c3cd3a5139c1b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041134206fc54bdca3d0ae5c2a90fc742a862b4c819b71ee09ec57ef6f72c25da6b462e7f862d81cbb1e3dad690e7211ec05964944a59fdae3fb353287e082db1021b00000000000000000000000000000000000000000000000000000000000000"," ","Contract Call:","  address:   0xb44fC3A592aDaA257AECe1Ae8956019EA53d0465\n  function:  nonContractAppClaim(address app, address inviter, uint256 validUntilBlock, bytes userSignature, bytes appSignature)\n  args:                         (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x85A4b09fb0788f1C549a68dC2EdAe3F97aeb5Dd7, 55922428, 0x127eb2b7a27fc42560e8ef0c37832e2dbf7dc1980e0256576ab0735373e28adb6e345ff22633a5aef07adbaac5b89a7ead4af6d62b6b75f7ef5c4c3cd3a5139c1b, 0x134206fc54bdca3d0ae5c2a90fc742a862b4c819b71ee09ec57ef6f72c25da6b462e7f862d81cbb1e3dad690e7211ec05964944a59fdae3fb353287e082db1021b)\n  sender:    0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"name":"ContractFunctionExecutionError","sender":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c","shortMessage":"User rejected the request.","version":"2.39.3"}
+[02:18:39.792] Server  LOG     ✓ Compiled in 2s
+[02:18:40.291] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:18:40.291] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:18:40.291] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:18:40.291] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:18:47.130] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:47.133] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:47.134] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:47.134] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:47.502] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:47.509] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:50.247] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:50.247] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:18:51.026] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"data":{"abiItem":{"inputs":["[Object]"],"name":"Error","type":"error"},"args":["App not approved or registered"],"errorName":"Error"},"name":"ContractFunctionRevertedError","raw":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001e417070206e6f7420617070726f766564206f7220726567697374657265640000","reason":"App not approved or registered","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"},"contractAddress":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0x25db74CF4E7BA120526fd87e159CF656d94bAE43\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"}
+[02:18:55.219] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"data":{"abiItem":{"inputs":["[Object]"],"name":"Error","type":"error"},"args":["App not approved or registered"],"errorName":"Error"},"name":"ContractFunctionRevertedError","raw":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001e417070206e6f7420617070726f766564206f7220726567697374657265640000","reason":"App not approved or registered","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"},"contractAddress":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0x25db74CF4E7BA120526fd87e159CF656d94bAE43\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"}
+[02:18:55.219] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"data":{"abiItem":{"inputs":["[Object]"],"name":"Error","type":"error"},"args":["App not approved or registered"],"errorName":"Error"},"name":"ContractFunctionRevertedError","raw":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001e417070206e6f7420617070726f766564206f7220726567697374657265640000","reason":"App not approved or registered","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"},"contractAddress":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0x25db74CF4E7BA120526fd87e159CF656d94bAE43\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"}
+[02:19:20.791] Server  LOG     ✓ Finished writing to filesystem cache in 21.1s
+[02:20:22.938] Server  LOG     ✓ Finished filesystem cache database compaction in 62s
+[02:20:23.180] Server  LOG     ✓ Finished writing to filesystem cache in 32.3s
+[02:24:25.101] Server  LOG     [WebSocket] Initializing websocket module.
+[02:24:25.549] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 11 times.
+[02:24:25.576] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 11 times.
+[02:24:29.275] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 pairing_create listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:24:29.278] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 pairing_delete listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:24:29.280] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 pairing_create listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:24:29.281] Server  ERROR   (node:23368) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 pairing_delete listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[02:24:34.683] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:24:39.188] Browser LOG     [WebSocket] Initializing websocket module.
+[02:24:39.188] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+      <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+        <RedirectBoundary>
+          <RedirectErrorBoundary router={{...}}>
+            <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+              <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                <SegmentTrieNode>
+                <Page>
+                  <HomePage>
+                    <div className="min-h-scre...">
+                      <header className="bg-white s...">
+                        <div className="max-w-7xl ...">
+                          <div className="flex justi...">
+                            <h1>
+                            <div className="flex items...">
+                              <UserProfile>
+                                <div
++                                 className="flex items-center space-x-3"
+-                                 className="flex items-center space-x-4"
+                                >
++                                 <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse">
+-                                 <button
+-                                   className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:..."
+-                                 >
+                                  ...
+                              ...
+                      ...
+              ...
+            ...
+
+[02:24:46.612] Server  LOG     🔍 App Registration Debug: {}
+[02:24:46.663] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 12 times.
+[02:24:46.678] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 12 times.
+[02:24:49.939] Browser LOG     Registration status changed: false -> true
+[02:24:49.939] Browser LOG     Registration status changed: false -> true
+[02:24:49.939] Browser LOG     Registration status changed: false -> true
+[02:24:49.939] Browser LOG     Registration status changed: false -> true
+[02:25:11.007] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:25:18.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:25:18.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:25:18.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:25:18.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:25:18.495] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[02:25:18.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:25:18.495] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[02:25:20.492] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[02:25:27.475] Server  LOG     🔍 App Registration Debug: {}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:41.999] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[02:26:48.511] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[02:27:37.813] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x1852EBfaBA9CA73bd19760542B5Ab7278F495d0E"],"cause":{"data":{"abiItem":{"inputs":["[Object]"],"name":"Error","type":"error"},"args":["User not whitelisted"],"errorName":"Error"},"name":"ContractFunctionRevertedError","raw":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001455736572206e6f742077686974656c6973746564000000000000000000000000","reason":"User not whitelisted","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nUser not whitelisted","version":"2.39.3"},"contractAddress":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0x25db74CF4E7BA120526fd87e159CF656d94bAE43\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x1852EBfaBA9CA73bd19760542B5Ab7278F495d0E)"],"name":"ContractFunctionExecutionError","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nUser not whitelisted","version":"2.39.3"}
+[02:27:37.813] Browser ERROR   Error checking eligibility: {"abi":[{"inputs":[{"name":"app","type":"address"},{"name":"inviter","type":"address"},{"name":"validUntilBlock","type":"uint256"},{"name":"userSignature","type":"bytes"},{"name":"appSignature","type":"bytes"}],"name":"nonContractAppClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"","type":"address"}],"name":"registeredApps","outputs":[{"name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"isUserRegistered","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"name":"app","type":"address"},{"name":"user","type":"address"}],"name":"canClaim","outputs":[{"name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claimCooldown","outputs":[{"name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],"args":["0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"],"cause":{"data":{"abiItem":{"inputs":["[Object]"],"name":"Error","type":"error"},"args":["App not approved or registered"],"errorName":"Error"},"name":"ContractFunctionRevertedError","raw":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001e417070206e6f7420617070726f766564206f7220726567697374657265640000","reason":"App not approved or registered","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"},"contractAddress":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","docsPath":"/docs/contract/readContract","functionName":"canClaim","metaMessages":["Contract Call:","  address:   0x25db74CF4E7BA120526fd87e159CF656d94bAE43\n  function:  canClaim(address app, address user)\n  args:              (0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C, 0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c)"],"name":"ContractFunctionExecutionError","shortMessage":"The contract function \"canClaim\" reverted with the following reason:\nApp not approved or registered","version":"2.39.3"}
+[02:27:37.813] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[02:27:48.495] Browser ERROR   Analytics SDK: {} {"context":"AnalyticsSDKApiError"}
+[03:11:20.697] Browser ERROR   {"context":"core/relayer","level":50,"msg":"Couldn't establish socket connection to the relay server: wss://relay.walletconnect.org","time":1767826407319}
+[03:11:20.713] Browser ERROR   {"context":"core/relayer","level":50,"msg":"Couldn't establish socket connection to the relay server: wss://relay.walletconnect.org","time":1767826407541}
+[03:11:55.444] Server  LOG     ✓ Finished filesystem cache database compaction in 18.0s
+[03:12:07.512] Browser ERROR   {"context":"core/relayer","level":50,"msg":"No internet connection detected. Please restart your network and try again.","time":1767826455310}
+[03:13:09.494] Browser ERROR   {"context":"core/relayer/subscription","level":50,"msg":"Restore will override. subscription","time":1767826517789}
+[03:13:09.494] Browser ERROR   {"context":"core/relayer/subscription","level":50,"msg":"subscription: [{\"topic\":\"e2654a031ae27a5a109a471d382ffafba23175fd316abf7a686c2ce56eab72d3\",\"relay\":{\"protocol\":\"irn\"},\"id\":\"628ee05f7887db5e1575ee4dcf914dcfd1cf88eede1ea9164eb2334f57be1c44\"},{\"topic\":\"60560aa4ce26b01ae99050b58df76974f8a40b165d09147272038b691e7753ff\",\"relay\":{\"protocol\":\"irn\"},\"id\":\"cfc5ae3c693bfa72422a28063160fad30340bef68561d772bb83e1d0bd85f6e8\"}]","time":1767826517806}
+[03:13:09.501] Browser ERROR   {"context":"core/relayer/subscription","level":50,"time":1767826517818}
+[03:26:06.526] Browser ERROR   {"context":"core/relayer","level":50,"msg":"No internet connection detected. Please restart your network and try again.","time":1767827294322}
+[03:27:03.494] Browser ERROR   {"context":"core/relayer","level":50,"msg":"No internet connection detected. Please restart your network and try again.","time":1767827351309}
+[03:33:33.435] Server  LOG     ✓ Compiled in 3.7s
+[03:33:34.517] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:33:34.517] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:35:28.678] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:35:28.684] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:37:31.780] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:37:31.782] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:38:16.357] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:38:16.357] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:38:21.040] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:38:21.040] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:41:53.302] Server  LOG     ✓ Compiled in 6.9s
+[03:42:32.620] Server  WARN    ⚠ Fast Refresh had to perform a full reload when ./Desktop/Folder/BlockBelle/next-frontend/src/app/test-rewards/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[03:42:52.775] Server  LOG     🔍 App Registration Debug: {}
+[03:42:53.702] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 13 times.
+[03:42:53.832] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 13 times.
+[03:43:23.221] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:43:23.221] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:43:23.224] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:43:23.224] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:43:23.224] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:43:23.224] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:44:16.507] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[03:44:45.004] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[03:44:45.004] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[03:44:45.005] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[03:44:45.005] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[03:44:45.005] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <ScrollAndFocusHandler segmentPath={[...]}>
+      <InnerScrollAndFocusHandler segmentPath={[...]} focusAndScrollRef={{apply:false, ...}}>
+        <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+          <LoadingBoundary name="test-rewards/" loading={null}>
+            <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <InnerLayoutRouter url="/test-rewards" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} ...>
+                    <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                      <SegmentTrieNode>
+                      <ClientPageRoot Component={function TestRewardsPage} serverProvidedParams={{...}}>
+                        <TestRewardsPage params={Promise} searchParams={Promise}>
+                          <div className="min-h-scre...">
+                            <div className="max-w-4xl ...">
+                              <div
++                               className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 mb-6 text-white"
+-                               className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 text-center"
+                              >
+                                <h1
++                                 className="text-3xl font-bold mb-2"
+-                                 className="text-2xl font-bold text-yellow-800 mb-2"
+                                >
++                                 🧪 Engagement Rewards Integration Test
+-                                 Connect Wallet to Test
+                                ...
+                              ...
+                    ...
+                  ...
+        ...
+
+[03:44:55.863] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[03:44:55.863] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","loading":true}
+[03:45:03.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:45:03.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:45:03.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:45:03.854] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:45:30.828] Server  LOG     ✓ Finished writing to filesystem cache in 15.0s
+[03:48:13.992] Server  LOG     ✓ Compiled in 87.3s
+[03:48:17.344] Server  LOG     🔍 App Registration Debug: {}
+[03:48:29.456] Server  LOG     ✓ Finished filesystem cache database compaction in 2.9min
+[03:48:37.828] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[03:48:45.080] Server  LOG     ✓ Finished writing to filesystem cache in 3.1min
+[03:50:06.808] Browser LOG     [WebSocket] Initializing websocket module.
+[03:50:06.840] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+      <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+        <RedirectBoundary>
+          <RedirectErrorBoundary router={{...}}>
+            <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+              <SegmentViewNode type="page" pagePath="/Desktop/F...">
+                <SegmentTrieNode>
+                <Page>
+                  <HomePage>
+                    <div className="min-h-scre...">
+                      <header className="bg-white s...">
+                        <div className="max-w-7xl ...">
+                          <div className="flex justi...">
+                            <h1>
+                            <div className="flex items...">
+                              <UserProfile>
+                                <div
++                                 className="flex items-center space-x-3"
+-                                 className="flex items-center space-x-4"
+                                >
++                                 <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse">
+-                                 <button
+-                                   className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:..."
+-                                 >
+                                  ...
+                              ...
+                      ...
+              ...
+            ...
+
+[03:50:15.543] Browser LOG     Registration status changed: false -> true
+[03:50:15.543] Browser LOG     Registration status changed: false -> true
+[03:50:15.543] Browser LOG     Registration status changed: false -> true
+[03:50:15.543] Browser LOG     Registration status changed: false -> true
+[03:51:10.578] Server  LOG     ✓ Finished writing to filesystem cache in 2.1min
+[03:51:16.078] Server  LOG     ✓ Compiled in 38.9s
+[03:51:16.080] Server  LOG     ✓ Finished writing to filesystem cache in 20.3s
+[03:52:46.311] Server  LOG     ✓ Finished writing to filesystem cache in 90s
+[03:54:20.491] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:54:20.491] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:54:20.491] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[03:54:20.491] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:54:20.491] Browser LOG     🔍 App Registration Debug: {"app":"0x562456dBF6F21d40C96D392Ef6eD1de2e921bF2C","contract":"0x25db74CF4E7BA120526fd87e159CF656d94bAE43","isRegistered":true,"loading":false,"owner":"0x0Fe3A9B6D34693e6e0DEd6BD006dD062D6F59d2c"}
+[03:54:49.632] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 14 times.
+[03:54:49.658] Server  WARN    WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 14 times.
+[03:55:31.452] Server  LOG     ✓ Finished filesystem cache database compaction in 116s
+[03:55:31.600] Server  LOG     ✓ Finished writing to filesystem cache in 107s

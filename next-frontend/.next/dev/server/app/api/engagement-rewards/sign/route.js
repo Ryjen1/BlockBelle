@@ -1,0 +1,10 @@
+var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/engagement-rewards/sign/route.js")
+R.c("server/chunks/beb29_@noble_curves_esm_secp256k1_b536255b.js")
+R.c("server/chunks/ee741_next_f2d82da2._.js")
+R.c("server/chunks/ee741_viem__esm_09a2d6c0._.js")
+R.c("server/chunks/beb29_@noble_curves_esm_01a05170._.js")
+R.c("server/chunks/ee741_392dd555._.js")
+R.c("server/chunks/[root-of-the-server]__1cf0ce5d._.js")
+R.c("server/chunks/511b3__next-internal_server_app_api_engagement-rewards_sign_route_actions_4006c956.js")
+R.m("[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/Folder/BlockBelle/next-frontend/src/app/api/engagement-rewards/sign/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/Desktop/Folder/BlockBelle/next-frontend/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/Folder/BlockBelle/next-frontend/src/app/api/engagement-rewards/sign/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

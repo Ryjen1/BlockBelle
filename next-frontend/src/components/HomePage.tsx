@@ -1,4 +1,4 @@
-import { useI18n } from '../contexts/I18nContext';
+aimport { useI18n } from '../contexts/I18nContext';
 
 export default function HomePage() {
   const { t } = useI18n();

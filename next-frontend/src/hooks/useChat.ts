@@ -45,6 +45,14 @@ export function useChat(recipientAddress: string) {
     args: [address, recipientAddress],
   });
 
+  // Fetch sender's public key if needed
+  const { data: senderDetails } = useReadContract({
+    address: '0x...', // registry address
+    abi: WhisprRegistryABI,
+    functionName: 'getUserDetails',
+    args: conversation ? conversation.find((msg: any) => msg.sender !== address)?.sender : [],
+  });
+
   useEffect(() => {
     if (conversation && secretKey) {
       const decryptedMessages = conversation.map((msg: any) => {
@@ -52,7 +60,7 @@ export function useChat(recipientAddress: string) {
         if (msg.sender !== address && msg.receiver === address) {
           // Decrypt incoming message
           try {
-            const senderPublicKey = 'sender_public_key'; // TODO: fetch sender's public key
+            const senderPublicKey = senderDetails ? senderDetails[2] : 'sender_public_key'; // publicKey
             content = decryptMessage(msg.content, senderPublicKey, secretKey);
           } catch (error) {
             console.error('Failed to decrypt message:', error);
@@ -67,7 +75,7 @@ export function useChat(recipientAddress: string) {
       });
       setMessages(decryptedMessages);
     }
-  }, [conversation, secretKey, address]);
+  }, [conversation, secretKey, address, senderDetails]);
 
   const sendMessage = useWriteContract();
 
