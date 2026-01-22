@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useChat } from '../hooks/useChat';
+import styles from './ChatInterface.module.css';
 
 interface ChatInterfaceProps {
   recipientAddress: string;
@@ -18,16 +19,16 @@ export default function ChatInterface({ recipientAddress }: ChatInterfaceProps) 
   };
 
   return (
-    <div className="chat-interface">
-      <div className="messages">
+    <div className={styles.chatInterface}>
+      <div className={styles.messages}>
         {messages.map((msg, index) => (
-          <div key={index} className={`message ${msg.sender === address ? 'sent' : 'received'}`}>
+          <div key={index} className={`${styles.message} ${msg.sender === address ? styles.sent : styles.received}`}>
             <p>{msg.content}</p>
             <span>{new Date(msg.timestamp * 1000).toLocaleString()}</span>
           </div>
         ))}
       </div>
-      <div className="message-input">
+      <div className={styles.messageInput}>
         <input
           type="text"
           value={newMessage}
