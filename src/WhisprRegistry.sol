@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 /**
  * @title UserRegistry
  * @dev A smart contract for registering users with ENS names and avatar hashes
+ * @notice This contract manages user registrations with ENS names and avatar hashes for the Whispr platform
  */
-contract WhisprRegistry {
+contract WhisprRegistry is Ownable {
     // User struct to store user information
     struct User {
         string ensName;
@@ -114,17 +117,16 @@ contract WhisprRegistry {
     }
 
     /**
-     * @dev Delete another user (admin function - for now anyone can delete others)
+     * @dev Delete another user (admin function - only callable by contract owner)
      * @param userAddress The address of the user to delete
      */
-    function deleteOtherUser(address userAddress) external {
+    function deleteOtherUser(address userAddress) external onlyOwner {
         require(users[userAddress].registered, "User is not registered");
 
         // Mark user as not registered
         users[userAddress].registered = false;
         users[userAddress].ensName = "";
         users[userAddress].avatarHash = "";
-        users[userAddress].publicKey = "";
 
         // Remove from allUsers array
         for (uint256 i = 0; i < allUsers.length; i++) {

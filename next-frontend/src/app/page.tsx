@@ -1,11 +1,8 @@
-import HomePage from '../components/HomePage';
-import LanguageSwitcher from '../components/LanguageSwitcher';
+import HomePage from '@/components/HomePage';
 
-export default function Home() {
-  return (
-    <div>
-      <LanguageSwitcher />
-      <HomePage />
-    </div>
-  );
+// Force dynamic rendering to avoid Next.js 16 static generation issues
+export const dynamic = 'force-dynamic';
+
+export default function Page() {
+  return <HomePage />;
 }
