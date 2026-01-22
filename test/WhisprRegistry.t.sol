@@ -14,17 +14,24 @@ contract WhisprRegistryTest is Test {
     function testRegisterUser() public {
         string memory ensName = "test.eth";
         string memory avatarHash = "hash";
+        string memory publicKey = "pubkey";
+        string memory displayName = "Test User";
+        string memory bio = "Bio";
+        string memory statusMessage = "Status";
+        string memory profilePictureHash = "picHash";
 
-        registry.registerUser(ensName, avatarHash);
+        registry.registerUser(ensName, avatarHash, publicKey, displayName, bio, statusMessage, profilePictureHash);
 
-        (string memory name, string memory hash, bool registered) = registry.getUserDetails(address(this));
+        (string memory name, , string memory aHash, , , , string memory pKey, , bool registered, uint256 lastUpd) = registry.getUserDetails(address(this));
         assertEq(name, ensName);
-        assertEq(hash, avatarHash);
+        assertEq(aHash, avatarHash);
+        assertEq(pKey, publicKey);
         assertTrue(registered);
+        assertGt(lastUpd, 0);
     }
 
     function testGetAllUsers() public {
-        registry.registerUser("test.eth", "hash");
+        registry.registerUser("test.eth", "hash", "pubkey", "Display", "Bio", "Status", "pic");
 
         address[] memory users = registry.getAllUsers();
         assertEq(users.length, 1);
