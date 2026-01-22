@@ -10,6 +10,7 @@ contract WhisprRegistry {
     struct User {
         string ensName;
         string avatarHash; // IPFS URL or CID
+        string publicKey; // Public key for E2EE
         bool registered;
     }
 
@@ -24,18 +25,20 @@ contract WhisprRegistry {
     event UserDeleted(address indexed userAddress);
 
     /**
-     * @dev Register a new user with ENS name and avatar hash
+     * @dev Register a new user with ENS name, avatar hash, and public key
      * @param ensName The ENS name of the user
      * @param avatarHash The IPFS hash or URL for the user's avatar
+     * @param publicKey The public key for E2EE
      */
-    function registerUser(string memory ensName, string memory avatarHash) external {
+    function registerUser(string memory ensName, string memory avatarHash, string memory publicKey) external {
         require(!users[msg.sender].registered, "User is already registered");
         require(bytes(ensName).length > 0, "ENS name cannot be empty");
-        
+
         // Store user details
         users[msg.sender] = User({
             ensName: ensName,
             avatarHash: avatarHash,
+            publicKey: publicKey,
             registered: true
         });
 
@@ -76,11 +79,12 @@ contract WhisprRegistry {
      * @param userAddress The address of the user
      * @return ensName The ENS name of the user
      * @return avatarHash The avatar hash of the user
+     * @return publicKey The public key of the user
      * @return registered Whether the user is registered
      */
-    function getUserDetails(address userAddress) external view returns (string memory ensName, string memory avatarHash, bool registered) {
+    function getUserDetails(address userAddress) external view returns (string memory ensName, string memory avatarHash, string memory publicKey, bool registered) {
         User memory user = users[userAddress];
-        return (user.ensName, user.avatarHash, user.registered);
+        return (user.ensName, user.avatarHash, user.publicKey, user.registered);
     }
 
     /**
@@ -88,12 +92,13 @@ contract WhisprRegistry {
      */
     function deleteUser() external {
         require(users[msg.sender].registered, "User is not registered");
-        
+
         // Mark user as not registered
         users[msg.sender].registered = false;
         users[msg.sender].ensName = "";
         users[msg.sender].avatarHash = "";
-        
+        users[msg.sender].publicKey = "";
+
         // Remove from allUsers array
         for (uint256 i = 0; i < allUsers.length; i++) {
             if (allUsers[i] == msg.sender) {
@@ -103,7 +108,7 @@ contract WhisprRegistry {
                 break;
             }
         }
-        
+
         // Emit event
         emit UserDeleted(msg.sender);
     }
@@ -114,12 +119,13 @@ contract WhisprRegistry {
      */
     function deleteOtherUser(address userAddress) external {
         require(users[userAddress].registered, "User is not registered");
-        
+
         // Mark user as not registered
         users[userAddress].registered = false;
         users[userAddress].ensName = "";
         users[userAddress].avatarHash = "";
-        
+        users[userAddress].publicKey = "";
+
         // Remove from allUsers array
         for (uint256 i = 0; i < allUsers.length; i++) {
             if (allUsers[i] == userAddress) {
@@ -129,7 +135,7 @@ contract WhisprRegistry {
                 break;
             }
         }
-        
+
         // Emit event
         emit UserDeleted(userAddress);
     }
