@@ -1,0 +1,14 @@
+{
+  "name": "blockbelle-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd next-frontend && npm run dev",
+    "start": "cd next-frontend && npm start"
+  },
+  "dependencies": {
+    "next": "^16.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

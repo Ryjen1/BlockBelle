@@ -1,101 +1,116 @@
-import { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { encryptMessage, decryptMessage } from '../utils/encryption';
-import WhisprChatABI from '../../contracts/abi/WhisprChat.json';
-import WhisprRegistryABI from '../../contracts/abi/WhisprRegistry.json';
+import { useState, useEffect, useCallback } from 'react'
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from 'wagmi'
+import { CONTRACT_ADDRESSES } from '@/config/contracts'
+
+// Import the compiled ABI directly
+import chatArtifact from '@/config/WhisprChat.json'
 
 interface Message {
-  sender: string;
-  receiver: string;
-  content: string;
-  timestamp: number;
+  sender: string
+  receiver: string
+  content: string
+  timestamp: bigint
 }
 
-export function useChat(recipientAddress: string) {
-  const { address } = useAccount();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [recipientPublicKey, setRecipientPublicKey] = useState<string | null>(null);
-  const [secretKey, setSecretKey] = useState<string | null>(null);
+const chatAbi = chatArtifact.abi
 
-  // Load secret key
-  useEffect(() => {
-    const storedSecretKey = localStorage.getItem('secretKey');
-    setSecretKey(storedSecretKey);
-  }, []);
+export function useChat() {
+  const { address: currentUserAddress } = useAccount()
 
-  // Fetch recipient's public key
-  const { data: userDetails } = useReadContract({
-    address: '0x...', // registry address
-    abi: WhisprRegistryABI,
-    functionName: 'getUserDetails',
-    args: [recipientAddress],
-  });
+  const [selectedUser, setSelectedUser] = useState<string>('')
+  const [messages, setMessages] = useState<Message[]>([])
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false)
 
-  useEffect(() => {
-    if (userDetails) {
-      setRecipientPublicKey(userDetails[2]); // publicKey is at index 2
-    }
-  }, [userDetails]);
+  const {
+    writeContract: sendMessage,
+    data: sendHash,
+    isPending: isSending,
+  } = useWriteContract()
 
-  // Fetch conversation
-  const { data: conversation } = useReadContract({
-    address: '0x...', // chat contract address
-    abi: WhisprChatABI,
+  const {
+    isLoading: isConfirmingSend,
+    isSuccess: isSendSuccess,
+  } = useWaitForTransactionReceipt({
+    hash: sendHash,
+  })
+
+  // Fetch messages for the selected conversation
+  const {
+    data: conversationData,
+    isLoading: isLoadingConversation,
+    refetch: refetchConversation,
+  } = useReadContract({
+    address: CONTRACT_ADDRESSES.chat,
+    abi: chatAbi,
     functionName: 'getConversation',
-    args: [address, recipientAddress],
-  });
+    args:
+      selectedUser && currentUserAddress
+        ? [currentUserAddress, selectedUser]
+        : undefined,
+    query: {
+      enabled: !!selectedUser && !!currentUserAddress,
+    },
+  })
 
-  // Fetch sender's public key if needed
-  const { data: senderDetails } = useReadContract({
-    address: '0x...', // registry address
-    abi: WhisprRegistryABI,
-    functionName: 'getUserDetails',
-    args: conversation ? conversation.find((msg: any) => msg.sender !== address)?.sender : [],
-  });
-
+  // Update messages when conversation data changes
   useEffect(() => {
-    if (conversation && secretKey) {
-      const decryptedMessages = conversation.map((msg: any) => {
-        let content = msg.content;
-        if (msg.sender !== address && msg.receiver === address) {
-          // Decrypt incoming message
-          try {
-            const senderPublicKey = senderDetails ? senderDetails[2] : 'sender_public_key'; // publicKey
-            content = decryptMessage(msg.content, senderPublicKey, secretKey);
-          } catch (error) {
-            console.error('Failed to decrypt message:', error);
-          }
-        }
-        return {
-          sender: msg.sender,
-          receiver: msg.receiver,
-          content,
-          timestamp: msg.timestamp,
-        };
-      });
-      setMessages(decryptedMessages);
+    if (conversationData) {
+      setMessages(conversationData as Message[])
+      setIsLoadingMessages(false)
     }
-  }, [conversation, secretKey, address, senderDetails]);
+  }, [conversationData])
 
-  const sendMessage = useWriteContract();
+  // Load messages when user is selected
+  useEffect(() => {
+    if (selectedUser && currentUserAddress) {
+      setIsLoadingMessages(true)
+      refetchConversation()
+    } else {
+      setMessages([])
+    }
+  }, [selectedUser, currentUserAddress, refetchConversation])
 
-  const handleSendMessage = (content: string) => {
-    if (!recipientPublicKey || !secretKey) return;
+  const handleSendMessage = useCallback(
+    async (content: string) => {
+      if (!selectedUser || !content.trim() || !currentUserAddress) return
 
-    // Encrypt the message
-    const encryptedContent = encryptMessage(content, recipientPublicKey, secretKey);
+      try {
+        await sendMessage({
+          address: CONTRACT_ADDRESSES.chat,
+          abi: chatAbi,
+          functionName: 'sendMessage',
+          args: [selectedUser, content],
+        })
+      } catch (error) {
+        console.error('Failed to send message:', error)
+      }
+    },
+    [selectedUser, currentUserAddress, sendMessage]
+  )
 
-    sendMessage.writeContract({
-      address: '0x...', // chat contract address
-      abi: WhisprChatABI,
-      functionName: 'sendMessage',
-      args: [recipientAddress, encryptedContent],
-    });
-  };
+  // Refresh messages after successful send
+  useEffect(() => {
+    if (isSendSuccess) {
+      refetchConversation()
+    }
+  }, [isSendSuccess, refetchConversation])
+
+  const selectUser = useCallback((userAddress: string) => {
+    setSelectedUser(userAddress)
+  }, [])
 
   return {
+    selectedUser,
     messages,
+    isLoadingMessages: isLoadingMessages || isLoadingConversation,
+    isSending: isSending || isConfirmingSend,
     sendMessage: handleSendMessage,
-    isLoading: sendMessage.isPending,
-  };
+    selectUser,
+    currentUserAddress,
+  }
 }
