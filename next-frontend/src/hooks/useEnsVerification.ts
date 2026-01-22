@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { getEnsAddress } from 'viem';
+import WhisprRegistryABI from '../../contracts/abi/WhisprRegistry.json';
 
 export function useEnsVerification(ensName: string) {
   const { address } = useAccount();
@@ -53,5 +54,30 @@ export function useEnsVerification(ensName: string) {
     isVerified,
     error,
     verifyEnsOwnership,
+  };
+}
+
+export function useProfile(userAddress?: string) {
+  const { address } = useAccount();
+  const targetAddress = userAddress || address;
+
+  const { data: userDetails, isLoading: isLoadingDetails } = useReadContract({
+    address: '0x...', // TODO: registry contract address
+    abi: WhisprRegistryABI,
+    functionName: 'getUserDetails',
+    args: targetAddress ? [targetAddress] : undefined,
+  });
+
+  const { data: visibleProfile, isLoading: isLoadingVisible } = useReadContract({
+    address: '0x...', // TODO: registry contract address
+    abi: WhisprRegistryABI,
+    functionName: 'getVisibleProfile',
+    args: targetAddress && address ? [targetAddress, address] : undefined,
+  });
+
+  return {
+    userDetails,
+    visibleProfile,
+    isLoading: isLoadingDetails || isLoadingVisible,
   };
 }
