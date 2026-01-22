@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import WhisprChatABI from '../../contracts/WhisprChat.json'; // Assume ABI is generated
+const WhisprChatABI = []; // TODO: Replace with actual ABIq
 
 const CONTRACT_ADDRESS = '0x...'; // Replace with actual address
 
@@ -26,18 +26,27 @@ export interface Group {
 export const useChat = () => {
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [account, setAccount] = useState<string>('');
-  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [provider, setProvider] = useState<ethers.Provider | null>(null);
+  const [conversations, setConversations] = useState<Map<string, Message[]>>(new Map());
+  const [groupConversations, setGroupConversations] = useState<Map<number, Message[]>>(new Map());
+  const [lastProcessedBlock, setLastProcessedBlock] = useState<number>(0);
+
+  const getConversationId = (user1: string, user2: string) => {
+    return [user1, user2].sort().join('-');
+  };
 
   useEffect(() => {
     const init = async () => {
-      if (window.ethereum) {
-        const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      if ((window as any).ethereum) {
+        const web3Provider = new ethers.BrowserProvider((window as any).ethereum);
         setProvider(web3Provider);
-        const signer = web3Provider.getSigner();
+        const signer = await web3Provider.getSigner();
         const address = await signer.getAddress();
         setAccount(address);
         const chatContract = new ethers.Contract(CONTRACT_ADDRESS, WhisprChatABI, signer);
         setContract(chatContract);
+        const currentBlock = await provider.getBlockNumber();
+        setLastProcessedBlock(currentBlock);
       }
     };
     init();
@@ -46,7 +55,7 @@ export const useChat = () => {
   useEffect(() => {
     if (!contract) return;
 
-    const onMessageSent = (from: string, to: string, message: string, timestamp: any) => {
+    const onMessageSent = (from: string, to: string, message: string, timestamp: any, event: any) => {
       const conversationId = getConversationId(from, to);
       const newMessage: Message = {
         sender: from,
@@ -60,9 +69,10 @@ export const useChat = () => {
         newMap.set(conversationId, [...msgs, newMessage]);
         return newMap;
       });
+      setLastProcessedBlock(event.blockNumber);
     };
 
-    const onGroupMessageSent = (groupId: number, sender: string, message: string, timestamp: any) => {
+    const onGroupMessageSent = (groupId: number, sender: string, message: string, timestamp: any, event: any) => {
       const newMessage: Message = {
         sender: sender,
         receiver: '',
@@ -75,6 +85,7 @@ export const useChat = () => {
         newMap.set(groupId, [...msgs, newMessage]);
         return newMap;
       });
+      setLastProcessedBlock(event.blockNumber);
     };
 
     contract.on('MessageSent', onMessageSent);
