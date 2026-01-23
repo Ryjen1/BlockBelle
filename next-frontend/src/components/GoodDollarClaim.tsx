@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useAccount, usePublicClient, useWalletClient, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { useIdentitySDK } from '@goodsdks/identity-sdk';
-import { 
-    CheckCircleIcon, 
-    XCircleIcon, 
+import {
+    CheckCircleIcon,
+    XCircleIcon,
     ArrowPathIcon,
     ShieldCheckIcon,
     ClockIcon,
@@ -87,6 +87,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     const [nextClaimTime, setNextClaimTime] = useState<string>('');
     const [hasClaimedToday, setHasClaimedToday] = useState(false);
     const [sdkTimeout, setSdkTimeout] = useState(false);
+    const [enrollmentCheckTimeout, setEnrollmentCheckTimeout] = useState(false);
 
     // Read Contract Hooks - Check entitlement (also tells us if enrolled)
     const { data: entitlementAmount, refetch: refetchEntitlement, isLoading: isLoadingEntitlement, isError: entitlementError } = useReadContract({
@@ -114,19 +115,19 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     // Check if already claimed today (from localStorage)
     useEffect(() => {
         if (!address) return;
-        
+
         const lastClaimKey = `gooddollar_last_claim_${address}`;
         const lastClaimTimestamp = localStorage.getItem(lastClaimKey);
-        
+
         if (lastClaimTimestamp) {
             const lastClaim = new Date(parseInt(lastClaimTimestamp));
             const now = new Date();
-            
+
             // Check if claim was made today (same UTC day)
             const isSameDay = lastClaim.getUTCDate() === now.getUTCDate() &&
-                             lastClaim.getUTCMonth() === now.getUTCMonth() &&
-                             lastClaim.getUTCFullYear() === now.getUTCFullYear();
-            
+                lastClaim.getUTCMonth() === now.getUTCMonth() &&
+                lastClaim.getUTCFullYear() === now.getUTCFullYear();
+
             if (isSameDay) {
                 setHasClaimedToday(true);
                 setClaimSuccess(true);
@@ -150,6 +151,25 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         return () => clearTimeout(timer);
     }, [identitySDK, isEnrolled]);
 
+    // Enrollment check timeout (5 seconds)
+    useEffect(() => {
+        if (!isCheckingEnrollment) return;
+
+        const timer = setTimeout(() => {
+            if (isCheckingEnrollment) {
+                console.warn('Enrollment check timed out after 5 seconds');
+                setIsCheckingEnrollment(false);
+                setEnrollmentCheckTimeout(true);
+                // If we have entitlement data from contract, use that
+                if (typeof entitlementAmount !== 'undefined' && !entitlementError) {
+                    setIsEnrolled(true);
+                }
+            }
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [isCheckingEnrollment, entitlementAmount, entitlementError]);
+
     // Check enrollment from contract first (fallback if SDK fails)
     useEffect(() => {
         if (address && typeof entitlementAmount !== 'undefined' && !entitlementError) {
@@ -160,19 +180,30 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
 
     // Check enrollment status from SDK (preferred method)
     useEffect(() => {
-        if (address && identitySDK) {
+        // Only check once, and only if we haven't timed out or already enrolled
+        if (address && identitySDK && !isEnrolled && !enrollmentCheckTimeout && !isCheckingEnrollment) {
             checkEnrollmentStatus();
         }
-    }, [address, identitySDK]);
+    }, [address, identitySDK, isEnrolled, enrollmentCheckTimeout]);
 
     const checkEnrollmentStatus = async () => {
-        if (!address || !identitySDK) return;
+        if (!address || !identitySDK) {
+            setIsCheckingEnrollment(false);
+            return;
+        }
 
         setIsCheckingEnrollment(true);
         setErrorMessage('');
 
         try {
-            const { isWhitelisted } = await identitySDK.getWhitelistedRoot(address);
+            // Add a race condition with timeout
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Enrollment check timeout')), 4000)
+            );
+
+            const checkPromise = identitySDK.getWhitelistedRoot(address);
+
+            const { isWhitelisted } = await Promise.race([checkPromise, timeoutPromise]) as any;
             setIsEnrolled(isWhitelisted);
 
             if (isWhitelisted) {
@@ -181,7 +212,14 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
             }
         } catch (error: any) {
             console.error('Error checking enrollment:', error);
-            setErrorMessage('Failed to check enrollment status');
+            // Don't show error message for timeout - just fall back to contract check
+            if (!error.message?.includes('timeout')) {
+                setErrorMessage('Failed to check enrollment status');
+            }
+            // Fall back to contract-based check
+            if (typeof entitlementAmount !== 'undefined' && !entitlementError) {
+                setIsEnrolled(true);
+            }
         } finally {
             setIsCheckingEnrollment(false);
         }
@@ -237,7 +275,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
             // Store claim timestamp in localStorage
             const lastClaimKey = `gooddollar_last_claim_${address}`;
             localStorage.setItem(lastClaimKey, Date.now().toString());
-            
+
             setClaimSuccess(true);
             setHasClaimedToday(true);
 
@@ -485,9 +523,9 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
 
                                         {!hasClaimedToday && !claimSuccess && (
                                             <button
-                                                onClick={() => { 
-                                                    refetchEntitlement(); 
-                                                    refetchBalance(); 
+                                                onClick={() => {
+                                                    refetchEntitlement();
+                                                    refetchBalance();
                                                     setHasClaimedToday(false);
                                                 }}
                                                 className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium underline inline-flex items-center gap-1"
