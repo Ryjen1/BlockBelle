@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+    Bars3Icon,
+    XMarkIcon,
+    UserPlusIcon,
+    ChatBubbleLeftRightIcon,
+    UserCircleIcon,
+    TrophyIcon,
+    BanknotesIcon,
+    UserGroupIcon
+} from '@heroicons/react/24/outline';
 
 export type TabType = 'register' | 'group' | 'main' | 'check' | 'account' | 'gooddollar' | 'quests';
 
@@ -13,13 +22,12 @@ interface NavbarProps {
 export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const navItems: { id: TabType; label: string }[] = [
-        { id: 'register', label: 'Register' },
-        { id: 'group', label: 'Group Chat' },
-        { id: 'main', label: 'Chat App' },
-        { id: 'account', label: 'Account' },
-        { id: 'quests', label: 'Quests' },
-        { id: 'gooddollar', label: 'GoodDollar UBI' },
+    const navItems: { id: TabType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+        { id: 'register', label: 'Register', icon: UserPlusIcon },
+        { id: 'main', label: 'Chat', icon: ChatBubbleLeftRightIcon },
+        { id: 'quests', label: 'Quests', icon: TrophyIcon },
+        { id: 'gooddollar', label: 'GoodDollar', icon: BanknotesIcon },
+        { id: 'account', label: 'Account', icon: UserCircleIcon },
     ];
 
     const handleTabClick = (tab: TabType) => {
@@ -28,68 +36,58 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
     };
 
     return (
-        <nav className="bg-white shadow">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    <div className="flex">
-                        {/* Logo or Brand if needed in Nav, mostly kept clean as per original design */}
-                        <div className="flex-shrink-0 flex items-center md:hidden">
-                            <span className="font-bold text-blockbelle-pink">Menu</span>
-                        </div>
+        <>
+            {/* Desktop Navigation - Top */}
+            <nav className="hidden md:block bg-white shadow-sm">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex space-x-8">
+                        {navItems.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => handleTabClick(item.id)}
+                                    className={`inline-flex items-center gap-2 px-1 py-4 border-b-2 text-sm font-medium transition-all duration-200 ${activeTab === item.id
+                                        ? 'border-blockbelle-purple text-blockbelle-purple'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                        }`}
+                                >
+                                    <Icon className="h-5 w-5" />
+                                    {item.label}
+                                </button>
+                            );
+                        })}
                     </div>
+                </div>
+            </nav>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-8">
-                        {navItems.map((item) => (
+            {/* Mobile Navigation - Bottom */}
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 pb-safe animate-slide-up">
+                <div className="grid grid-cols-5 h-16">
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = activeTab === item.id;
+                        return (
                             <button
                                 key={item.id}
                                 onClick={() => handleTabClick(item.id)}
-                                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${activeTab === item.id
-                                    ? 'border-indigo-500 text-indigo-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                className={`flex flex-col items-center justify-center gap-1 transition-all duration-200 relative ${isActive
+                                    ? 'text-blockbelle-purple'
+                                    : 'text-gray-500 active:bg-gray-100'
                                     }`}
                             >
-                                {item.label}
+                                <Icon className={`h-6 w-6 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+                                <span className={`text-xs font-medium ${isActive ? 'font-semibold' : ''}`}>
+                                    {item.label}
+                                </span>
+                                {isActive && (
+                                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-blockbelle-purple rounded-t-full" />
+                                )}
                             </button>
-                        ))}
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <div className="-mr-2 flex items-center md:hidden">
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                        >
-                            <span className="sr-only">Open main menu</span>
-                            {isOpen ? (
-                                <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                            ) : (
-                                <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                            )}
-                        </button>
-                    </div>
+                        );
+                    })}
                 </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {isOpen && (
-                <div className="md:hidden">
-                    <div className="pt-2 pb-3 space-y-1">
-                        {navItems.map((item) => (
-                            <button
-                                key={item.id}
-                                onClick={() => handleTabClick(item.id)}
-                                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left ${activeTab === item.id
-                                    ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-                                    : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
-                                    }`}
-                            >
-                                {item.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
-        </nav>
+            </nav>
+        </>
     );
 }
