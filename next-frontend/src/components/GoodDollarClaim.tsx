@@ -86,6 +86,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [nextClaimTime, setNextClaimTime] = useState<string>('');
     const [hasClaimedToday, setHasClaimedToday] = useState(false);
+    const [sdkTimeout, setSdkTimeout] = useState(false);
 
     // Read Contract Hooks
     const { data: entitlementAmount, refetch: refetchEntitlement, isLoading: isLoadingEntitlement } = useReadContract({
@@ -137,6 +138,17 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
             }
         }
     }, [address]);
+
+    // SDK timeout detection (10 seconds)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!identitySDK && !isEnrolled) {
+                setSdkTimeout(true);
+            }
+        }, 10000);
+
+        return () => clearTimeout(timer);
+    }, [identitySDK, isEnrolled]);
 
     // Check enrollment status on mount
     useEffect(() => {
@@ -315,12 +327,32 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                         </div>
                         <button
                             onClick={handleEnroll}
-                            disabled={showFVLink || !identitySDK}
+                            disabled={showFVLink || (!identitySDK && !sdkTimeout)}
                             className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             <ShieldCheckIcon className="h-5 w-5" />
-                            {!identitySDK ? 'Initializing SDK...' : showFVLink ? 'Opening verification...' : 'Start Verification'}
+                            {!identitySDK && !sdkTimeout ? 'Initializing SDK...' : showFVLink ? 'Opening verification...' : 'Start Verification'}
                         </button>
+
+                        {sdkTimeout && !identitySDK && (
+                            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p className="text-xs text-blue-800 mb-2">
+                                    SDK taking too long? Use manual verification:
+                                </p>
+                                <a
+                                    href="https://wallet.gooddollar.org/open?inviteCode=UKRCQSNFQq&utm_campaign=celo-onlyurl"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors w-full justify-center"
+                                >
+                                    <ShieldCheckIcon className="h-4 w-4" />
+                                    Verify Manually
+                                </a>
+                                <p className="text-xs text-blue-700 mt-2">
+                                    After verification, return here and refresh the page.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {showFVLink && fvLink && (
