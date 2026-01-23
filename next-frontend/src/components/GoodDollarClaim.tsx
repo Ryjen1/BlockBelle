@@ -4,6 +4,15 @@ import { useState, useEffect } from 'react';
 import { useAccount, usePublicClient, useWalletClient, useReadContract, useWriteContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { useIdentitySDK } from '@goodsdks/identity-sdk';
+import { 
+    CheckCircleIcon, 
+    XCircleIcon, 
+    ArrowPathIcon,
+    ShieldCheckIcon,
+    ClockIcon,
+    BanknotesIcon,
+    ExclamationTriangleIcon
+} from '@heroicons/react/24/outline';
 import ReferralCard from '@/components/ReferralCard';
 
 interface GoodDollarClaimProps {
@@ -76,6 +85,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     const [claimSuccess, setClaimSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [nextClaimTime, setNextClaimTime] = useState<string>('');
+    const [hasClaimedToday, setHasClaimedToday] = useState(false);
 
     // Read Contract Hooks
     const { data: entitlementAmount, refetch: refetchEntitlement, isLoading: isLoadingEntitlement } = useReadContract({
@@ -99,6 +109,34 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
 
     // Write Contract Hook
     const { writeContractAsync, isPending: isClaiming } = useWriteContract();
+
+    // Check if already claimed today (from localStorage)
+    useEffect(() => {
+        if (!address) return;
+        
+        const lastClaimKey = `gooddollar_last_claim_${address}`;
+        const lastClaimTimestamp = localStorage.getItem(lastClaimKey);
+        
+        if (lastClaimTimestamp) {
+            const lastClaim = new Date(parseInt(lastClaimTimestamp));
+            const now = new Date();
+            
+            // Check if claim was made today (same UTC day)
+            const isSameDay = lastClaim.getUTCDate() === now.getUTCDate() &&
+                             lastClaim.getUTCMonth() === now.getUTCMonth() &&
+                             lastClaim.getUTCFullYear() === now.getUTCFullYear();
+            
+            if (isSameDay) {
+                setHasClaimedToday(true);
+                setClaimSuccess(true);
+                // Calculate next claim time (next UTC day)
+                const tomorrow = new Date(now);
+                tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+                tomorrow.setUTCHours(0, 0, 0, 0);
+                setNextClaimTime(tomorrow.toLocaleString());
+            }
+        }
+    }, [address]);
 
     // Check enrollment status on mount
     useEffect(() => {
@@ -130,8 +168,6 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     };
 
     const handleEnroll = async () => {
-        console.log('handleEnroll called. SDK ready:', !!identitySDK, 'Address:', address);
-
         if (!identitySDK) {
             setErrorMessage('GoodDollar SDK is initializing. Please try again in a moment.');
             return;
@@ -143,14 +179,12 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         }
 
         setErrorMessage('');
-        setShowFVLink(true); // Show loading state
+        setShowFVLink(true);
         try {
-            // Generate Face Verification link
             const callbackUrl = typeof window !== 'undefined' ? window.location.href : '';
-            const link = await identitySDK.generateFVLink(false, callbackUrl, 42220); // Celo mainnet chainId
+            const link = await identitySDK.generateFVLink(false, callbackUrl, 42220);
             setFvLink(link);
 
-            // Automatically open the link in a new window
             if (link && typeof window !== 'undefined') {
                 window.open(link, '_blank', 'noopener,noreferrer');
             }
@@ -176,35 +210,39 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
 
             console.log('Claim transaction sent:', tx);
 
-            // Wait for transaction receipt (optional, but good UX)
             if (publicClient && tx) {
                 await publicClient.waitForTransactionReceipt({ hash: tx });
             }
 
+            // Store claim timestamp in localStorage
+            const lastClaimKey = `gooddollar_last_claim_${address}`;
+            localStorage.setItem(lastClaimKey, Date.now().toString());
+            
             setClaimSuccess(true);
+            setHasClaimedToday(true);
 
-            // Refresh data
             refetchEntitlement();
             refetchBalance();
 
-            // Set next claim time to tomorrow (simplified)
-            setNextClaimTime(new Date(Date.now() + 24 * 60 * 60 * 1000).toLocaleString());
+            // Calculate next claim time (next UTC day)
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+            tomorrow.setUTCHours(0, 0, 0, 0);
+            setNextClaimTime(tomorrow.toLocaleString());
 
         } catch (error: any) {
             console.error('Error claiming G$:', error);
             if (error.message?.includes('User not allowed')) {
-                setErrorMessage('You are not eligible to claim properly yet. Please ensure you are verified.');
+                setErrorMessage('You are not eligible to claim. Please ensure you are verified.');
             } else {
                 setErrorMessage('Failed to claim G$. The transaction may have failed or was rejected.');
             }
         }
     };
 
-
-
     const formatG$ = (value: bigint | undefined) => {
         if (value === undefined) return '0.00';
-        // G$ on Celo has 18 decimals
         const formatted = formatUnits(value, 18);
         return Number(formatted).toFixed(2);
     };
@@ -214,152 +252,207 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     }
 
     return (
-        <div className={`bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20 ${className}`}>
-            <h2 className="text-2xl font-bold text-gradient-blockbelle mb-4">
-                🌟 GoodDollar UBI Perk
-            </h2>
-            <p className="text-sm text-gray-600 mb-6">
-                Claim your daily Universal Basic Income (G$) on the Celo network. Complete face verification to get started!
-            </p>
+        <div className={`bg-white rounded-xl p-6 border-2 border-gray-200 shadow-lg ${className}`}>
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6 pb-5 border-b border-gray-200">
+                <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-lg">
+                    <BanknotesIcon className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                    <h2 className="text-xl font-bold text-gray-900">GoodDollar UBI</h2>
+                    <p className="text-sm text-gray-600">Universal Basic Income on Celo</p>
+                </div>
+            </div>
 
+            {/* Error Message */}
             {errorMessage && (
-                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-600">{errorMessage}</p>
+                <div className="mb-5 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                    <div className="flex items-start gap-3">
+                        <XCircleIcon className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <p className="text-sm font-medium text-red-800">Error</p>
+                            <p className="text-sm text-red-700 mt-1">{errorMessage}</p>
+                        </div>
+                    </div>
                 </div>
             )}
 
+            {/* Success Message */}
             {claimSuccess && (
-                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-sm text-green-600 font-medium">
-                        ✅ Successfully claimed G$! Next claim available at {nextClaimTime}
-                    </p>
+                <div className="mb-5 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+                    <div className="flex items-start gap-3">
+                        <CheckCircleIcon className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <p className="text-sm font-medium text-green-800">Claim Successful</p>
+                            <p className="text-sm text-green-700 mt-1">
+                                Next claim available: {nextClaimTime}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
 
+            {/* Checking Status */}
             {isCheckingEnrollment ? (
-                <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blockbelle-purple"></div>
+                <div className="flex items-center justify-center py-12">
+                    <ArrowPathIcon className="h-8 w-8 text-gray-400 animate-spin" />
                     <span className="ml-3 text-gray-600">Checking enrollment status...</span>
                 </div>
             ) : !isEnrolled ? (
-                <div className="space-y-4">
-                    <div className="border-2 border-dashed border-blockbelle-purple/30 rounded-xl p-6 bg-white/50">
-                        <h3 className="text-lg font-semibold text-blockbelle-purple mb-2">
-                            Not Enrolled Yet
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                            Complete face verification to enroll in GoodDollar UBI and start claiming your daily G$ tokens.
-                        </p>
+                /* Not Enrolled */
+                <div className="space-y-5">
+                    <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-5">
+                        <div className="flex items-start gap-3 mb-4">
+                            <ExclamationTriangleIcon className="h-6 w-6 text-amber-600 flex-shrink-0" />
+                            <div>
+                                <h3 className="text-base font-semibold text-amber-900 mb-1">
+                                    Verification Required
+                                </h3>
+                                <p className="text-sm text-amber-800">
+                                    Complete face verification to enroll in GoodDollar UBI and start claiming daily G$ tokens.
+                                </p>
+                            </div>
+                        </div>
                         <button
                             onClick={handleEnroll}
                             disabled={showFVLink || !identitySDK}
-                            className="gradient-blockbelle hover:opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                            className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            {!identitySDK ? 'Initializing SDK...' : showFVLink ? 'Opening verification...' : 'Start Face Verification →'}
+                            <ShieldCheckIcon className="h-5 w-5" />
+                            {!identitySDK ? 'Initializing SDK...' : showFVLink ? 'Opening verification...' : 'Start Verification'}
                         </button>
                     </div>
 
                     {showFVLink && fvLink && (
-                        <div className="border border-blockbelle-purple/30 rounded-xl p-6 bg-gradient-to-br from-blockbelle-gold/10 to-blockbelle-gold/5">
-                            <h3 className="text-lg font-semibold text-blockbelle-purple mb-2">
+                        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-5">
+                            <h3 className="text-base font-semibold text-blue-900 mb-2">
                                 Complete Face Verification
                             </h3>
-                            <p className="text-sm text-gray-600 mb-4">
+                            <p className="text-sm text-blue-800 mb-4">
                                 Click the link below to complete your face verification. This ensures one person = one account for fair UBI distribution.
                             </p>
                             <a
                                 href={fvLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block gradient-blockbelle hover:opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                             >
-                                Verify Your Identity →
+                                <ShieldCheckIcon className="h-5 w-5" />
+                                Verify Your Identity
                             </a>
-                            <p className="text-xs text-gray-500 mt-4">
+                            <p className="text-xs text-blue-700 mt-3">
                                 After verification, refresh this page to see your claim status.
                             </p>
                         </div>
                     )}
 
-                    <div className="text-center pt-4">
-                        <p className="text-xs text-gray-500">
+                    <div className="text-center pt-4 border-t border-gray-200">
+                        <p className="text-sm text-gray-600">
                             Don't have a GoodDollar account?{' '}
                             <a
                                 href="https://wallet.gooddollar.org/open?inviteCode=UKRCQSNFQq&utm_campaign=celo-onlyurl"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blockbelle-purple hover:text-blockbelle-pink font-bold underline ml-1"
+                                className="text-blue-600 hover:text-blue-700 font-semibold underline"
                             >
-                                Sign up
+                                Sign up here
                             </a>
                         </p>
                     </div>
                 </div>
             ) : (
-                <div className="space-y-4">
-                    <div className="border-2 border-blockbelle-gold bg-gradient-to-br from-blockbelle-gold/10 to-blockbelle-gold/5 rounded-xl p-6 shadow-lg">
+                /* Enrolled - Show Claim Interface */
+                <div className="space-y-5">
+                    {/* Balance & Status */}
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-5">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-blockbelle-purple">
-                                ✅ Enrolled in GoodDollar UBI
-                            </h3>
-                            <div className="bg-white/80 rounded-full px-3 py-1 shadow-sm border border-blockbelle-purple/10">
-                                <p className="text-xs font-medium text-blockbelle-purple">
-                                    Balance: {formatG$(balance as bigint)} G$
+                            <div className="flex items-center gap-2">
+                                <CheckCircleIcon className="h-5 w-5 text-green-600" />
+                                <span className="text-sm font-semibold text-green-900">Enrolled in UBI</span>
+                            </div>
+                            <div className="bg-white px-3 py-1.5 rounded-full border border-green-300">
+                                <p className="text-xs font-medium text-gray-700">
+                                    Balance: <span className="font-bold text-green-700">{formatG$(balance as bigint)} G$</span>
                                 </p>
                             </div>
                         </div>
 
                         {isLoadingEntitlement ? (
-                            <div className="flex items-center justify-center py-4">
-                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blockbelle-purple"></div>
+                            <div className="flex items-center justify-center py-8">
+                                <ArrowPathIcon className="h-6 w-6 text-green-600 animate-spin" />
                                 <span className="ml-3 text-sm text-gray-600">Checking eligibility...</span>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                <div className="bg-white/70 rounded-lg p-4">
-                                    <p className="text-sm text-gray-600 mb-1">Claimable Amount</p>
-                                    <p className="text-3xl font-bold text-gradient-blockbelle">
-                                        {claimSuccess ? "0.00" : formatG$(entitlementAmount as bigint)} G$
+                                {/* Claimable Amount */}
+                                <div className="bg-white rounded-lg p-4 border border-green-200">
+                                    <p className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-2">
+                                        Claimable Amount
+                                    </p>
+                                    <p className="text-4xl font-bold text-gray-900">
+                                        {hasClaimedToday ? "0.00" : formatG$(entitlementAmount as bigint)} <span className="text-2xl text-gray-600">G$</span>
                                     </p>
                                     {nextClaimTime && (
-                                        <p className="text-xs text-gray-500 mt-2">
-                                            Next claim: {nextClaimTime}
-                                        </p>
+                                        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
+                                            <ClockIcon className="h-4 w-4 text-gray-500" />
+                                            <p className="text-xs text-gray-600">
+                                                Next claim: {nextClaimTime}
+                                            </p>
+                                        </div>
                                     )}
                                 </div>
 
-                                {!claimSuccess && entitlementAmount && (entitlementAmount as bigint) > 0n ? (
+                                {/* Claim Button or Status */}
+                                {!hasClaimedToday && !claimSuccess && entitlementAmount && (entitlementAmount as bigint) > 0n ? (
                                     <button
                                         onClick={handleClaim}
                                         disabled={isClaiming}
-                                        className="gradient-blockbelle hover:opacity-90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-lg transition-all shadow-md hover:shadow-lg disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         {isClaiming ? (
-                                            <span className="flex items-center justify-center">
-                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                                Claiming...
-                                            </span>
+                                            <>
+                                                <ArrowPathIcon className="h-5 w-5 animate-spin" />
+                                                Processing Claim...
+                                            </>
                                         ) : (
-                                            'Claim G$ Now'
+                                            <>
+                                                <BanknotesIcon className="h-5 w-5" />
+                                                Claim G$ Now
+                                            </>
                                         )}
                                     </button>
                                 ) : (
-                                    <div className="text-center py-4">
-                                        {claimSuccess ? (
-                                            <p className="text-sm text-green-600 font-medium bg-green-50 px-3 py-2 rounded-lg inline-block">
-                                                🎉 You have claimed your daily G$!
-                                            </p>
+                                    <div className="text-center py-6 bg-gray-50 rounded-lg border border-gray-200">
+                                        {hasClaimedToday || claimSuccess ? (
+                                            <div>
+                                                <div className="flex items-center justify-center gap-2 mb-2">
+                                                    <CheckCircleIcon className="h-6 w-6 text-green-600" />
+                                                    <p className="text-base font-semibold text-green-700">
+                                                        Daily Claim Completed
+                                                    </p>
+                                                </div>
+                                                {nextClaimTime && (
+                                                    <p className="text-sm text-gray-600">
+                                                        Come back after {nextClaimTime}
+                                                    </p>
+                                                )}
+                                            </div>
                                         ) : (
                                             <p className="text-sm text-gray-600">
-                                                No G$ available to claim right now. Check back later!
+                                                No G$ available to claim right now. Check back later.
                                             </p>
                                         )}
 
-                                        {!claimSuccess && (
+                                        {!hasClaimedToday && !claimSuccess && (
                                             <button
-                                                onClick={() => { refetchEntitlement(); refetchBalance(); }}
-                                                className="mt-3 text-blockbelle-purple hover:text-blockbelle-pink font-medium text-sm underline block mx-auto"
+                                                onClick={() => { 
+                                                    refetchEntitlement(); 
+                                                    refetchBalance(); 
+                                                    setHasClaimedToday(false);
+                                                }}
+                                                className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium underline inline-flex items-center gap-1"
                                             >
+                                                <ArrowPathIcon className="h-4 w-4" />
                                                 Refresh Status
                                             </button>
                                         )}
@@ -369,10 +462,11 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                         )}
                     </div>
 
-                    <div className="bg-gradient-to-br from-blockbelle-purple/10 to-blockbelle-indigo/10 border border-blockbelle-purple/30 rounded-xl p-4 mb-4">
-                        <h3 className="text-sm font-semibold text-blockbelle-purple mb-2">About GoodDollar UBI</h3>
-                        <p className="text-xs text-gray-700">
-                            GoodDollar provides Universal Basic Income to anyone, anywhere. Your daily G$ claim helps create a more equitable financial system. Gas fees are minimal (~$0.01 on Celo).
+                    {/* Info Box */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 className="text-sm font-semibold text-blue-900 mb-2">About GoodDollar UBI</h3>
+                        <p className="text-xs text-blue-800">
+                            GoodDollar provides Universal Basic Income to anyone, anywhere. Your daily G$ claim helps create a more equitable financial system. Gas fees are minimal (approximately $0.01 on Celo).
                         </p>
                     </div>
 
