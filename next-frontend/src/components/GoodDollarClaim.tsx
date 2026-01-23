@@ -26,7 +26,9 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     const identitySDK = useIdentitySDK('production');
 
     // Contract Addresses (Celo Mainnet)
+    // Contract Addresses (Celo Mainnet)
     const UBI_SCHEME_ADDRESS = '0x43d72Ff17701B2DA814620735C39C620Ce0ea4A1';
+    const IDENTITY_CONTRACT_ADDRESS = '0xC361A6E67822a0EDc17D899227dd9FC50BD62F42';
     const GDOLLAR_TOKEN_ADDRESS = '0x62B8B11039FcfE5aB0C56E502b1C372A3d2a9c7A';
 
     // ABIs
@@ -56,6 +58,16 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
             inputs: [],
             name: "periodStart",
             outputs: [{ name: "", type: "uint256" }],
+            stateMutability: "view",
+            type: "function"
+        }
+    ] as const;
+
+    const IDENTITY_ABI = [
+        {
+            inputs: [{ name: "account", type: "address" }],
+            name: "isWhitelisted",
+            outputs: [{ name: "", type: "bool" }],
             stateMutability: "view",
             type: "function"
         }
@@ -103,6 +115,17 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         address: GDOLLAR_TOKEN_ADDRESS,
         abi: ERC20_ABI,
         functionName: 'balanceOf',
+        args: address ? [address] : undefined,
+        query: {
+            enabled: !!address,
+        }
+    });
+
+    // Check strict whitelisting status from Identity Contract
+    const { data: isWhitelisted, refetch: refetchWhitelisted } = useReadContract({
+        address: IDENTITY_CONTRACT_ADDRESS,
+        abi: IDENTITY_ABI,
+        functionName: 'isWhitelisted',
         args: address ? [address] : undefined,
         query: {
             enabled: !!address,
@@ -170,21 +193,25 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         return () => clearTimeout(timer);
     }, [isCheckingEnrollment, entitlementAmount, entitlementError]);
 
-    // Check enrollment from contract first (fallback if SDK fails)
+    // Check enrollment from contract first (Primary Source of Truth)
     useEffect(() => {
-        if (address && typeof entitlementAmount !== 'undefined' && !entitlementError) {
-            // If contract returns entitlement, user is enrolled!
-            setIsEnrolled(true);
-        }
-    }, [address, entitlementAmount, entitlementError]);
+        if (typeof isWhitelisted !== 'undefined') {
+            setIsEnrolled(isWhitelisted as boolean);
 
-    // Check enrollment status from SDK (preferred method)
+            // If whitelisted, we can stop the loading spinner
+            if (isWhitelisted) {
+                setIsCheckingEnrollment(false);
+            }
+        }
+    }, [isWhitelisted]);
+
+    // Check enrollment status from SDK (Secondary/Fallback)
     useEffect(() => {
-        // Only check once, and only if we haven't timed out or already enrolled
-        if (address && identitySDK && !isEnrolled && !enrollmentCheckTimeout && !isCheckingEnrollment) {
+        // Only check if stricter contract check is not yet available or failed
+        if (address && identitySDK && !isEnrolled && !enrollmentCheckTimeout && !isCheckingEnrollment && typeof isWhitelisted === 'undefined') {
             checkEnrollmentStatus();
         }
-    }, [address, identitySDK, isEnrolled, enrollmentCheckTimeout]);
+    }, [address, identitySDK, isEnrolled, enrollmentCheckTimeout, isWhitelisted]);
 
     const checkEnrollmentStatus = async () => {
         if (!address || !identitySDK) {
@@ -279,8 +306,11 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
             setClaimSuccess(true);
             setHasClaimedToday(true);
 
+            setHasClaimedToday(true);
+
             refetchEntitlement();
             refetchBalance();
+            refetchWhitelisted();
 
             // Calculate next claim time (next UTC day)
             const now = new Date();
@@ -484,7 +514,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                 {!hasClaimedToday && !claimSuccess && entitlementAmount && (entitlementAmount as bigint) > 0n ? (
                                     <button
                                         onClick={handleClaim}
-                                        disabled={isClaiming}
+                                        disabled={isClaiming || !isEnrolled}
                                         className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-lg transition-all shadow-md hover:shadow-lg disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         {isClaiming ? (
@@ -548,7 +578,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                         </p>
                     </div>
 
-                    {/* Referral Card */}
+                    {/* Referral Card - Only shown when verified */}
                     <ReferralCard />
                 </div>
             )}
