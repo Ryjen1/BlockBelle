@@ -61,43 +61,43 @@ export default function QuestBoard() {
     const activeQuests = quests.filter(q => !q.completed);
 
     return (
-        <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-6 border border-blockbelle-purple/20">
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                    <TrophyIcon className="h-8 w-8 text-blockbelle-gold" />
+        <div className="bg-gradient-to-br from-blockbelle-pink/10 via-blockbelle-purple/10 to-blockbelle-indigo/10 shadow-lg rounded-xl p-4 sm:p-6 border border-blockbelle-purple/20 animate-fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                    <TrophyIcon className="h-8 w-8 sm:h-10 sm:w-10 text-blockbelle-gold" />
                     <div>
-                        <h2 className="text-2xl font-bold text-gradient-blockbelle">Quest Board</h2>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gradient-blockbelle">Quest Board</h2>
                         <p className="text-sm text-gray-600">Complete quests to earn G$ rewards</p>
                     </div>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right">
                     <p className="text-sm text-gray-600">Completed</p>
-                    <p className="text-2xl font-bold text-blockbelle-purple">
+                    <p className="text-2xl sm:text-3xl font-bold text-blockbelle-purple">
                         {completedQuests.length}/{quests.length}
                     </p>
                 </div>
             </div>
 
             {error && (
-                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl animate-scale-in">
                     <p className="text-sm text-red-600">{error}</p>
                 </div>
             )}
 
             {success && (
-                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl animate-scale-in">
                     <p className="text-sm text-green-600">{success}</p>
                 </div>
             )}
 
             {/* Unclaimed Rewards Section */}
             {unclaimedQuests.length > 0 && (
-                <div className="mb-6 p-4 bg-gradient-to-r from-blockbelle-gold/20 to-blockbelle-gold/10 border-2 border-blockbelle-gold rounded-xl">
-                    <h3 className="text-lg font-bold text-blockbelle-purple mb-3 flex items-center">
-                        <TrophyIcon className="h-5 w-5 mr-2" />
+                <div className="mb-6 p-4 sm:p-6 bg-gradient-to-r from-blockbelle-gold/20 to-blockbelle-gold/10 border-2 border-blockbelle-gold rounded-2xl animate-scale-in">
+                    <h3 className="text-lg sm:text-xl font-bold text-blockbelle-purple mb-4 flex items-center gap-2">
+                        <TrophyIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                         Ready to Claim ({unclaimedQuests.length})
                     </h3>
-                    <div className="space-y-2">
+                    <div className="space-y-3 sm:space-y-4">
                         {unclaimedQuests.map(quest => (
                             <QuestCard
                                 key={quest.id}
@@ -114,8 +114,8 @@ export default function QuestBoard() {
             {/* Active Quests */}
             {activeQuests.length > 0 && (
                 <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">Active Quests</h3>
-                    <div className="space-y-3">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Active Quests</h3>
+                    <div className="space-y-3 sm:space-y-4">
                         {activeQuests.map(quest => (
                             <QuestCard
                                 key={quest.id}
@@ -131,9 +131,9 @@ export default function QuestBoard() {
 
             {/* All Completed */}
             {activeQuests.length === 0 && unclaimedQuests.length === 0 && (
-                <div className="text-center py-8">
-                    <TrophyIcon className="h-16 w-16 text-blockbelle-gold mx-auto mb-3" />
-                    <h3 className="text-xl font-bold text-blockbelle-purple mb-2">
+                <div className="text-center py-12">
+                    <TrophyIcon className="h-20 w-20 text-blockbelle-gold mx-auto mb-4" />
+                    <h3 className="text-xl sm:text-2xl font-bold text-blockbelle-purple mb-2">
                         All Quests Completed! 🎉
                     </h3>
                     <p className="text-gray-600">
@@ -158,39 +158,39 @@ function QuestCard({ quest, onClaim, isClaiming, formatG$ }: QuestCardProps) {
     const progressPercent = (quest.progress / quest.target) * 100;
 
     return (
-        <div className={`bg-white rounded-lg p-4 border-2 ${quest.completed ? 'border-green-300' : 'border-gray-200'
-            } hover:shadow-md transition-all duration-200`}>
-            <div className="flex items-start justify-between mb-3">
-                <div className="flex items-start space-x-3 flex-1">
-                    <div className={`bg-gradient-to-br ${colorGradient} p-2 rounded-lg`}>
-                        <Icon className="h-5 w-5 text-white" />
+        <div className={`bg-white rounded-xl p-4 sm:p-5 border-2 ${quest.completed ? 'border-green-300' : 'border-gray-200'
+            } card-hover shadow-sm`}>
+            <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div className={`bg-gradient-to-br ${colorGradient} p-2.5 sm:p-3 rounded-xl flex-shrink-0 shadow-md`}>
+                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                     </div>
-                    <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900 flex items-center">
-                            {quest.title}
+                    <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-gray-900 flex items-center gap-2 text-base sm:text-lg">
+                            <span className="truncate">{quest.title}</span>
                             {quest.claimed && (
-                                <CheckCircleIcon className="h-4 w-4 ml-2 text-green-500" />
+                                <CheckCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 text-green-500 flex-shrink-0" />
                             )}
                         </h4>
-                        <p className="text-sm text-gray-600">{quest.description}</p>
+                        <p className="text-sm text-gray-600 mt-1">{quest.description}</p>
                     </div>
                 </div>
-                <div className="text-right ml-4">
-                    <p className="text-lg font-bold text-blockbelle-gold">
+                <div className="text-right flex-shrink-0">
+                    <p className="text-lg sm:text-xl font-bold text-blockbelle-gold">
                         {formatG$(quest.reward)} G$
                     </p>
                 </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="mb-3">
-                <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <div className="mb-4">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-2">
                     <span>Progress</span>
-                    <span>{quest.progress}/{quest.target}</span>
+                    <span className="font-medium">{quest.progress}/{quest.target}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 rounded-full h-2.5 sm:h-3">
                     <div
-                        className={`bg-gradient-to-r ${colorGradient} h-2 rounded-full transition-all duration-300`}
+                        className={`bg-gradient-to-r ${colorGradient} h-2.5 sm:h-3 rounded-full transition-all duration-500 shadow-sm`}
                         style={{ width: `${progressPercent}%` }}
                     />
                 </div>
@@ -201,11 +201,11 @@ function QuestCard({ quest, onClaim, isClaiming, formatG$ }: QuestCardProps) {
                 <button
                     onClick={() => onClaim(quest.id)}
                     disabled={isClaiming}
-                    className="w-full gradient-blockbelle hover:opacity-90 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="btn-touch w-full gradient-blockbelle hover:opacity-90 text-white shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                     {isClaiming ? (
-                        <span className="flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <span className="flex items-center justify-center gap-2">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                             Claiming...
                         </span>
                     ) : (
@@ -215,7 +215,7 @@ function QuestCard({ quest, onClaim, isClaiming, formatG$ }: QuestCardProps) {
             )}
 
             {quest.claimed && (
-                <div className="w-full bg-green-50 border border-green-200 text-green-700 font-medium py-2 px-4 rounded-lg text-center">
+                <div className="w-full bg-green-50 border-2 border-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl text-center">
                     ✅ Reward Claimed
                 </div>
             )}

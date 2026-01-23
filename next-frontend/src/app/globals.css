@@ -8,10 +8,25 @@
   --color-blockbelle-pink-light: #fbcfe8;
   --color-blockbelle-purple-light: #e9d5ff;
   --color-blockbelle-gold: #fbbf24;
+  --color-blockbelle-neon-blue: #3b82f6;
+  --color-blockbelle-dark: #0f172a;
+  --color-blockbelle-dark-card: #1e293b;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile-Optimized Base Styles */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
 }
 
 /* Custom Utilities */
-@utility tier-badge {
+.tier-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24,13 +39,215 @@
   box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
 }
 
-@utility gradient-blockbelle {
+.gradient-blockbelle {
   background: linear-gradient(135deg, var(--color-blockbelle-pink), var(--color-blockbelle-purple), var(--color-blockbelle-indigo));
 }
 
-@utility text-gradient-blockbelle {
+.text-gradient-blockbelle {
   background: linear-gradient(135deg, var(--color-blockbelle-pink), var(--color-blockbelle-purple));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.glass-card-dark {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Touch-Friendly Button */
+.btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-touch:active {
+  transform: scale(0.97);
+}
+
+/* Smooth Slide In Animation */
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Bottom Navigation Safe Area */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Mobile-Optimized Spacing */
+.mobile-container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 640px) {
+  .mobile-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Smooth Gradient Background */
+.gradient-bg-animated {
+  background: linear-gradient(135deg, #ec4899, #9333ea, #4f46e5);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/* Premium Neon Glow Effects */
+.neon-glow {
+  box-shadow: 
+    0 0 10px rgba(236, 72, 153, 0.5),
+    0 0 20px rgba(147, 51, 234, 0.3),
+    0 0 30px rgba(79, 70, 229, 0.2);
+}
+
+.neon-text {
+  text-shadow: 
+    0 0 10px rgba(236, 72, 153, 0.8),
+    0 0 20px rgba(147, 51, 234, 0.6),
+    0 0 30px rgba(79, 70, 229, 0.4);
+}
+
+/* Premium Card with Darker Theme */
+.premium-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+.premium-card:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 12px 40px 0 rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(59, 130, 246, 0.25);
+}
+
+/* Premium Button with Glow */
+.btn-premium {
+  background: linear-gradient(135deg, #ec4899, #9333ea);
+  box-shadow: 
+    0 4px 15px rgba(236, 72, 153, 0.4),
+    0 0 20px rgba(147, 51, 234, 0.3);
+  border: 1px solid rgba(236, 72, 153, 0.5);
+}
+
+.btn-premium:hover {
+  box-shadow: 
+    0 6px 20px rgba(236, 72, 153, 0.5),
+    0 0 30px rgba(147, 51, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-premium:active {
+  transform: scale(0.97) translateY(0);
 }
