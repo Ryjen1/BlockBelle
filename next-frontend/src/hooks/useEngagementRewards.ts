@@ -48,7 +48,7 @@ export function useEngagementRewards() {
   const isAppRegistered = appOwner && appOwner !== '0x0000000000000000000000000000000000000000';
 
   // Check if user is already registered with the app
-  const { data: isUserRegistered, refetch: refetchUserRegistration } = useReadContract({
+  const { data: isUserRegistered, refetch: refetchUserRegistration, isLoading: isCheckingRegistration } = useReadContract({
     address: ACTIVE_REWARDS_CONTRACT,
     abi: ENGAGEMENT_REWARDS_ABI,
     functionName: 'isUserRegistered',
@@ -193,6 +193,7 @@ export function useEngagementRewards() {
   return {
     ...state,
     isAppRegistered: !!isAppRegistered,
+    isCheckingRegistration,
     checkEligibility,
     generateClaimSignature,
     getValidUntilBlock,

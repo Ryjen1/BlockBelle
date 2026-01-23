@@ -21,6 +21,7 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
     isCheckingEligibility,
     isUserRegistered,
     isAppRegistered,
+    isCheckingRegistration,
     claimError,
     hasClaimedBefore,
     generateClaimSignature,
@@ -152,7 +153,19 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
     );
   }
 
-  // Don't show if already claimed
+  // Show loading while checking registration status
+  if (isCheckingRegistration && !hasClaimedBefore) {
+    return (
+      <div className={`bg-gray-50 border-2 border-gray-200 rounded-xl p-4 ${className}`}>
+        <div className="flex items-center space-x-3">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blockbelle-purple"></div>
+          <p className="text-sm text-gray-600">Checking your eligibility...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't show if already claimed (check localStorage first for instant feedback)
   if (hasClaimedBefore || isUserRegistered) {
     return (
       <div className={`bg-green-50 border-2 border-green-200 rounded-xl p-4 ${className}`}>
@@ -296,7 +309,7 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
       ) : (
         <button
           onClick={handleClaim}
-          disabled={isClaiming || !canClaimReward || claimSuccess}
+          disabled={isClaiming || !canClaimReward || claimSuccess || isCheckingRegistration}
           className={`w-full font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
             claimSuccess
               ? 'bg-green-500 text-white'
