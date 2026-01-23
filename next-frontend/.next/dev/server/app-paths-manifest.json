@@ -1,0 +1,8 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/engagement-rewards/sign/route": "app/api/engagement-rewards/sign/route.js",
+  "/page": "app/page.js",
+  "/test-claim/page": "app/test-claim/page.js",
+  "/test-integration/page": "app/test-integration/page.js",
+  "/test-rewards/page": "app/test-rewards/page.js"
+}

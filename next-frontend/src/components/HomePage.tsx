@@ -116,11 +116,22 @@ export default function HomePage() {
                 View Demo
               </button>
             </div>
-            {/* Features - Compact on mobile, detailed on desktop */}
-            <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto px-4">
-              <div className="text-center">
-                <div className="bg-pink-500/30 rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mx-auto mb-2 sm:mb-3 shadow-lg">
-                  <span className="text-xl sm:text-2xl">👩‍💻</span>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 shadow-xl">
+              <h2 className="text-lg font-bold mb-2">Built for Web3 Women</h2>
+              <p className="text-sm mb-3">
+                Connect with verified ENS identities, create private groups, and
+                build meaningful relationships in the web3 space. ENS ownership required.
+              </p>
+              <div className="grid md:grid-cols-3 gap-3">
+                <div className="text-center">
+                  <div className="bg-pink-500/30 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-1 shadow-lg">
+                    <span className="text-base">👩‍💻</span>
+                  </div>
+                  <h3 className="font-semibold mb-1 text-xs">ENS Verified</h3>
+                  <p className="text-xs">
+                    All users are verified through ENS domains, ensuring
+                    authentic conversations.
+                  </p>
                 </div>
                 <h3 className="text-xs sm:text-sm font-semibold mb-1">ENS Verified</h3>
                 <p className="text-xs text-white/80 hidden sm:block">Authentic conversations</p>

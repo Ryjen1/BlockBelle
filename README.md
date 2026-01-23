@@ -15,11 +15,13 @@ Chata-Bella is a decentralized chat application built on Celo that creates a saf
 ### 🔐 Identity Verification
 - **Self Protocol Integration**: Privacy-preserving age (18+) and gender verification using zero-knowledge proofs
 - **Queens-Only Access**: Gender-based verification ensures the platform remains a women-only space
+- **Contract-Level Enforcement**: Smart contract-level gender verification prevents unauthorized access
 - **On-Chain Attestation**: Verification status stored permanently on Celo blockchain
 
 ### 💬 Decentralized Chat
 - **ENS-Based Registration**: Users register with custom ENS names
 - **Group & Private Messaging**: Chat with the entire community or individual members
+- **Group Invites**: Invite members to groups with accept/decline functionality
 - **On-Chain Messages**: All messages stored on Celo for transparency and permanence
 
 ### 👑 Tier System
@@ -234,7 +236,7 @@ Verification status is stored on Celo blockchain, ensuring:
 - Decentralization
 
 ### Gender Verification
-Currently enforced at the frontend level. Future updates will include smart contract-level enforcement for enhanced security.
+Enforced at both frontend and smart contract levels for maximum security. Only verified females can participate in chat functions.
 
 ---
 
@@ -246,10 +248,11 @@ Currently enforced at the frontend level. Future updates will include smart cont
 - [x] Self Protocol verification
 - [x] Group chat
 - [x] Private messaging
+- [x] Group invites
 - [x] Gender-specific verification messages
 
-### Phase 2: Enhanced Security 🚧
-- [ ] Contract-level gender enforcement
+### Phase 2: Enhanced Security ✅
+- [x] Contract-level gender enforcement
 - [ ] Multi-signature admin controls
 - [ ] Rate limiting for spam prevention
 

@@ -92,13 +92,13 @@ export default function RegistrationCheck({ onRegistered, onNotRegistered }: Reg
             <>
               You're registered as <span className="font-mono font-semibold text-blue-600">{ensName}</span>
               <br />
-              Ready to start chatting with the community?
+              Your ENS ownership has been verified. Ready to start chatting?
             </>
           ) : (
             <>
-              Create your unique profile to start chatting with other community members.
+              Create your verified profile to start chatting with other community members.
               <br />
-              Choose any name you'd like - no ENS ownership required!
+              You must own an ENS domain to register.
             </>
           )}
         </p>
@@ -134,7 +134,7 @@ export default function RegistrationCheck({ onRegistered, onNotRegistered }: Reg
         {!ensName && (
           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-700">
-              <strong>💡 Tip:</strong> Choose any name you'd like - no ENS domain ownership required!
+              <strong>💡 Tip:</strong> Make sure you own the ENS domain before registering. You can register ENS names at <a href="https://app.ens.domains" target="_blank" rel="noopener noreferrer" className="underline">app.ens.domains</a>.
             </p>
           </div>
         )}
