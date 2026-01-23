@@ -88,13 +88,13 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     const [hasClaimedToday, setHasClaimedToday] = useState(false);
     const [sdkTimeout, setSdkTimeout] = useState(false);
 
-    // Read Contract Hooks
-    const { data: entitlementAmount, refetch: refetchEntitlement, isLoading: isLoadingEntitlement } = useReadContract({
+    // Read Contract Hooks - Check entitlement (also tells us if enrolled)
+    const { data: entitlementAmount, refetch: refetchEntitlement, isLoading: isLoadingEntitlement, isError: entitlementError } = useReadContract({
         address: UBI_SCHEME_ADDRESS,
         abi: UBI_SCHEME_ABI,
         functionName: 'checkEntitlement',
         query: {
-            enabled: !!address && isEnrolled,
+            enabled: !!address, // Check regardless of SDK status!
         }
     });
 
@@ -150,7 +150,15 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
         return () => clearTimeout(timer);
     }, [identitySDK, isEnrolled]);
 
-    // Check enrollment status on mount
+    // Check enrollment from contract first (fallback if SDK fails)
+    useEffect(() => {
+        if (address && typeof entitlementAmount !== 'undefined' && !entitlementError) {
+            // If contract returns entitlement, user is enrolled!
+            setIsEnrolled(true);
+        }
+    }, [address, entitlementAmount, entitlementError]);
+
+    // Check enrollment status from SDK (preferred method)
     useEffect(() => {
         if (address && identitySDK) {
             checkEnrollmentStatus();
