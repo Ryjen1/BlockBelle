@@ -3,6 +3,12 @@ import { createWalletClient, http, type Address } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { celo } from 'viem/chains';
 
+export const dynamic = 'force-dynamic'; // Prevent static caching behavior
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { status: 200, headers: { 'Allow': 'POST, OPTIONS' } });
+}
+
 // This would be your app's signing key - MUST be kept secret
 // In production, use environment variables and never commit this
 
