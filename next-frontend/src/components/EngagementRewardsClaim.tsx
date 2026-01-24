@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
 import { GiftIcon, CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useEngagementRewards } from '@/hooks/useEngagementRewards';
 import { ACTIVE_REWARDS_CONTRACT, ENGAGEMENT_REWARDS_ABI, CHATABELLA_APP_ADDRESS } from '@/config/engagement-rewards';
@@ -336,8 +336,8 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
           onClick={handleClaim}
           disabled={isClaiming || !canClaimReward || claimSuccess || isCheckingRegistration}
           className={`w-full font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${claimSuccess
-              ? 'bg-green-500 text-white'
-              : 'gradient-blockbelle hover:opacity-90 text-white'
+            ? 'bg-green-500 text-white'
+            : 'gradient-blockbelle hover:opacity-90 text-white'
             }`}
         >
           {isClaiming ? (
