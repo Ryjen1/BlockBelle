@@ -13,6 +13,17 @@ interface EngagementRewardsClaimProps {
   onClaimSuccess?: () => void;
 }
 
+const IDENTITY_CONTRACT_ADDRESS = '0xC361A6E67822a0EDc17D899227dd9FC50BD62F42';
+const IDENTITY_ABI = [
+  {
+    inputs: [{ name: "account", type: "address" }],
+    name: "isWhitelisted",
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function"
+  }
+] as const;
+
 export default function EngagementRewardsClaim({ className = '', onClaimSuccess }: EngagementRewardsClaimProps) {
   const { address, isConnected } = useAccount();
   const {
@@ -43,6 +54,17 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
   // Wait for transaction confirmation
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash: txHash || undefined,
+  });
+
+  // Strict Identity Check
+  const { data: isWhitelisted } = useReadContract({
+    address: IDENTITY_CONTRACT_ADDRESS,
+    abi: IDENTITY_ABI,
+    functionName: 'isWhitelisted',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    }
   });
 
   useEffect(() => {
@@ -109,22 +131,22 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
 
     } catch (error: any) {
       console.error('Error claiming reward:', error);
-      
+
       // Detect whitelisting errors
       const errorMessage = error.message || error.toString() || '';
-      const isWhitelisted = errorMessage.toLowerCase().includes('not whitelisted') || 
-                           errorMessage.toLowerCase().includes('user not whitelisted') ||
-                           errorMessage.toLowerCase().includes('whitelisted');
-      
+      const isWhitelisted = errorMessage.toLowerCase().includes('not whitelisted') ||
+        errorMessage.toLowerCase().includes('user not whitelisted') ||
+        errorMessage.toLowerCase().includes('whitelisted');
+
       setIsWhitelistError(isWhitelisted);
-      
+
       if (isWhitelisted) {
         setErrorMsg('You need to verify with GoodDollar first');
         setShowVerificationGuide(true);
       } else {
         setErrorMsg(error.message || 'Failed to claim reward');
       }
-      
+
       setIsClaiming(false);
     }
   };
@@ -189,7 +211,7 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
     return (
       <div className={`space-y-4 ${className}`}>
         <GoodDollarVerificationGuide onClose={() => setShowVerificationGuide(false)} />
-        
+
         {/* Option to try again */}
         <button
           onClick={() => {
@@ -279,16 +301,16 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blockbelle-purple"></div>
           <span className="ml-3 text-sm text-gray-600">Checking eligibility...</span>
         </div>
-      ) : claimError && claimError.toLowerCase().includes('not eligible') ? (
+      ) : (claimError && claimError.toLowerCase().includes('not eligible')) || (isWhitelisted === false) ? (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
           <div className="flex items-start space-x-2">
             <XCircleIcon className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-sm text-yellow-800 mb-2">
-                ⚠️ {claimError}
+                ⚠️ Verification Required
               </p>
               <p className="text-xs text-yellow-700 mb-2">
-                This usually means you're not verified with GoodDollar yet. Complete verification to claim rewards.
+                You must be verified with GoodDollar before you can claim this welcome bonus.
               </p>
               <button
                 onClick={() => setShowVerificationGuide(true)}
@@ -300,7 +322,10 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
             </div>
           </div>
           <button
-            onClick={checkEligibility}
+            onClick={() => {
+              checkEligibility();
+              // If we had a refetch for whitelist, we'd call it here
+            }}
             className="mt-3 w-full text-sm text-blockbelle-purple hover:text-blockbelle-pink font-medium underline"
           >
             Check eligibility again
@@ -310,11 +335,10 @@ export default function EngagementRewardsClaim({ className = '', onClaimSuccess 
         <button
           onClick={handleClaim}
           disabled={isClaiming || !canClaimReward || claimSuccess || isCheckingRegistration}
-          className={`w-full font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-            claimSuccess
+          className={`w-full font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${claimSuccess
               ? 'bg-green-500 text-white'
               : 'gradient-blockbelle hover:opacity-90 text-white'
-          }`}
+            }`}
         >
           {isClaiming ? (
             <span className="flex items-center justify-center">
