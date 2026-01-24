@@ -97,7 +97,6 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     const [claimSuccess, setClaimSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [nextClaimTime, setNextClaimTime] = useState<string>('');
-    const [hasClaimedToday, setHasClaimedToday] = useState(false);
     const [sdkTimeout, setSdkTimeout] = useState(false);
     const [enrollmentCheckTimeout, setEnrollmentCheckTimeout] = useState(false);
 
@@ -135,33 +134,33 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
     // Write Contract Hook
     const { writeContractAsync, isPending: isClaiming } = useWriteContract();
 
-    // Check if already claimed today (from localStorage)
+    // Calculate next claim time (12:00 PM UTC)
     useEffect(() => {
-        if (!address) return;
-
-        const lastClaimKey = `gooddollar_last_claim_${address}`;
-        const lastClaimTimestamp = localStorage.getItem(lastClaimKey);
-
-        if (lastClaimTimestamp) {
-            const lastClaim = new Date(parseInt(lastClaimTimestamp));
+        const calculateNextClaim = () => {
             const now = new Date();
+            const nextClaim = new Date(now);
 
-            // Check if claim was made today (same UTC day)
-            const isSameDay = lastClaim.getUTCDate() === now.getUTCDate() &&
-                lastClaim.getUTCMonth() === now.getUTCMonth() &&
-                lastClaim.getUTCFullYear() === now.getUTCFullYear();
+            // GoodDollar resets at 12:00 PM UTC
+            nextClaim.setUTCHours(12, 0, 0, 0);
 
-            if (isSameDay) {
-                setHasClaimedToday(true);
-                setClaimSuccess(true);
-                // Calculate next claim time (next UTC day)
-                const tomorrow = new Date(now);
-                tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-                tomorrow.setUTCHours(0, 0, 0, 0);
-                setNextClaimTime(tomorrow.toLocaleString());
+            // If we are already past 12:00 PM UTC, next claim is tomorrow
+            if (now >= nextClaim) {
+                nextClaim.setUTCDate(nextClaim.getUTCDate() + 1);
             }
-        }
-    }, [address]);
+
+            // Format duration until next claim
+            const diff = nextClaim.getTime() - now.getTime();
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            setNextClaimTime(`${hours}h ${minutes}m`);
+        };
+
+        calculateNextClaim();
+        const interval = setInterval(calculateNextClaim, 60000); // Update every minute
+
+        return () => clearInterval(interval);
+    }, []);
 
     // SDK timeout detection (10 seconds)
     useEffect(() => {
@@ -304,9 +303,6 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
             localStorage.setItem(lastClaimKey, Date.now().toString());
 
             setClaimSuccess(true);
-            setHasClaimedToday(true);
-
-            setHasClaimedToday(true);
 
             refetchEntitlement();
             refetchBalance();
@@ -498,7 +494,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                         Claimable Amount
                                     </p>
                                     <p className="text-4xl font-bold text-gray-900">
-                                        {hasClaimedToday ? "0.00" : formatG$(entitlementAmount as bigint)} <span className="text-2xl text-gray-600">G$</span>
+                                        {(entitlementAmount as bigint) > 0n ? formatG$(entitlementAmount as bigint) : "0.00"} <span className="text-2xl text-gray-600">G$</span>
                                     </p>
                                     {nextClaimTime && (
                                         <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
@@ -511,7 +507,7 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                 </div>
 
                                 {/* Claim Button or Status */}
-                                {!hasClaimedToday && !claimSuccess && entitlementAmount && (entitlementAmount as bigint) > 0n ? (
+                                {!claimSuccess && entitlementAmount && (entitlementAmount as bigint) > 0n ? (
                                     <button
                                         onClick={handleClaim}
                                         disabled={isClaiming || !isEnrolled}
@@ -531,17 +527,17 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                     </button>
                                 ) : (
                                     <div className="text-center py-6 bg-gray-50 rounded-lg border border-gray-200">
-                                        {hasClaimedToday || claimSuccess ? (
+                                        {claimSuccess || (entitlementAmount && (entitlementAmount as bigint) === 0n) ? (
                                             <div>
                                                 <div className="flex items-center justify-center gap-2 mb-2">
                                                     <CheckCircleIcon className="h-6 w-6 text-green-600" />
                                                     <p className="text-base font-semibold text-green-700">
-                                                        Daily Claim Completed
+                                                        {claimSuccess ? "Claim Successful!" : "Already Claimed Today"}
                                                     </p>
                                                 </div>
                                                 {nextClaimTime && (
                                                     <p className="text-sm text-gray-600">
-                                                        Come back after {nextClaimTime}
+                                                        Next claim in: <span className="font-mono font-medium">{nextClaimTime}</span>
                                                     </p>
                                                 )}
                                             </div>
@@ -551,12 +547,12 @@ export default function GoodDollarClaim({ className = '' }: GoodDollarClaimProps
                                             </p>
                                         )}
 
-                                        {!hasClaimedToday && !claimSuccess && (
+                                        {!claimSuccess && (
                                             <button
                                                 onClick={() => {
                                                     refetchEntitlement();
                                                     refetchBalance();
-                                                    setHasClaimedToday(false);
+                                                    refetchWhitelisted();
                                                 }}
                                                 className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium underline inline-flex items-center gap-1"
                                             >
