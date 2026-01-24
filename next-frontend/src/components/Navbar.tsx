@@ -25,7 +25,7 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
     const navItems: { id: TabType; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
         { id: 'register', label: 'Register', icon: UserPlusIcon },
         { id: 'main', label: 'Chat', icon: ChatBubbleLeftRightIcon },
-        // { id: 'quests', label: 'Quests', icon: TrophyIcon }, // Hidden for release
+        { id: 'quests', label: 'Quests', icon: TrophyIcon },
         { id: 'gooddollar', label: 'GoodDollar', icon: BanknotesIcon },
         { id: 'account', label: 'Account', icon: UserCircleIcon },
     ];

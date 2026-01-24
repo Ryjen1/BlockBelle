@@ -11,7 +11,7 @@ import Account from '@/components/Account';
 import GoodDollarClaim from '@/components/GoodDollarClaim';
 import EngagementRewardsClaim from '@/components/EngagementRewardsClaim';
 import GoodDollarInfoBanner from '@/components/GoodDollarInfoBanner';
-// import QuestsPage from '@/components/QuestsPage'; // Hidden for release
+import QuestsPage from '@/components/QuestsPage'; // Re-enabled for grant demo
 import Navbar, { type TabType } from '@/components/Navbar';
 import Image from 'next/image';
 import { useEngagementRewards } from '@/hooks/useEngagementRewards';
@@ -187,11 +187,11 @@ export default function HomePage() {
             <GoodDollarClaim />
           </div>
         )}
-        {/* {activeTab === 'quests' && (
+        {activeTab === 'quests' && (
           <div className="animate-fade-in">
             <QuestsPage />
           </div>
-        )} */}
+        )}
       </main>
     </div>
   );
